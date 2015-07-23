@@ -1,0 +1,68 @@
+﻿<Window x:Class="ImageEdit_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ImageEdit_WPF"
+        Title="Image Edit" Height="350" Width="525" Background="Black" Closing="Window_Closing">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="open_Executed" CanExecute="open_CanExecute" />
+        <CommandBinding Command="ApplicationCommands.Save" Executed="save_Executed" CanExecute="save_CanExecute" />
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0">
+            <MenuItem Header="File" StaysOpenOnClick="True">
+                <MenuItem Name="open" Header="Open..." Command="ApplicationCommands.Open"></MenuItem>
+                <MenuItem Name="reopen" Header="Re-Open" Click="reopen_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="save" Header="Save" Command="ApplicationCommands.Save"></MenuItem>
+                <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Edit" StaysOpenOnClick="True">
+                <MenuItem Name="undo" Header="Undo" Command="ApplicationCommands.Undo"></MenuItem>
+                <MenuItem Name="redo" Header="Redo" Command="ApplicationCommands.Redo"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Image" StaysOpenOnClick="True">
+                <MenuItem Name="information" Header="Information" Click="information_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="shiftBits" Header="Shift bits" Click="shiftBits_Click"></MenuItem>
+                <MenuItem Name="threshold" Header="Threshold" Click="threshold_Click"></MenuItem>
+                <MenuItem Name="autoThreshold" Header="Auto Threshold" Click="autoThreshold_Click"></MenuItem>
+                <MenuItem Name="negative" Header="Negative" Click="negative_Click"></MenuItem>
+                <MenuItem Name="squareRoot" Header="Square root" Click="squareRoot_Click"></MenuItem>
+                <MenuItem Name="contrastEnhancement" Header="Contrast Enhancement" Click="contrastEnhancement_Click"></MenuItem>
+                <MenuItem Name="brightness" Header="Brightness" Click="brightness_Click"></MenuItem>
+                <MenuItem Name="contrast" Header="Contrast" Click="contrast_Click"></MenuItem>
+                <MenuItem Name="histogram" Header="Histogram" Click="histogram_Click"></MenuItem>
+                <MenuItem Name="histogramEqualizationRGB" Header="Histogram Equalization (RGB)" Click="histogramEqualizationRGB_Click"></MenuItem>
+                <MenuItem Name="histogramEqualizationHSV" Header="Histogram Equalization (HSV)" Click="histogramEqualizationHSV_Click"></MenuItem>
+                <MenuItem Name="histogramEqualizationYUV" Header="Histogram Equalization (YUV)" Click="histogramEqualizationYUV_Click"></MenuItem>
+                <MenuItem Name="imageSummarization" Header="Image Summarization" Click="imageSummarization_Click"></MenuItem>
+                <MenuItem Name="imageSubtraction" Header="Image Subtraction" Click="imageSubtraction_Click"></MenuItem>
+                <MenuItem Name="imageConvolution2d" Header="Image Convolution (2D)" Click="imageConvolution2d_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Options" StaysOpenOnClick="True">
+                <MenuItem Name="preferences" Header="Preferences"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="statusBarShowHide" Header="Show/Hide status bar" Click="statusBarShowHide_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help" StaysOpenOnClick="True">
+                <MenuItem Name="help" Header="ImageEdit Help" Click="help_Click"></MenuItem>
+                <MenuItem Name="about" Header="About..." Click="about_Click"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <local:ZoomBorder x:Name="border" Grid.Row="1" Grid.Column="0" ClipToBounds="True" Background="Black">
+            <Image x:Name="mainImage" x:FieldModifier="public"></Image>
+        </local:ZoomBorder>
+        <StatusBar Name="statusBar" Grid.Row="2" Grid.Column="0" Visibility="Visible">
+            <TextBlock Name="imageResolution"></TextBlock>
+            <Separator Opacity="0.5"></Separator>
+            <TextBlock Name="imageSize"></TextBlock>
+        </StatusBar>
+    </Grid>
+</Window>

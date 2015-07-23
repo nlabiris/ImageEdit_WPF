@@ -1,0 +1,48 @@
+﻿<Window x:Class="ImageEdit_WPF.Information"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Image information" Height="300" Width="400" Background="WhiteSmoke" ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0">File name:</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0">Directory:</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0">Full path:</TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="0">Compression:</TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="0">Resolution:</TextBlock>
+        <TextBlock Grid.Row="5" Grid.Column="0">Colors:</TextBlock>
+        <TextBlock Grid.Row="6" Grid.Column="0">Disk size:</TextBlock>
+        <TextBlock Grid.Row="7" Grid.Column="0">Memory size:</TextBlock>
+        <TextBlock Grid.Row="8" Grid.Column="0">File date/time:</TextBlock>
+        <TextBox Name="filenameTbx" Grid.Row="0" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="directoryTbx" Grid.Row="1" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="pathTbx" Grid.Row="2" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="compressionTbx" Grid.Row="3" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="resolutionTbx" Grid.Row="4" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="colorsTbx" Grid.Row="5" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="disksizeTbx" Grid.Row="6" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="memorysizeTbx" Grid.Row="7" Grid.Column="1" IsReadOnly="True"></TextBox>
+        <TextBox Name="filedatetimeTbx" Grid.Row="8" Grid.Column="1" IsReadOnly="True"></TextBox>
+    </Grid>
+</Window>
