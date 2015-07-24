@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace ImageEdit_WPF
 {
@@ -125,14 +126,14 @@ namespace ImageEdit_WPF
             if (sobel.IsChecked == true)
             {
                 MaskX = new Double[3, 3] {
-                                                    { -1.0, -2.0, -1.0 },
-                                                    { 0.0, 0.0, 0.0 },
-                                                    { 1.0, 2.0, 1.0 }
+                                                    { Double.Parse(tbx1.Text, new CultureInfo("el-GR")), Double.Parse(tbx2.Text, new CultureInfo("el-GR")), Double.Parse(tbx3.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tbx4.Text, new CultureInfo("el-GR")), Double.Parse(tbx5.Text, new CultureInfo("el-GR")), Double.Parse(tbx6.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tbx7.Text, new CultureInfo("el-GR")), Double.Parse(tbx8.Text, new CultureInfo("el-GR")), Double.Parse(tbx9.Text, new CultureInfo("el-GR")) }
                                                    };
                 MaskY = new Double[3, 3] {
-                                                    { -1.0, 0.0, 1.0 },
-                                                    { -2.0, 0.0, 2.0 },
-                                                    { -1.0, 0.0, 1.0 }
+                                                    { Double.Parse(tby1.Text, new CultureInfo("el-GR")), Double.Parse(tby2.Text, new CultureInfo("el-GR")), Double.Parse(tby3.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tby4.Text, new CultureInfo("el-GR")), Double.Parse(tby5.Text, new CultureInfo("el-GR")), Double.Parse(tby6.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tby7.Text, new CultureInfo("el-GR")), Double.Parse(tby8.Text, new CultureInfo("el-GR")), Double.Parse(tby9.Text, new CultureInfo("el-GR")) }
                                                    };
 
                 for (i = 1; i < bmpOutput.Width - 1; i++)
@@ -223,9 +224,9 @@ namespace ImageEdit_WPF
             else if (gaussianBlur.IsChecked == true)
             {
                 MaskX = new Double[3, 3] {
-                                                    { 1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0 },
-                                                    { 2.0 / 16.0, 4.0 / 16.0, 2.0 / 16.0 },
-                                                    { 1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0 }
+                                                    { Double.Parse(tbx1.Text, new CultureInfo("el-GR")), Double.Parse(tbx2.Text, new CultureInfo("el-GR")), Double.Parse(tbx3.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tbx4.Text, new CultureInfo("el-GR")), Double.Parse(tbx5.Text, new CultureInfo("el-GR")), Double.Parse(tbx6.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tbx7.Text, new CultureInfo("el-GR")), Double.Parse(tbx8.Text, new CultureInfo("el-GR")), Double.Parse(tbx9.Text, new CultureInfo("el-GR")) }
                                                    };
 
                 for (i = 1; i < bmpOutput.Width - 1; i++)
@@ -302,9 +303,9 @@ namespace ImageEdit_WPF
             else if (sharpen.IsChecked == true)
             {
                 MaskX = new Double[3, 3] {
-                                                    { 0.0, -1.0, 0.0 },
-                                                    { -1.0, 5.0, -1.0 },
-                                                    { 0.0, -1.0, 0.0 }
+                                                    { Double.Parse(tbx1.Text, new CultureInfo("el-GR")), Double.Parse(tbx2.Text, new CultureInfo("el-GR")), Double.Parse(tbx3.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tbx4.Text, new CultureInfo("el-GR")), Double.Parse(tbx5.Text, new CultureInfo("el-GR")), Double.Parse(tbx6.Text, new CultureInfo("el-GR")) },
+                                                    { Double.Parse(tbx7.Text, new CultureInfo("el-GR")), Double.Parse(tbx8.Text, new CultureInfo("el-GR")), Double.Parse(tbx9.Text, new CultureInfo("el-GR")) }
                                                    };
 
                 for (i = 1; i < bmpOutput.Width - 1; i++)
