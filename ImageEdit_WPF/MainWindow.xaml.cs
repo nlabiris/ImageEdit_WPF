@@ -20,6 +20,11 @@ using System.Drawing.Imaging;
 using Microsoft.Win32;
 using ImageMagick;
 
+// TODO: save image to other formats
+// TODO: Convolution kernels: double, int
+// TODO: [Double.Parse] Decimal conflict: "," and "."
+// TODO: Color to Grayscale algorithm
+
 
 namespace ImageEdit_WPF
 {
@@ -161,19 +166,79 @@ namespace ImageEdit_WPF
             {
                 if (OutputFilename != String.Empty)
                 {
-                    
-                    //MagickImage image = new MagickImage(bmpOutput);
-                    //image.Quality = 100;
-                    //image.Format = MagickFormat.Jpeg;
-                    //image.CompressionMethod = CompressionMethod.JPEG;
-                    //image.Write(OutputFilename);
-                    ImageCodecInfo codec = GetEncoder(ImageFormat.Jpeg);
-                    System.Drawing.Imaging.Encoder quality = System.Drawing.Imaging.Encoder.Quality;
-                    EncoderParameters encoderArray = new EncoderParameters(1);
-                    EncoderParameter encoder = new EncoderParameter(quality, 100L);
-                    encoderArray.Param[0] = encoder;
 
-                    bmpOutput.Save(OutputFilename, codec, encoderArray);
+                    String extension = System.IO.Path.GetExtension(OutputFilename);
+
+                    ImageCodecInfo codec;
+                    System.Drawing.Imaging.Encoder quality;
+                    EncoderParameters encoderArray;
+                    EncoderParameter encoder;
+
+                    switch (extension.ToLower())
+                    {
+                        case ".jpg":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Jpeg);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        case ".jpeg":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Jpeg);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        case ".png":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Png);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        case ".bmp":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Bmp);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(extension);
+                    }
                 }
                 else
                 {
@@ -183,19 +248,78 @@ namespace ImageEdit_WPF
                     if (saveFile.ShowDialog() == true)
                     {
                         OutputFilename = saveFile.FileName;
+                        String extension = System.IO.Path.GetExtension(OutputFilename);
 
-                        //MagickImage image = new MagickImage(bmpOutput);
-                        //image.Quality = 100;
-                        //image.Format = MagickFormat.Jpeg;
-                        //image.CompressionMethod = CompressionMethod.JPEG;
-                        //image.Write(OutputFilename);
-                        ImageCodecInfo codec = GetEncoder(ImageFormat.Jpeg);
-                        System.Drawing.Imaging.Encoder quality = System.Drawing.Imaging.Encoder.Quality;
-                        EncoderParameters encoderArray = new EncoderParameters(1);
-                        EncoderParameter encoder = new EncoderParameter(quality, 100L);
-                        encoderArray.Param[0] = encoder;
+                        ImageCodecInfo codec;
+                        System.Drawing.Imaging.Encoder quality;
+                        EncoderParameters encoderArray;
+                        EncoderParameter encoder;
 
-                        bmpOutput.Save(OutputFilename, codec, encoderArray);
+                        switch (extension.ToLower())
+                        {
+                            case ".jpg":
+                                //MagickImage image = new MagickImage(bmpOutput);
+                                //image.Quality = 100;
+                                //image.Format = MagickFormat.Jpeg;
+                                //image.CompressionMethod = CompressionMethod.JPEG;
+                                //image.Write(OutputFilename);
+                                codec = GetEncoder(ImageFormat.Jpeg);
+                                quality = System.Drawing.Imaging.Encoder.Quality;
+                                encoderArray = new EncoderParameters(1);
+                                encoder = new EncoderParameter(quality, 85L);
+                                encoderArray.Param[0] = encoder;
+
+                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                                break;
+                            case ".jpeg":
+                                //MagickImage image = new MagickImage(bmpOutput);
+                                //image.Quality = 100;
+                                //image.Format = MagickFormat.Jpeg;
+                                //image.CompressionMethod = CompressionMethod.JPEG;
+                                //image.Write(OutputFilename);
+                                codec = GetEncoder(ImageFormat.Jpeg);
+                                quality = System.Drawing.Imaging.Encoder.Quality;
+                                encoderArray = new EncoderParameters(1);
+                                encoder = new EncoderParameter(quality, 85L);
+                                encoderArray.Param[0] = encoder;
+
+                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                                break;
+                            case ".png":
+                                //MagickImage image = new MagickImage(bmpOutput);
+                                //image.Quality = 100;
+                                //image.Format = MagickFormat.Jpeg;
+                                //image.CompressionMethod = CompressionMethod.JPEG;
+                                //image.Write(OutputFilename);
+                                codec = GetEncoder(ImageFormat.Png);
+                                quality = System.Drawing.Imaging.Encoder.Quality;
+                                encoderArray = new EncoderParameters(1);
+                                encoder = new EncoderParameter(quality, 85L);
+                                encoderArray.Param[0] = encoder;
+
+                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                                break;
+                            case ".bmp":
+                                //MagickImage image = new MagickImage(bmpOutput);
+                                //image.Quality = 100;
+                                //image.Format = MagickFormat.Jpeg;
+                                //image.CompressionMethod = CompressionMethod.JPEG;
+                                //image.Write(OutputFilename);
+                                codec = GetEncoder(ImageFormat.Bmp);
+                                quality = System.Drawing.Imaging.Encoder.Quality;
+                                encoderArray = new EncoderParameters(1);
+                                encoder = new EncoderParameter(quality, 85L);
+                                encoderArray.Param[0] = encoder;
+
+                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(extension);
+                        }
                     }
                 }
 
@@ -231,19 +355,78 @@ namespace ImageEdit_WPF
                 if (saveFile.ShowDialog() == true)
                 {
                     OutputFilename = saveFile.FileName;
+                    String extension = System.IO.Path.GetExtension(OutputFilename);
 
-                    //MagickImage image = new MagickImage(bmpOutput);
-                    //image.Quality = 100;
-                    //image.Format = MagickFormat.Jpeg;
-                    //image.CompressionMethod = CompressionMethod.JPEG;
-                    //image.Write(OutputFilename);
-                    ImageCodecInfo codec = GetEncoder(ImageFormat.Jpeg);
-                    System.Drawing.Imaging.Encoder quality = System.Drawing.Imaging.Encoder.Quality;
-                    EncoderParameters encoderArray = new EncoderParameters(1);
-                    EncoderParameter encoder = new EncoderParameter(quality, 100L);
-                    encoderArray.Param[0] = encoder;
+                    ImageCodecInfo codec;
+                    System.Drawing.Imaging.Encoder quality;
+                    EncoderParameters encoderArray;
+                    EncoderParameter encoder;
 
-                    bmpOutput.Save(OutputFilename, codec, encoderArray);
+                    switch (extension.ToLower())
+                    {
+                        case ".jpg":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Jpeg);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        case ".jpeg":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Jpeg);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        case ".png":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Png);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        case ".bmp":
+                            //MagickImage image = new MagickImage(bmpOutput);
+                            //image.Quality = 100;
+                            //image.Format = MagickFormat.Jpeg;
+                            //image.CompressionMethod = CompressionMethod.JPEG;
+                            //image.Write(OutputFilename);
+                            codec = GetEncoder(ImageFormat.Bmp);
+                            quality = System.Drawing.Imaging.Encoder.Quality;
+                            encoderArray = new EncoderParameters(1);
+                            encoder = new EncoderParameter(quality, 85L);
+                            encoderArray.Param[0] = encoder;
+
+                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(extension);
+                    }
                 }
 
                 noChange = true;

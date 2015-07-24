@@ -18,7 +18,7 @@
         <Menu Grid.Row="0" Grid.Column="0">
             <MenuItem Header="File" StaysOpenOnClick="True">
                 <MenuItem Name="open" Header="Open..." Command="ApplicationCommands.Open"></MenuItem>
-                <MenuItem Name="reopen" Header="Re-Open" Click="reopen_Click"></MenuItem>
+                <MenuItem Name="reopen" Header="Reopen last image" Click="reopen_Click"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Name="save" Header="Save" Command="ApplicationCommands.Save"></MenuItem>
                 <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
