@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace ImageEdit_WPF
 {
@@ -47,8 +48,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                // TODO: Decimal conflict: "," and "."
-                contrast = Double.Parse(textboxContrast.Text);
+                contrast = Double.Parse(textboxContrast.Text, new CultureInfo("el-GR"));
                 brightness = Int32.Parse(textboxBrightness.Text);
                 //if (brightness > 255 || brightness < 0)
                 //{
