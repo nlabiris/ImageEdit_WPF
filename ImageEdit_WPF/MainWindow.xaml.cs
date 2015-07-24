@@ -20,9 +20,7 @@ using System.Drawing.Imaging;
 using Microsoft.Win32;
 using ImageMagick;
 
-// TODO: save image to other formats
 // TODO: Convolution kernels: double, int
-// TODO: [Double.Parse] Decimal conflict: "," and "."
 // TODO: Color to Grayscale algorithm
 
 
@@ -73,31 +71,31 @@ namespace ImageEdit_WPF
                     bmpInput = new BitmapImage(uri);
                     bmpOutput = new System.Drawing.Bitmap(InputFilename);
                     mainImage.Source = bmpInput;
-                }
 
-                Int32 bpp = System.Drawing.Image.GetPixelFormatSize(bmpOutput.PixelFormat);
-                String resolution = bmpOutput.Width + " x " + bmpOutput.Height + " x " + bpp + " bpp";
-                String size = String.Empty;
-                FileInfo filesize = new FileInfo(InputFilename);
-                if (bpp == 8)
-                {
-                    size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 1) / 1000000 + " MB";
-                }
-                else if (bpp == 16)
-                {
-                    size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 2) / 1000000 + " MB";
-                }
-                else if (bpp == 24)
-                {
-                    size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 3) / 1000000 + " MB";
-                }
-                else if (bpp == 32)
-                {
-                    size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 4) / 1000000 + " MB";
-                }
+                    Int32 bpp = System.Drawing.Image.GetPixelFormatSize(bmpOutput.PixelFormat);
+                    String resolution = bmpOutput.Width + " x " + bmpOutput.Height + " x " + bpp + " bpp";
+                    String size = String.Empty;
+                    FileInfo filesize = new FileInfo(InputFilename);
+                    if (bpp == 8)
+                    {
+                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 1) / 1000000 + " MB";
+                    }
+                    else if (bpp == 16)
+                    {
+                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 2) / 1000000 + " MB";
+                    }
+                    else if (bpp == 24)
+                    {
+                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 3) / 1000000 + " MB";
+                    }
+                    else if (bpp == 32)
+                    {
+                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 4) / 1000000 + " MB";
+                    }
 
-                imageResolution.Text = resolution;
-                imageSize.Text = size;
+                    imageResolution.Text = resolution;
+                    imageSize.Text = size;
+                }
             }
             catch (FileNotFoundException ex)
             {
