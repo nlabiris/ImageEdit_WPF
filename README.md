@@ -1,6 +1,6 @@
 # Basic image processing program
 
-A simple image processing program made with *C#* and *WPF* containg a large amount of algorithms to test. Currently supports **JPEG*/**JPG**, **PNG** and **BMP** image file formats.
+A simple image processing program made with *C#* and *WPF* containg a large amount of algorithms to test. Currently supports **JPEG**/**JPG**, **PNG** and **BMP** image file formats.
 **RAW** file format are not supported for now.
 
 
@@ -29,7 +29,7 @@ A simple image processing program made with *C#* and *WPF* containg a large amou
 - [ ] Better encoder... (I used Magick.NET but I have to deal with some problems to use it again)
 - [ ] Undo/Redo system
 
-
+```
 
 #### Download link
 
