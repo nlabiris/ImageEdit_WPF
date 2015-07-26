@@ -37,13 +37,12 @@ namespace ImageEdit_WPF
         ContrastEnhancement = 5,
         Brightness = 6,
         Contrast = 7,
-        Histogram = 8,
-        ImageSummarization = 9,
-        ImageSubtraction = 10,
-        ImageConvolution = 11,
-        ImageEqualizationRGB = 12,
-        ImageEqualizationHSV = 13,
-        ImageEqualizationYUV = 14
+        ImageSummarization = 8,
+        ImageSubtraction = 9,
+        ImageConvolution = 10,
+        ImageEqualizationRGB = 11,
+        ImageEqualizationHSV = 12,
+        ImageEqualizationYUV = 13
     }
 
 
@@ -57,10 +56,10 @@ namespace ImageEdit_WPF
         public static Boolean noChange = true;
         private BitmapImage bmpInput = null;
         private System.Drawing.Bitmap bmpOutput = null;
-        private System.Drawing.Bitmap bmpUndoRedo = null;
-        public ActionType Action;
-        private Stack<System.Drawing.Bitmap> undoStack = new Stack<System.Drawing.Bitmap>();
-        private Stack<System.Drawing.Bitmap> redoStack = new Stack<System.Drawing.Bitmap>();
+        public static Stack<System.Drawing.Bitmap> undoStack = new Stack<System.Drawing.Bitmap>();
+        public static Stack<System.Drawing.Bitmap> redoStack = new Stack<System.Drawing.Bitmap>();
+        public static ActionType Action;
+        public System.Drawing.Bitmap bmpUndoRedo = null;
 
         public MainWindow()
         {
@@ -92,8 +91,7 @@ namespace ImageEdit_WPF
                 if (openFile.ShowDialog() == true)
                 {
                     InputFilename = openFile.FileName;
-                    Uri uri = new Uri(InputFilename, UriKind.Absolute);
-                    bmpInput = new BitmapImage(uri);
+                    bmpInput = new BitmapImage(new Uri(InputFilename, UriKind.Absolute));
                     bmpOutput = new System.Drawing.Bitmap(InputFilename);
                     bmpUndoRedo = new System.Drawing.Bitmap(bmpOutput);
                     mainImage.Source = bmpInput;
@@ -124,7 +122,8 @@ namespace ImageEdit_WPF
                     imageResolution.Text = resolution;
                     imageSize.Text = size;
 
-                    InsertIntoUndoRedoStack();
+                    undoStack.Push(bmpUndoRedo);
+                    redoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -483,7 +482,85 @@ namespace ImageEdit_WPF
             if (undoStack.Count == 0) return;
 
             System.Drawing.Bitmap bmpUndo = undoStack.Pop();
-            if (Action == ActionType.Negative)
+            if (Action == ActionType.ShiftBits)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Threshold)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.AutoThreshold)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Negative)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.SquareRoot)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ContrastEnhancement)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Brightness)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Contrast)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageSummarization)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageSubtraction)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageConvolution)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageEqualizationRGB)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageEqualizationHSV)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageEqualizationYUV)
             {
                 bmpUndo = undoStack.Pop();
                 bmpOutput = bmpUndo;
@@ -575,7 +652,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                ShiftBits shiftBitsWindow = new ShiftBits(InputFilename, bmpOutput);
+                ShiftBits shiftBitsWindow = new ShiftBits(InputFilename, bmpOutput, bmpUndoRedo);
                 shiftBitsWindow.Owner = this;
                 shiftBitsWindow.Show();
             }
@@ -734,7 +811,8 @@ namespace ImageEdit_WPF
                     noChange = false;
                     Action = ActionType.Negative;
                     bmpUndoRedo = bmpOutput;
-                    InsertIntoUndoRedoStack();
+                    undoStack.Push(bmpUndoRedo);
+                    redoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1871,12 +1949,6 @@ namespace ImageEdit_WPF
             }
         }
         #endregion
-
-        public void InsertIntoUndoRedoStack()
-        {
-            undoStack.Push(bmpUndoRedo);
-            redoStack.Clear();
-        }
 
         public void BitmapToBitmapImage()
         {

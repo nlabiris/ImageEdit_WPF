@@ -26,13 +26,15 @@ namespace ImageEdit_WPF
     {
         private String filename;
         private Bitmap bmpOutput = null;
+        private Bitmap bmpUndoRedo = null;
 
-        public ShiftBits(String fname, Bitmap bmpO)
+        public ShiftBits(String fname, Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
 
             filename = fname;
             bmpOutput = bmpO;
+            bmpUndoRedo = bmpUR;
 
             textboxBits.Focus();
         }
@@ -131,6 +133,10 @@ namespace ImageEdit_WPF
             if (result == MessageBoxResult.OK)
             {
                 MainWindow.noChange = false;
+                MainWindow.Action = ActionType.ShiftBits;
+                bmpUndoRedo = bmpOutput;
+                MainWindow.undoStack.Push(bmpUndoRedo);
+                MainWindow.redoStack.Clear();
                 this.Close();
             }
         }
