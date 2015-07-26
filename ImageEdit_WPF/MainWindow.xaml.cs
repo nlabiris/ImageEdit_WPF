@@ -22,10 +22,31 @@ using ImageMagick;
 
 // TODO: Convolution kernels: double, int
 // TODO: Color to Grayscale algorithm
-
+// TODO: Check sum of kernel
+// TODO: Progress bar on every algorithm window
 
 namespace ImageEdit_WPF
 {
+    public enum ActionType
+    {
+        ShiftBits = 0,
+        Threshold = 1,
+        AutoThreshold = 2,
+        Negative = 3,
+        SquareRoot = 4,
+        ContrastEnhancement = 5,
+        Brightness = 6,
+        Contrast = 7,
+        Histogram = 8,
+        ImageSummarization = 9,
+        ImageSubtraction = 10,
+        ImageConvolution = 11,
+        ImageEqualizationRGB = 12,
+        ImageEqualizationHSV = 13,
+        ImageEqualizationYUV = 14
+    }
+
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -33,9 +54,13 @@ namespace ImageEdit_WPF
     {
         private String InputFilename = String.Empty;
         private String OutputFilename = String.Empty;
+        public static Boolean noChange = true;
         private BitmapImage bmpInput = null;
         private System.Drawing.Bitmap bmpOutput = null;
-        public static Boolean noChange = true;
+        private System.Drawing.Bitmap bmpUndoRedo = null;
+        public ActionType Action;
+        private Stack<System.Drawing.Bitmap> undoStack = new Stack<System.Drawing.Bitmap>();
+        private Stack<System.Drawing.Bitmap> redoStack = new Stack<System.Drawing.Bitmap>();
 
         public MainWindow()
         {
@@ -70,7 +95,10 @@ namespace ImageEdit_WPF
                     Uri uri = new Uri(InputFilename, UriKind.Absolute);
                     bmpInput = new BitmapImage(uri);
                     bmpOutput = new System.Drawing.Bitmap(InputFilename);
+                    bmpUndoRedo = new System.Drawing.Bitmap(bmpOutput);
                     mainImage.Source = bmpInput;
+
+                    statusBar.Visibility = Visibility.Visible;
 
                     Int32 bpp = System.Drawing.Image.GetPixelFormatSize(bmpOutput.PixelFormat);
                     String resolution = bmpOutput.Width + " x " + bmpOutput.Height + " x " + bpp + " bpp";
@@ -95,6 +123,8 @@ namespace ImageEdit_WPF
 
                     imageResolution.Text = resolution;
                     imageSize.Text = size;
+
+                    InsertIntoUndoRedoStack();
                 }
             }
             catch (FileNotFoundException ex)
@@ -448,6 +478,24 @@ namespace ImageEdit_WPF
         }
         #endregion
 
+        private void undo_Click(object sender, RoutedEventArgs e)
+        {
+            if (undoStack.Count == 0) return;
+
+            System.Drawing.Bitmap bmpUndo = undoStack.Pop();
+            if (Action == ActionType.Negative)
+            {
+                bmpUndo = undoStack.Pop();
+                bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+        }
+
+        private void redo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         #region Status bar
         private void statusBarShowHide_Click(object sender, RoutedEventArgs e)
         {
@@ -630,7 +678,7 @@ namespace ImageEdit_WPF
         }
         #endregion
 
-        #region Negtative
+        #region Negative
         private void negative_Click(object sender, RoutedEventArgs e)
         {
             if (InputFilename == String.Empty || bmpOutput == null)
@@ -677,18 +725,16 @@ namespace ImageEdit_WPF
                 bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                BitmapToBitmapImage();
 
                 String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    MainWindow.noChange = false;
+                    noChange = false;
+                    Action = ActionType.Negative;
+                    bmpUndoRedo = bmpOutput;
+                    InsertIntoUndoRedoStack();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1825,6 +1871,23 @@ namespace ImageEdit_WPF
             }
         }
         #endregion
+
+        public void InsertIntoUndoRedoStack()
+        {
+            undoStack.Push(bmpUndoRedo);
+            redoStack.Clear();
+        }
+
+        public void BitmapToBitmapImage()
+        {
+            // Convert Bitmap to BitmapImage
+            MemoryStream str = new MemoryStream();
+            bmpOutput.Save(str, ImageFormat.Bmp);
+            str.Seek(0, SeekOrigin.Begin);
+            BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+
+            mainImage.Source = bdc.Frames[0];
+        }
 
         private ImageCodecInfo GetEncoder(ImageFormat format)
         {

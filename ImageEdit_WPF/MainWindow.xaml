@@ -24,8 +24,8 @@
                 <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edit" StaysOpenOnClick="True">
-                <MenuItem Name="undo" Header="Undo" Command="ApplicationCommands.Undo"></MenuItem>
-                <MenuItem Name="redo" Header="Redo" Command="ApplicationCommands.Redo"></MenuItem>
+                <MenuItem Name="undo" Header="Undo" Click="undo_Click"></MenuItem>
+                <MenuItem Name="redo" Header="Redo" Click="redo_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Image" StaysOpenOnClick="True">
                 <MenuItem Name="information" Header="Information" Click="information_Click"></MenuItem>
@@ -61,7 +61,7 @@
         </local:ZoomBorder>
         <StatusBar Name="statusBar" Grid.Row="2" Grid.Column="0" Visibility="Visible">
             <TextBlock Name="imageResolution"></TextBlock>
-            <Separator Opacity="0.5"></Separator>
+            <Separator Visibility="Collapsed" Opacity="0.5"></Separator>
             <TextBlock Name="imageSize"></TextBlock>
         </StatusBar>
     </Grid>
