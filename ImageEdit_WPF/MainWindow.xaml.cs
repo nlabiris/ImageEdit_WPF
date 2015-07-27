@@ -93,7 +93,7 @@ namespace ImageEdit_WPF
                     InputFilename = openFile.FileName;
                     bmpInput = new BitmapImage(new Uri(InputFilename, UriKind.Absolute));
                     bmpOutput = new System.Drawing.Bitmap(InputFilename);
-                    bmpUndoRedo = new System.Drawing.Bitmap(bmpOutput);
+                    bmpUndoRedo = new System.Drawing.Bitmap(InputFilename);
                     mainImage.Source = bmpInput;
 
                     statusBar.Visibility = Visibility.Visible;
