@@ -134,7 +134,7 @@ namespace ImageEdit_WPF
             {
                 MainWindow.noChange = false;
                 MainWindow.Action = ActionType.ShiftBits;
-                bmpUndoRedo = bmpOutput;
+                bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                 MainWindow.undoStack.Push(bmpUndoRedo);
                 MainWindow.redoStack.Clear();
                 this.Close();
