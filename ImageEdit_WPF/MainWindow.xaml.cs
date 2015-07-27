@@ -511,8 +511,8 @@ namespace ImageEdit_WPF
             }
             else if (Action == ActionType.SquareRoot)
             {
-                //bmpUndo = undoStack.Pop();
-                //bmpOutput = bmpUndo;
+                undoStack.Push(bmpUndoRedo);
+                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ContrastEnhancement)
@@ -605,8 +605,8 @@ namespace ImageEdit_WPF
             }
             else if (Action == ActionType.SquareRoot)
             {
-                //bmpUndo = undoStack.Pop();
-                //bmpOutput = bmpUndo;
+                undoStack.Push(bmpUndoRedo);
+                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ContrastEnhancement)
@@ -902,7 +902,7 @@ namespace ImageEdit_WPF
                 {
                     noChange = false;
                     Action = ActionType.Negative;
-                    bmpUndoRedo = bmpOutput;
+                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     redoStack.Clear();
                 }
@@ -977,18 +977,17 @@ namespace ImageEdit_WPF
                 bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                BitmapToBitmapImage();
 
                 String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    MainWindow.noChange = false;
+                    noChange = false;
+                    Action = ActionType.SquareRoot;
+                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
+                    undoStack.Push(bmpUndoRedo);
+                    redoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
