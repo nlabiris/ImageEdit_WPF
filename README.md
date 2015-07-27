@@ -25,9 +25,15 @@ A simple image processing program made with *C#* and *WPF* containg a large amou
 
 ### TODO
 
-- [ ] Color to grayscale conversion
-- [ ] Better encoder... (I used Magick.NET but I have to deal with some problems to use it again)
-- [ ] Undo/Redo system
+- [ ] Color to Grayscale algorithm
+- [ ] Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
+- [X] Undo/Redo system
+  - [ ] Key shortcuts
+- [ ] Convolution kernels: double, int
+- [ ] Check sum of kernel windows
+- [ ] Progress bar on every algorithm window
+- [ ] Preferences window
+- [ ] Documentation of the source code
 
 
 
@@ -35,4 +41,4 @@ A simple image processing program made with *C#* and *WPF* containg a large amou
 
 You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* to clone the repository.
 
-[ImageEdit v.0.21.19.177 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v.0.21.19.177_beta.rar?raw=true)
+[ImageEdit v0.22.30.214 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.22.30.214_beta.rar?raw=true)
