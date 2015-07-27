@@ -26,13 +26,15 @@ namespace ImageEdit_WPF
     {
         private String filename;
         private Bitmap bmpOutput = null;
+        private Bitmap bmpUndoRedo = null;
 
-        public Brightness(String fname, Bitmap bmpO)
+        public Brightness(String fname, Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
 
             filename = fname;
             bmpOutput = bmpO;
+            bmpUndoRedo = bmpUR;
 
             textboxBrightness.Focus();
         }
@@ -165,6 +167,10 @@ namespace ImageEdit_WPF
             if (result == MessageBoxResult.OK)
             {
                 MainWindow.noChange = false;
+                MainWindow.Action = ActionType.Brightness;
+                bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
+                MainWindow.undoStack.Push(bmpUndoRedo);
+                MainWindow.redoStack.Clear();
                 this.Close();
             }
         }

@@ -26,13 +26,15 @@ namespace ImageEdit_WPF
     {
         private String filename;
         private Bitmap bmpOutput = null;
+        private Bitmap bmpUndoRedo = null;
 
-        public AutoThreshold(String fname, Bitmap bmpO)
+        public AutoThreshold(String fname, Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
 
             filename = fname;
             bmpOutput = bmpO;
+            bmpUndoRedo = bmpUR;
 
             textboxDistance.Focus();
         }
@@ -368,6 +370,10 @@ namespace ImageEdit_WPF
             if (result == MessageBoxResult.OK)
             {
                 MainWindow.noChange = false;
+                MainWindow.Action = ActionType.AutoThreshold;
+                bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
+                MainWindow.undoStack.Push(bmpUndoRedo);
+                MainWindow.redoStack.Clear();
                 this.Close();
             }
         }
