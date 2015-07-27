@@ -479,98 +479,190 @@ namespace ImageEdit_WPF
 
         private void undo_Click(object sender, RoutedEventArgs e)
         {
-            if (undoStack.Count == 0) return;
+            if (undoStack.Count == 0)
+            {
+                return;
+            }
 
-            System.Drawing.Bitmap bmpUndo = undoStack.Pop();
+            bmpUndoRedo = undoStack.Pop();
             if (Action == ActionType.ShiftBits)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                redoStack.Push(bmpUndoRedo);
+                bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Threshold)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.AutoThreshold)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Negative)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                redoStack.Push(bmpUndoRedo);
+                bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.SquareRoot)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ContrastEnhancement)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Brightness)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Contrast)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageSummarization)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageSubtraction)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageConvolution)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationRGB)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationHSV)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationYUV)
             {
-                bmpUndo = undoStack.Pop();
-                bmpOutput = bmpUndo;
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
                 BitmapToBitmapImage();
             }
         }
 
         private void redo_Click(object sender, RoutedEventArgs e)
         {
+            if (redoStack.Count == 0)
+            {
+                return;
+            }
 
+            bmpUndoRedo = redoStack.Pop();
+            if (Action == ActionType.ShiftBits)
+            {
+                undoStack.Push(bmpUndoRedo);
+                bmpOutput = redoStack.Peek();
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Threshold)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.AutoThreshold)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Negative)
+            {
+                undoStack.Push(bmpUndoRedo);
+                bmpOutput = redoStack.Peek();
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.SquareRoot)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ContrastEnhancement)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Brightness)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.Contrast)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageSummarization)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageSubtraction)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageConvolution)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageEqualizationRGB)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageEqualizationHSV)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
+            else if (Action == ActionType.ImageEqualizationYUV)
+            {
+                //bmpUndo = undoStack.Pop();
+                //bmpOutput = bmpUndo;
+                BitmapToBitmapImage();
+            }
         }
 
         #region Status bar
