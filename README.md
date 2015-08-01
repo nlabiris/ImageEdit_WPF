@@ -10,21 +10,21 @@ Currently supports the following file formats:
 
 ### Algorithms
 
-* Shift bits
-* Threshold
-* Auto threshold
-* Negative
-* Square root
-* Contrast enhancement
-* Brightness
-* Contrast
-* Histogram
-* Image summarization
-* Image subtraction
-* Image convolution (Sobel, Gaussian Blur, Sharpen)
-* Image equalization [RGB]
-* Image equalization [HSV]
-* Image equalization [YUV]
+- Shift bits
+- Threshold
+- Auto threshold
+- Negative
+- Square root
+- Contrast enhancement
+- Brightness
+- Contrast
+- Histogram
+- Image summarization
+- Image subtraction
+- Image convolution (Sobel, Gaussian Blur, Sharpen)
+- Image equalization [RGB]
+- Image equalization [HSV]
+- Image equalization [YUV]
 
 
 ### TODO
@@ -38,7 +38,6 @@ Currently supports the following file formats:
 - [ ] Progress bar on every algorithm window
 - [ ] Preferences window
 - [ ] Documentation of the source code
-
 
 
 #### Download link
