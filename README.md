@@ -1,7 +1,11 @@
 # Basic image processing program
 
-A simple image processing program made with *C#* and *WPF* containg a large amount of algorithms to test. Currently supports **JPEG**/**JPG**, **PNG** and **BMP** image file formats.
-**RAW** file format are not supported for now.
+A simple image processing program made with *C#* and *WPF* containg a large amount of algorithms to test.
+Currently supports the following file formats:
+
+- JPEG/JPG
+- PNG
+- BMP
 
 
 ### Algorithms
