@@ -40,7 +40,6 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using Microsoft.Win32;
-using ImageMagick;
 
 
 // TODO: Color to Grayscale algorithm
