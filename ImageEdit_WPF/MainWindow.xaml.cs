@@ -46,6 +46,9 @@ using ImageMagick;
 // TODO: Color to Grayscale algorithm
 // TODO: Check sum of kernel
 // TODO: Progress bar on every algorithm window
+// TODO: null action in enum
+// TODO: check in open, reopen actions and stacks
+
 
 namespace ImageEdit_WPF
 {
@@ -504,6 +507,7 @@ namespace ImageEdit_WPF
         {
             if (undoStack.Count == 0)
             {
+                undo.IsEnabled = false;
                 return;
             }
 
@@ -592,6 +596,12 @@ namespace ImageEdit_WPF
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
+
+            if (undoStack.Count == 1)
+            {
+                undo.IsEnabled = false;
+                return;
+            }
         }
         #endregion
 
@@ -600,92 +610,84 @@ namespace ImageEdit_WPF
         {
             if (redoStack.Count == 0)
             {
+                redo.IsEnabled = false;
                 return;
             }
 
-            bmpUndoRedo = redoStack.Pop();
+            if (redoStack.Count == 1)
+            {
+                redo.IsEnabled = false;
+            }
+
+            bmpOutput = bmpUndoRedo = redoStack.Pop();
             if (Action == ActionType.ShiftBits)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Threshold)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.AutoThreshold)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Negative)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.SquareRoot)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ContrastEnhancement)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Brightness)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Contrast)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageSummarization)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageSubtraction)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageConvolution)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationRGB)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationHSV)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationYUV)
             {
                 undoStack.Push(bmpUndoRedo);
-                bmpOutput = redoStack.Peek();
                 BitmapToBitmapImage();
             }
         }
