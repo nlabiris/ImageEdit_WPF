@@ -92,9 +92,9 @@ namespace ImageEdit_WPF
             tbx4.Width = 40; tbx5.Width = 40; tbx6.Width = 40;
             tbx7.Width = 40; tbx8.Width = 40; tbx9.Width = 40;
 
-            tbx1.Text = "1/16"; tbx2.Text = "2/16"; tbx3.Text = "1/16";
-            tbx4.Text = "2/16"; tbx5.Text = "4/16"; tbx6.Text = "2/16";
-            tbx7.Text = "1/16"; tbx8.Text = "2/16"; tbx9.Text = "1/16";
+            tbx1.Text = "1"; tbx2.Text = "2"; tbx3.Text = "1";
+            tbx4.Text = "2"; tbx5.Text = "4"; tbx6.Text = "2";
+            tbx7.Text = "1"; tbx8.Text = "2"; tbx9.Text = "1";
         }
 
         private void sharpen_Checked(object sender, RoutedEventArgs e)
@@ -267,9 +267,9 @@ namespace ImageEdit_WPF
                             for (l = 0; l < SizeMask; l++)
                             {
                                 index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
-                                txR = txR + rgbValues[index + 2] * MaskX[k, l];
-                                txG = txG + rgbValues[index + 1] * MaskX[k, l];
-                                txB = txB + rgbValues[index] * MaskX[k, l];
+                                txR = txR + rgbValues[index + 2] * (0.0625 * MaskX[k, l]);
+                                txG = txG + rgbValues[index + 1] * (0.0625 * MaskX[k, l]);
+                                txB = txB + rgbValues[index] * (0.0625 * MaskX[k, l]);
                             }
                         }
 
