@@ -515,84 +515,98 @@ namespace ImageEdit_WPF
             if (Action == ActionType.ShiftBits)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Threshold)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.AutoThreshold)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Negative)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.SquareRoot)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ContrastEnhancement)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Brightness)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.Contrast)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageSummarization)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageSubtraction)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageConvolution)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationRGB)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationHSV)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
             else if (Action == ActionType.ImageEqualizationYUV)
             {
                 redoStack.Push(bmpUndoRedo);
+                redo.IsEnabled = true;
                 bmpOutput = undoStack.Peek();
                 BitmapToBitmapImage();
             }
@@ -617,6 +631,11 @@ namespace ImageEdit_WPF
             if (redoStack.Count == 1)
             {
                 redo.IsEnabled = false;
+            }
+
+            if (undoStack.Count > 1)
+            {
+                undo.IsEnabled = true;
             }
 
             bmpOutput = bmpUndoRedo = redoStack.Pop();
@@ -719,7 +738,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.22.30.214 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.22.33.220 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
