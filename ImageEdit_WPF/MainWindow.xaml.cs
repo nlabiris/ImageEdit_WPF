@@ -47,7 +47,6 @@ using ImageMagick;
 // TODO: Check sum of kernel
 // TODO: Progress bar on every algorithm window
 // TODO: null action in enum
-// TODO: check in open, reopen actions and stacks
 
 
 namespace ImageEdit_WPF
@@ -183,7 +182,12 @@ namespace ImageEdit_WPF
                     Uri uri = new Uri(InputFilename, UriKind.Absolute);
                     bmpInput = new BitmapImage(uri);
                     bmpOutput = new System.Drawing.Bitmap(InputFilename);
+                    bmpUndoRedo = new System.Drawing.Bitmap(InputFilename);
                     mainImage.Source = bmpInput;
+
+                    undoStack.Clear();
+                    undoStack.Push(bmpUndoRedo);
+                    redoStack.Clear();
                 }
                 else
                 {
