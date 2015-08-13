@@ -194,6 +194,13 @@ namespace ImageEdit_WPF
                 bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                 MainWindow.undoStack.Push(bmpUndoRedo);
                 MainWindow.redoStack.Clear();
+                foreach (Window mainWindow in Application.Current.Windows)
+                {
+                    if (mainWindow.GetType() == typeof(MainWindow))
+                    {
+                        (mainWindow as MainWindow).undo.IsEnabled = true;
+                    }
+                }
                 this.Close();
             }
         }

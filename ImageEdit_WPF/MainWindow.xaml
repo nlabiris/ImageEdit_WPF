@@ -46,8 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edit" StaysOpenOnClick="True">
-                <MenuItem Name="undo" Header="Undo" Click="undo_Click"></MenuItem>
-                <MenuItem Name="redo" Header="Redo" Click="redo_Click"></MenuItem>
+                <MenuItem Name="undo" Header="Undo" Click="undo_Click" x:FieldModifier="public"></MenuItem>
+                <MenuItem Name="redo" Header="Redo" Click="redo_Click" x:FieldModifier="public"></MenuItem>
             </MenuItem>
             <MenuItem Header="Image" StaysOpenOnClick="True">
                 <MenuItem Name="information" Header="Information" Click="information_Click"></MenuItem>

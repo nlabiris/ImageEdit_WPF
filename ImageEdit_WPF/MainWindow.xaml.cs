@@ -90,6 +90,9 @@ namespace ImageEdit_WPF
         {
             InitializeComponent();
 
+            undo.IsEnabled = false;
+            redo.IsEnabled = false;
+
             if (statusBar.Visibility == Visibility.Visible)
             {
                 statusBarShowHide.IsChecked = true;
@@ -738,7 +741,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.22.33.220 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.22.34.225 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -951,6 +954,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.Negative;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
@@ -1034,6 +1038,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.SquareRoot;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
@@ -1362,6 +1367,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.ImageEqualizationRGB;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
@@ -1635,6 +1641,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.ImageEqualizationHSV;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
@@ -1836,6 +1843,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.ImageEqualizationYUV;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
@@ -1947,6 +1955,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.ImageSummarization;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
@@ -2044,6 +2053,7 @@ namespace ImageEdit_WPF
                     Action = ActionType.ImageSubtraction;
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
                     redoStack.Clear();
                 }
             }
