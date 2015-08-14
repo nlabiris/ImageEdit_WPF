@@ -30,10 +30,11 @@ Currently supports the following file formats:
 ### TODO
 
 - [ ] Color to Grayscale algorithm
+- [ ] Image croping
 - [ ] Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
 - [X] Undo/Redo system
   - [ ] Key shortcuts
-- [ ] Convolution kernels: double, int
+- [X] Convolution kernels: double
 - [ ] Check sum of kernel windows
 - [ ] Progress bar on every algorithm window
 - [ ] Preferences window
@@ -44,4 +45,4 @@ Currently supports the following file formats:
 
 You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* to clone the repository.
 
-[ImageEdit v0.22.36.236 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.22.36.236_beta.rar?raw=true)
+[ImageEdit v0.23.37.266 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.23.37.266_beta.rar?raw=true)
