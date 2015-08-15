@@ -27,24 +27,6 @@ Currently supports the following file formats:
 - Image equalization [YUV]
 
 
-### TODO
-
-- [ ] Color to Grayscale algorithm
-- [ ] Edit
-  - [ ] Image croping
-  - [ ] Image rotation
-  - [ ] Resize
-- [ ] Filters
-- [ ] Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
-- [X] Undo/Redo system
-  - [ ] Key shortcuts
-- [X] Convolution kernels: double
-- [ ] Check sum of kernel windows
-- [ ] Progress bar on every algorithm window
-- [ ] Preferences window
-- [ ] Documentation of the source code
-
-
 #### Download link
 
 You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* to clone the repository.

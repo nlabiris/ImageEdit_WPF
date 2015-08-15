@@ -46,6 +46,18 @@ using Microsoft.Win32;
 // TODO: Check sum of kernel
 // TODO: Progress bar on every algorithm window
 // TODO: null action in enum
+// TODO: Color to Grayscale algorithm
+// TODO: Edit
+// TODO: Image croping
+// TODO: Image rotation
+// TODO: Resize
+// TODO: Filters
+// TODO: Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
+// TODO: Key shortcuts (Undo/Redo system)
+// TODO: Check sum of kernel windows
+// TODO: Progress bar on every algorithm window
+// TODO: Preferences window
+// TODO: Documentation of the source code
 
 
 namespace ImageEdit_WPF
