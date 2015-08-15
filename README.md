@@ -30,7 +30,11 @@ Currently supports the following file formats:
 ### TODO
 
 - [ ] Color to Grayscale algorithm
-- [ ] Image croping
+- [ ] Edit
+  - [ ] Image croping
+  - [ ] Image rotation
+  - [ ] Resize
+- [ ] Filters
 - [ ] Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
 - [X] Undo/Redo system
   - [ ] Key shortcuts

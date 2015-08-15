@@ -40,7 +40,6 @@ namespace ImageEdit_WPF
         private Boolean isStillDown_Middle = false;
         private Point origin;
         private Point start;
-        private Rectangle rect;
 
         private TranslateTransform GetTranslateTransform(UIElement element)
         {
@@ -70,7 +69,6 @@ namespace ImageEdit_WPF
 
         public void Initialize(UIElement element)
         {
-            rect = new Rectangle();
             this.child = element;
             if (child != null)
             {
@@ -203,8 +201,8 @@ namespace ImageEdit_WPF
                     var w = Math.Max(pos.X, start.X) - x;
                     var h = Math.Max(pos.Y, start.Y) - y;
 
-                    rect.Width = w;
-                    rect.Height = h;
+                    //rect.Width = w;
+                    //rect.Height = h;
                 }
             }
         }
