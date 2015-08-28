@@ -43,15 +43,15 @@ using Microsoft.Win32;
 
 
 // TODO: Color to Grayscale algorithm
-// TODO: Check sum of kernel
-// TODO: Progress bar on every algorithm window
-// TODO: null action in enum
-// TODO: Color to Grayscale algorithm
-// TODO: Edit
+// TODO: Convolution2d undo/redo problem
+// TODO: Noise reduction algorithm
 // TODO: Image croping
-// TODO: Image rotation
+// TODO: Rotation algorithm
 // TODO: Resize
-// TODO: Filters
+// TODO: HDR
+// TODO: Thermal
+// TODO: Pixelization
+// TODO: null action in enum
 // TODO: Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
 // TODO: Key shortcuts (Undo/Redo system)
 // TODO: Check sum of kernel windows
@@ -756,7 +756,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.23.37.266 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.24.39.279 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 

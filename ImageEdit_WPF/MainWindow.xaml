@@ -46,8 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edit" StaysOpenOnClick="True">
-                <MenuItem Name="undo" Header="Undo" Click="undo_Click" x:FieldModifier="public"></MenuItem>
-                <MenuItem Name="redo" Header="Redo" Click="redo_Click" x:FieldModifier="public"></MenuItem>
+                <MenuItem x:Name="undo" Header="Undo" Click="undo_Click" x:FieldModifier="public"></MenuItem>
+                <MenuItem x:Name="redo" Header="Redo" Click="redo_Click" x:FieldModifier="public"></MenuItem>
             </MenuItem>
             <MenuItem Header="Image" StaysOpenOnClick="True">
                 <MenuItem Name="information" Header="Information" Click="information_Click"></MenuItem>
@@ -61,12 +61,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="brightness" Header="Brightness" Click="brightness_Click"></MenuItem>
                 <MenuItem Name="contrast" Header="Contrast" Click="contrast_Click"></MenuItem>
                 <MenuItem Name="histogram" Header="Histogram" Click="histogram_Click"></MenuItem>
-                <MenuItem Name="histogramEqualizationRGB" Header="Histogram Equalization (RGB)" Click="histogramEqualizationRGB_Click"></MenuItem>
-                <MenuItem Name="histogramEqualizationHSV" Header="Histogram Equalization (HSV)" Click="histogramEqualizationHSV_Click"></MenuItem>
-                <MenuItem Name="histogramEqualizationYUV" Header="Histogram Equalization (YUV)" Click="histogramEqualizationYUV_Click"></MenuItem>
+                <MenuItem Name="histogramEqualization" Header="Histogram Equalization">
+                    <MenuItem Name="histogramEqualizationRGB" Header="RGB" Click="histogramEqualizationRGB_Click"></MenuItem>
+                    <MenuItem Name="histogramEqualizationHSV" Header="HSV" Click="histogramEqualizationHSV_Click"></MenuItem>
+                    <MenuItem Name="histogramEqualizationYUV" Header="YUV" Click="histogramEqualizationYUV_Click"></MenuItem>
+                </MenuItem>
                 <MenuItem Name="imageSummarization" Header="Image Summarization" Click="imageSummarization_Click"></MenuItem>
                 <MenuItem Name="imageSubtraction" Header="Image Subtraction" Click="imageSubtraction_Click"></MenuItem>
-                <MenuItem Name="imageConvolution2d" Header="Image Convolution (2D)" Click="imageConvolution2d_Click"></MenuItem>
+                <MenuItem Name="imageConvolution2d" Header="Filters/Edge detection" Click="imageConvolution2d_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Options" StaysOpenOnClick="True">
                 <MenuItem Name="preferences" Header="Preferences"></MenuItem>

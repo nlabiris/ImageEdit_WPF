@@ -67,6 +67,7 @@ namespace ImageEdit_WPF
             groupBox.Header = "Sobel (X Axis)";
             groupBox2.Header = "Sobel (Y Axis)";
             groupBox.Width = 105;
+            groupBox.Visibility = Visibility.Visible;
             groupBox2.Visibility = Visibility.Visible;
 
             tbx1.Width = 30; tbx2.Width = 30; tbx3.Width = 30;
@@ -110,6 +111,12 @@ namespace ImageEdit_WPF
             tbx1.Text = "0"; tbx2.Text = "-1"; tbx3.Text = "0";
             tbx4.Text = "-1"; tbx5.Text = "5"; tbx6.Text = "-1";
             tbx7.Text = "0"; tbx8.Text = "-1"; tbx9.Text = "0";
+        }
+
+        private void noise_Checked(object sender, RoutedEventArgs e)
+        {
+            groupBox.Visibility = Visibility.Collapsed;
+            groupBox2.Visibility = Visibility.Collapsed;
         }
 
         private void ok_Click(object sender, RoutedEventArgs e)
@@ -400,6 +407,72 @@ namespace ImageEdit_WPF
                         rgbValues[index + 2] = bgrValues[index + 2];
                         rgbValues[index + 1] = bgrValues[index + 1];
                         rgbValues[index] = bgrValues[index];
+                    }
+                }
+            }
+            else if (noise.IsChecked == true)
+            {
+                Double probability = 3;
+                Int32 data = (Int32)(probability * 32768 / 2);
+                Int32 data1 = data + 16384;
+                Int32 data2 = 16384 - data;
+                Random rand = new Random();
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(65536);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index + 2] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index + 2] = 255;
+                        }
+                    }
+                }
+
+                data = (Int32)(probability * 32768 / 2);
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(65536);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index + 1] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index + 1] = 255;
+                        }
+                    }
+                }
+
+                data = (Int32)(probability * 32768 / 2);
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(65536);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index] = 255;
+                        }
                     }
                 }
             }
