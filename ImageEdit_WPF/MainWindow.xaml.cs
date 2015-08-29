@@ -159,6 +159,7 @@ namespace ImageEdit_WPF
 
                     imageResolution.Text = resolution;
                     imageSize.Text = size;
+                    separator.Visibility = Visibility.Visible;
 
                     undoStack.Push(bmpUndoRedo);
                     redoStack.Clear();
@@ -756,7 +757,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.24.39.279 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.25.42.286 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 

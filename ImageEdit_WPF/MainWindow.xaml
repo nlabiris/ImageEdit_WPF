@@ -68,11 +68,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </MenuItem>
                 <MenuItem Name="imageSummarization" Header="Image Summarization" Click="imageSummarization_Click"></MenuItem>
                 <MenuItem Name="imageSubtraction" Header="Image Subtraction" Click="imageSubtraction_Click"></MenuItem>
-                <MenuItem Name="imageConvolution2d" Header="Filters/Edge detection" Click="imageConvolution2d_Click">
+                <MenuItem Name="imageConvolution2d" Header="Filters/Edge detection">
                     <MenuItem Name="sobel" Header="Sobel (Edge detection)" Click="sobel_Click"></MenuItem>
                     <MenuItem Name="gaussianBlur" Header="Gaussian Blur" Click="gaussianBlur_Click"></MenuItem>
                     <MenuItem Name="sharpen" Header="Sharpen" Click="sharpen_Click"></MenuItem>
-                    <MenuItem Name="noiseColor" Header="Salt-and-Pepper noise (Colored)" Click="noiseColor_Click"></MenuItem>
+                    <MenuItem Name="noiseColor" Header="Salt-and-Pepper noise (Color)" Click="noiseColor_Click"></MenuItem>
                     <MenuItem Name="noiseBW" Header="Salt-and-Pepper noise (Black/White)" Click="noiseBW_Click"></MenuItem>
                     <MenuItem Name="noiseReduction" Header="Noise reduction" Click="noiseReduction_Click"></MenuItem>
                 </MenuItem>
@@ -92,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </local:ZoomBorder>
         <StatusBar Name="statusBar" Grid.Row="2" Grid.Column="0" Visibility="Visible">
             <TextBlock Name="imageResolution"></TextBlock>
-            <Separator Visibility="Collapsed" Opacity="0.5"></Separator>
+            <Separator Name="separator" Visibility="Collapsed" Opacity="0.5"></Separator>
             <TextBlock Name="imageSize"></TextBlock>
         </StatusBar>
     </Grid>

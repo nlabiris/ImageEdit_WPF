@@ -19,7 +19,7 @@ Currently supports the following file formats:
 - Brightness
 - Contrast
 - Histogram
-- Salt-and-Pepper noise generator 
+- Salt-and-Pepper noise generator (Color/BW)
 - Image summarization
 - Image subtraction
 - Image convolution (Sobel, Gaussian Blur, Sharpen)
@@ -32,4 +32,4 @@ Currently supports the following file formats:
 
 You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* to clone the repository.
 
-[ImageEdit v0.24.39.279 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.24.39.279_beta.rar?raw=true)
+[ImageEdit v0.25.42.286 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.25.42.286_beta.rar?raw=true)
