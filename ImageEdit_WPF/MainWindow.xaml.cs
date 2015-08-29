@@ -2095,8 +2095,8 @@ namespace ImageEdit_WPF
         }
         #endregion
 
-        #region Image Convolution [2D]
-        private void imageConvolution2d_Click(object sender, RoutedEventArgs e)
+        #region Edge detection (Sobel)
+        private void sobel_Click(object sender, RoutedEventArgs e)
         {
             if (InputFilename == String.Empty || bmpOutput == null)
             {
@@ -2106,9 +2106,9 @@ namespace ImageEdit_WPF
 
             try
             {
-                ImageConvolution2D imageConvolution2dWindow = new ImageConvolution2D(InputFilename, bmpOutput, bmpUndoRedo);
-                imageConvolution2dWindow.Owner = this;
-                imageConvolution2dWindow.Show();
+                Sobel sobelWindow = new Sobel(InputFilename, bmpOutput, bmpUndoRedo);
+                sobelWindow.Owner = this;
+                sobelWindow.Show();
             }
             catch (FileNotFoundException ex)
             {
@@ -2130,6 +2130,331 @@ namespace ImageEdit_WPF
             {
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        #endregion
+
+        #region Gaussian Blur
+        private void gaussianBlur_Click(object sender, RoutedEventArgs e)
+        {
+            if (InputFilename == String.Empty || bmpOutput == null)
+            {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                GaussianBlur gaussianBlurWindow = new GaussianBlur(InputFilename, bmpOutput, bmpUndoRedo);
+                gaussianBlurWindow.Owner = this;
+                gaussianBlurWindow.Show();
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Sharpen
+        private void sharpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (InputFilename == String.Empty || bmpOutput == null)
+            {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                Sharpen sharpenWindow = new Sharpen(InputFilename, bmpOutput, bmpUndoRedo);
+                sharpenWindow.Owner = this;
+                sharpenWindow.Show();
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Salt-and-Pepper Noise (Color)
+        private void noiseColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (InputFilename == String.Empty || bmpOutput == null)
+            {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                Int32 i = 0;
+                Int32 j = 0;
+                Double probability = 0.5;
+                Int32 data = (Int32)(probability * 32768 / 2);
+                Int32 data1 = data + 16384;
+                Int32 data2 = 16384 - data;
+                Random rand = new Random();
+
+                // Lock the bitmap's bits.  
+                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+
+                // Get the address of the first line.
+                IntPtr ptr = bmpData.Scan0;
+
+                // Declare an array to hold the bytes of the bitmap. 
+                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
+                Byte[] rgbValues = new Byte[bytes];
+
+                // Copy the RGB values into the array.
+                Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+                Stopwatch watch = Stopwatch.StartNew();
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(32768);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index + 2] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index + 2] = 255;
+                        }
+                    }
+                }
+
+                data = (Int32)(probability * 32768 / 2);
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(32768);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index + 1] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index + 1] = 255;
+                        }
+                    }
+                }
+
+                data = (Int32)(probability * 32768 / 2);
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(32768);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index] = 255;
+                        }
+                    }
+                }
+
+                watch.Stop();
+                TimeSpan elapsedTime = watch.Elapsed;
+
+                // Copy the RGB values back to the bitmap
+                Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+                // Unlock the bits.
+                bmpOutput.UnlockBits(bmpData);
+
+                // Convert Bitmap to BitmapImage
+                BitmapToBitmapImage();
+
+                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                {
+                    noChange = false;
+                    Action = ActionType.ImageConvolution;
+                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
+                    undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
+                    redoStack.Clear();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Salt-and-Pepper Noise (Black/White)
+        private void noiseBW_Click(object sender, RoutedEventArgs e)
+        {
+            if (InputFilename == String.Empty || bmpOutput == null)
+            {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                Int32 i = 0;
+                Int32 j = 0;
+                Double probability = 0.5;
+                Int32 data = (Int32)(probability * 32768 / 2);
+                Int32 data1 = data + 16384;
+                Int32 data2 = 16384 - data;
+                Random rand = new Random();
+
+                // Lock the bitmap's bits.  
+                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+
+                // Get the address of the first line.
+                IntPtr ptr = bmpData.Scan0;
+
+                // Declare an array to hold the bytes of the bitmap. 
+                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
+                Byte[] rgbValues = new Byte[bytes];
+
+                // Copy the RGB values into the array.
+                Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+                Stopwatch watch = Stopwatch.StartNew();
+
+                for (i = 0; i < bmpOutput.Width; i++)
+                {
+                    for (j = 0; j < bmpOutput.Height; j++)
+                    {
+                        int index = (j * bmpData.Stride) + (i * 3);
+
+                        data = rand.Next(32768);
+                        if (data >= 16384 && data < data1)
+                        {
+                            rgbValues[index + 2] = 0;
+                            rgbValues[index + 1] = 0;
+                            rgbValues[index] = 0;
+                        }
+                        if (data >= data2 && data <= 16384)
+                        {
+                            rgbValues[index + 2] = 255;
+                            rgbValues[index + 1] = 255;
+                            rgbValues[index] = 255;
+                        }
+                    }
+                }
+
+                watch.Stop();
+                TimeSpan elapsedTime = watch.Elapsed;
+
+                // Copy the RGB values back to the bitmap
+                Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+                // Unlock the bits.
+                bmpOutput.UnlockBits(bmpData);
+
+                // Convert Bitmap to BitmapImage
+                BitmapToBitmapImage();
+
+                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                {
+                    noChange = false;
+                    Action = ActionType.ImageConvolution;
+                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
+                    undoStack.Push(bmpUndoRedo);
+                    undo.IsEnabled = true;
+                    redoStack.Clear();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Noise Reduction
+        private void noiseReduction_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
 

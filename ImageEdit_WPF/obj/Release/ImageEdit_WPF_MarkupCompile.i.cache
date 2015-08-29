@@ -10,11 +10,11 @@ none
 false
 TRACE
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\App.xaml
-101143833665
+12-246566534
 
-191355600943
+21532319120
 141012385901
-AutoThreshold.xaml;Brightness.xaml;Contrast.xaml;ContrastEnhancement.xaml;Histogram.xaml;ImageConvolution2D.xaml;Information.xaml;MainWindow.xaml;ShiftBits.xaml;Threshold.xaml;
+AutoThreshold.xaml;Brightness.xaml;Contrast.xaml;ContrastEnhancement.xaml;GaussianBlur.xaml;Histogram.xaml;Information.xaml;MainWindow.xaml;Sharpen.xaml;ShiftBits.xaml;Sobel.xaml;Threshold.xaml;
 
 False
 

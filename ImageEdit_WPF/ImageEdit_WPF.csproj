@@ -67,14 +67,20 @@
     <Compile Include="ContrastEnhancement.xaml.cs">
       <DependentUpon>ContrastEnhancement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImageConvolution2D.xaml.cs">
-      <DependentUpon>ImageConvolution2D.xaml</DependentUpon>
+    <Compile Include="GaussianBlur.xaml.cs">
+      <DependentUpon>GaussianBlur.xaml</DependentUpon>
     </Compile>
     <Compile Include="Information.xaml.cs">
       <DependentUpon>Information.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sharpen.xaml.cs">
+      <DependentUpon>Sharpen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShiftBits.xaml.cs">
       <DependentUpon>ShiftBits.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sobel.xaml.cs">
+      <DependentUpon>Sobel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Threshold.xaml.cs">
       <DependentUpon>Threshold.xaml</DependentUpon>
@@ -96,11 +102,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Histogram.xaml">
+    <Page Include="GaussianBlur.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ImageConvolution2D.xaml">
+    <Page Include="Histogram.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,7 +129,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Sharpen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ShiftBits.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sobel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
