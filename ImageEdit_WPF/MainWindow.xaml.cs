@@ -757,7 +757,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.25.42.286 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.25.43.288 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -2259,16 +2259,6 @@ namespace ImageEdit_WPF
                         {
                             rgbValues[index + 2] = 255;
                         }
-                    }
-                }
-
-                data = (Int32)(probability * 32768 / 2);
-
-                for (i = 0; i < bmpOutput.Width; i++)
-                {
-                    for (j = 0; j < bmpOutput.Height; j++)
-                    {
-                        int index = (j * bmpData.Stride) + (i * 3);
 
                         data = rand.Next(32768);
                         if (data >= 16384 && data < data1)
@@ -2279,16 +2269,6 @@ namespace ImageEdit_WPF
                         {
                             rgbValues[index + 1] = 255;
                         }
-                    }
-                }
-
-                data = (Int32)(probability * 32768 / 2);
-
-                for (i = 0; i < bmpOutput.Width; i++)
-                {
-                    for (j = 0; j < bmpOutput.Height; j++)
-                    {
-                        int index = (j * bmpData.Stride) + (i * 3);
 
                         data = rand.Next(32768);
                         if (data >= 16384 && data < data1)

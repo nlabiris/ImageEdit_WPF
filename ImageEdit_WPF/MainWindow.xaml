@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="threshold" Header="Threshold" Click="threshold_Click"></MenuItem>
                 <MenuItem Name="autoThreshold" Header="Auto Threshold" Click="autoThreshold_Click"></MenuItem>
                 <MenuItem Name="negative" Header="Negative" Click="negative_Click"></MenuItem>
-                <MenuItem Name="squareRoot" Header="Square root" Click="squareRoot_Click"></MenuItem>
+                <MenuItem Name="squareRoot" Header="Square root (increase brightness)" Click="squareRoot_Click"></MenuItem>
                 <MenuItem Name="contrastEnhancement" Header="Contrast Enhancement" Click="contrastEnhancement_Click"></MenuItem>
                 <MenuItem Name="brightness" Header="Brightness" Click="brightness_Click"></MenuItem>
                 <MenuItem Name="contrast" Header="Contrast" Click="contrast_Click"></MenuItem>
@@ -83,7 +83,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="statusBarShowHide" Header="Show/Hide status bar" Click="statusBarShowHide_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Help" StaysOpenOnClick="True">
-                <MenuItem Name="help" Header="ImageEdit Help" Click="help_Click"></MenuItem>
+                <MenuItem Name="help" Header="Help/Documentation" Click="help_Click"></MenuItem>
                 <MenuItem Name="about" Header="About..." Click="about_Click"></MenuItem>
             </MenuItem>
         </Menu>
