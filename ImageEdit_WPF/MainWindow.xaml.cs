@@ -43,7 +43,6 @@ using Microsoft.Win32;
 
 
 // TODO: Color to Grayscale algorithm
-// TODO: Convolution2d undo/redo problem
 // TODO: Noise reduction algorithm
 // TODO: Image croping
 // TODO: Rotation algorithm
@@ -524,117 +523,22 @@ namespace ImageEdit_WPF
         #region Undo
         private void undo_Click(object sender, RoutedEventArgs e)
         {
-            if (undoStack.Count == 0)
+            if (undoStack.Count <= 1)
             {
                 undo.IsEnabled = false;
                 return;
+            }
+
+            if(undoStack.Count == 2)
+            {
+                undo.IsEnabled = false ;
             }
 
             bmpUndoRedo = undoStack.Pop();
-            if (Action == ActionType.ShiftBits)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Threshold)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.AutoThreshold)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Negative)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.SquareRoot)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ContrastEnhancement)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Brightness)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Contrast)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageSummarization)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageSubtraction)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageConvolution)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageEqualizationRGB)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageEqualizationHSV)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageEqualizationYUV)
-            {
-                redoStack.Push(bmpUndoRedo);
-                redo.IsEnabled = true;
-                bmpOutput = undoStack.Peek();
-                BitmapToBitmapImage();
-            }
-
-            if (undoStack.Count == 1)
-            {
-                undo.IsEnabled = false;
-                return;
-            }
+            redoStack.Push(bmpUndoRedo);
+            redo.IsEnabled = true;
+            bmpOutput = undoStack.Peek();
+            BitmapToBitmapImage();
         }
         #endregion
 
@@ -652,81 +556,13 @@ namespace ImageEdit_WPF
                 redo.IsEnabled = false;
             }
 
+            bmpOutput = bmpUndoRedo = redoStack.Pop();
+            undoStack.Push(bmpUndoRedo);
+            BitmapToBitmapImage();
+
             if (undoStack.Count > 1)
             {
                 undo.IsEnabled = true;
-            }
-
-            bmpOutput = bmpUndoRedo = redoStack.Pop();
-            if (Action == ActionType.ShiftBits)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Threshold)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.AutoThreshold)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Negative)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.SquareRoot)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ContrastEnhancement)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Brightness)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.Contrast)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageSummarization)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageSubtraction)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageConvolution)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageEqualizationRGB)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageEqualizationHSV)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
-            }
-            else if (Action == ActionType.ImageEqualizationYUV)
-            {
-                undoStack.Push(bmpUndoRedo);
-                BitmapToBitmapImage();
             }
         }
         #endregion
@@ -757,7 +593,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.25.43.288 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.25.44.292 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
