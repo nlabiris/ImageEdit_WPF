@@ -20,16 +20,18 @@ Currently supports the following file formats:
 - Contrast
 - Histogram
 - Salt-and-Pepper noise generator (Color/BW)
+- Median filter (Noise reduction)
+- Arithmetic mean filter (Noise reduction)
 - Image summarization
 - Image subtraction
-- Image convolution (Sobel, Gaussian Blur, Sharpen)
-- Image equalization [RGB]
-- Image equalization [HSV]
-- Image equalization [YUV]
+- Edge detection (Sobel)
+- Gaussian Blur filter
+- Sharpen filter
+- Image equalization [RGB],[HSV],[YUV]
 
 
 #### Download link
 
 You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* to clone the repository.
 
-[ImageEdit v0.26.45.298 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.26.45.298_beta.rar?raw=true)
+[ImageEdit v0.26.47.307 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.26.47.307_beta.rar?raw=true)

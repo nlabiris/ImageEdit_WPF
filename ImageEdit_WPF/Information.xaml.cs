@@ -86,12 +86,31 @@ namespace ImageEdit_WPF
             filenameTbx.Text = file.Name;
             directoryTbx.Text = file.DirectoryName;
             pathTbx.Text = file.FullName;
-            compressionTbx.Text = format.ToString();
+            compressionTbx.Text = GetEncoderInfo(format);
             resolutionTbx.Text = bmpOutput.Width + " x " + bmpOutput.Height + " Pixels";
-            colorsTbx.Text = bmpOutput.PixelFormat.ToString();
+            colorsTbx.Text = Math.Pow(2, bpp).ToString();
             disksizeTbx.Text = disksize;
             memorysizeTbx.Text = memorysize;
             filedatetimeTbx.Text = file.LastWriteTime.ToString();
+        }
+
+        private String GetEncoderInfo(ImageFormat format)
+        {
+            while(true)
+            {
+                if(format.Equals(ImageFormat.Jpeg))
+                {
+                    return "JPEG";
+                }
+                else if(format.Equals(ImageFormat.Png))
+                {
+                    return "PNG";
+                }
+                else if(format.Equals(ImageFormat.Bmp))
+                {
+                    return "BMP";
+                }
+            }
         }
     }
 }

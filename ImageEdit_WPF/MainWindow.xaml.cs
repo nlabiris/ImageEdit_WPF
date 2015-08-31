@@ -593,7 +593,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.26.45.298 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.26.47.307 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
