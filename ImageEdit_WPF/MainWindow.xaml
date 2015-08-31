@@ -74,7 +74,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <MenuItem Name="sharpen" Header="Sharpen" Click="sharpen_Click"></MenuItem>
                     <MenuItem Name="noiseColor" Header="Salt-and-Pepper noise (Color)" Click="noiseColor_Click"></MenuItem>
                     <MenuItem Name="noiseBW" Header="Salt-and-Pepper noise (Black/White)" Click="noiseBW_Click"></MenuItem>
-                    <MenuItem Name="noiseReduction" Header="Noise reduction" Click="noiseReduction_Click"></MenuItem>
+                    <MenuItem Name="noiseReductionMean" Header="Noise reduction (Mean)" Click="noiseReductionMean_Click"></MenuItem>
+                    <MenuItem Name="noiseReductionMedian" Header="Noise reduction (Median)" Click="noiseReductionMedian_Click"></MenuItem>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Options" StaysOpenOnClick="True">
