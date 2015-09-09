@@ -34,3 +34,8 @@ C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\GaussianBlur.g.cs
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Sharpen.g.cs
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Sobel.g.cs
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\SaltPepperNoiseBW.baml
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\SaltPepperNoiseColor.baml
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\SaltPepperNoiseBW.g.cs
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\SaltPepperNoiseColor.g.cs
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF.csprojResolveAssemblyReference.cache

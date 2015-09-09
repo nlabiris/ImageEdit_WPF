@@ -73,6 +73,12 @@
     <Compile Include="Information.xaml.cs">
       <DependentUpon>Information.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SaltPepperNoiseBW.xaml.cs">
+      <DependentUpon>SaltPepperNoiseBW.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SaltPepperNoiseColor.xaml.cs">
+      <DependentUpon>SaltPepperNoiseColor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Sharpen.xaml.cs">
       <DependentUpon>Sharpen.xaml</DependentUpon>
     </Compile>
@@ -129,6 +135,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SaltPepperNoiseBW.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SaltPepperNoiseColor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Sharpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

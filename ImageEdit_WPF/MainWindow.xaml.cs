@@ -2057,90 +2057,9 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 i = 0;
-                Int32 j = 0;
-                Double probability = 0.1;
-                Int32 data = (Int32)(probability * 32768 / 2);
-                Int32 data1 = data + 16384;
-                Int32 data2 = 16384 - data;
-                Random rand = new Random();
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                for (i = 0; i < bmpOutput.Width; i++)
-                {
-                    for (j = 0; j < bmpOutput.Height; j++)
-                    {
-                        int index = (j * bmpData.Stride) + (i * 3);
-
-                        data = rand.Next(32768);
-                        if (data >= 16384 && data < data1)
-                        {
-                            rgbValues[index + 2] = 0;
-                        }
-                        if (data >= data2 && data <= 16384)
-                        {
-                            rgbValues[index + 2] = 255;
-                        }
-
-                        data = rand.Next(32768);
-                        if (data >= 16384 && data < data1)
-                        {
-                            rgbValues[index + 1] = 0;
-                        }
-                        if (data >= data2 && data <= 16384)
-                        {
-                            rgbValues[index + 1] = 255;
-                        }
-
-                        data = rand.Next(32768);
-                        if (data >= 16384 && data < data1)
-                        {
-                            rgbValues[index] = 0;
-                        }
-                        if (data >= data2 && data <= 16384)
-                        {
-                            rgbValues[index] = 255;
-                        }
-                    }
-                }
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
-
-                // Convert Bitmap to BitmapImage
-                BitmapToBitmapImage();
-
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK)
-                {
-                    noChange = false;
-                    Action = ActionType.ImageConvolution;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redoStack.Clear();
-                }
+                SaltPepperNoiseColor saltPepperNoiseColorWindow = new SaltPepperNoiseColor(InputFilename, bmpOutput, bmpUndoRedo);
+                saltPepperNoiseColorWindow.Owner = this;
+                saltPepperNoiseColorWindow.Show();
             }
             catch (FileNotFoundException ex)
             {
@@ -2176,74 +2095,9 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 i = 0;
-                Int32 j = 0;
-                Double probability = 0.1;
-                Int32 data = (Int32)(probability * 32768 / 2);
-                Int32 data1 = data + 16384;
-                Int32 data2 = 16384 - data;
-                Random rand = new Random();
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                for (i = 0; i < bmpOutput.Width; i++)
-                {
-                    for (j = 0; j < bmpOutput.Height; j++)
-                    {
-                        int index = (j * bmpData.Stride) + (i * 3);
-
-                        data = rand.Next(32768);
-                        if (data >= 16384 && data < data1)
-                        {
-                            rgbValues[index + 2] = 0;
-                            rgbValues[index + 1] = 0;
-                            rgbValues[index] = 0;
-                        }
-                        if (data >= data2 && data <= 16384)
-                        {
-                            rgbValues[index + 2] = 255;
-                            rgbValues[index + 1] = 255;
-                            rgbValues[index] = 255;
-                        }
-                    }
-                }
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
-
-                // Convert Bitmap to BitmapImage
-                BitmapToBitmapImage();
-
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK)
-                {
-                    noChange = false;
-                    Action = ActionType.ImageConvolution;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redoStack.Clear();
-                }
+                SaltPepperNoiseBW saltPepperNoiseBWWindow = new SaltPepperNoiseBW(InputFilename, bmpOutput, bmpUndoRedo);
+                saltPepperNoiseBWWindow.Owner = this;
+                saltPepperNoiseBWWindow.Show();
             }
             catch (FileNotFoundException ex)
             {
