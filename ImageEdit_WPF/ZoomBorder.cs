@@ -1,6 +1,6 @@
 ﻿/*
 Basic image processing software
-<https://github.com/nlabiris/ImageEdit>
+<https://github.com/nlabiris/ImageEdit_WPF>
 
 Copyright (C) 2015  Nikos Labiris
 
@@ -21,15 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace ImageEdit_WPF
 {
