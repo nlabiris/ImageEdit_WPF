@@ -73,6 +73,12 @@
     <Compile Include="Information.xaml.cs">
       <DependentUpon>Information.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NoiseReductionMean.xaml.cs">
+      <DependentUpon>NoiseReductionMean.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NoiseReductionMedian.xaml.cs">
+      <DependentUpon>NoiseReductionMedian.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SaltPepperNoiseBW.xaml.cs">
       <DependentUpon>SaltPepperNoiseBW.xaml</DependentUpon>
     </Compile>
@@ -135,6 +141,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NoiseReductionMean.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NoiseReductionMedian.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SaltPepperNoiseBW.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
