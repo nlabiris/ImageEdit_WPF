@@ -68,6 +68,16 @@ namespace ImageEdit_WPF
             ok.Margin = new Thickness(90, 10, 90, 10);
 
             // X Axis Mask textboxes
+            tbx1.Text = "-1";
+            tbx2.Text = "0";
+            tbx3.Text = "1";
+            tbx8.Text = "-2";
+            tbx9.Text = "0";
+            tbx10.Text = "2";
+            tbx15.Text = "-1";
+            tbx16.Text = "0";
+            tbx17.Text = "1";
+
             tbx1.Visibility = Visibility.Visible;
             tbx2.Visibility = Visibility.Visible;
             tbx3.Visibility = Visibility.Visible;
@@ -119,6 +129,16 @@ namespace ImageEdit_WPF
             tbx49.Visibility = Visibility.Collapsed;
 
             // Y Axis Mask textboxes
+            tby1.Text = "1";
+            tby2.Text = "2";
+            tby3.Text = "1";
+            tby8.Text = "0";
+            tby9.Text = "0";
+            tby10.Text = "0";
+            tby15.Text = "-1";
+            tby16.Text = "-2";
+            tby17.Text = "-1";
+
             tby1.Visibility = Visibility.Visible;
             tby2.Visibility = Visibility.Visible;
             tby3.Visibility = Visibility.Visible;
@@ -185,6 +205,32 @@ namespace ImageEdit_WPF
             ok.Margin = new Thickness(150, 10, 150, 10);
 
             // X Axis Mask textboxes
+            tbx1.Text = "-1";
+            tbx2.Text = "-2";
+            tbx3.Text = "0";
+            tbx4.Text = "2";
+            tbx5.Text = "1";
+            tbx8.Text = "-4";
+            tbx9.Text = "-10";
+            tbx10.Text = "0";
+            tbx11.Text = "10";
+            tbx12.Text = "4";
+            tbx15.Text = "-7";
+            tbx16.Text = "-17";
+            tbx17.Text = "0";
+            tbx18.Text = "17";
+            tbx19.Text = "7";
+            tbx22.Text = "-4";
+            tbx23.Text = "-10";
+            tbx24.Text = "0";
+            tbx25.Text = "10";
+            tbx26.Text = "4";
+            tbx29.Text = "-1";
+            tbx30.Text = "-2";
+            tbx31.Text = "0";
+            tbx32.Text = "2";
+            tbx33.Text = "1";
+
             tbx1.Visibility = Visibility.Visible;
             tbx2.Visibility = Visibility.Visible;
             tbx3.Visibility = Visibility.Visible;
@@ -236,6 +282,32 @@ namespace ImageEdit_WPF
             tbx49.Visibility = Visibility.Collapsed;
 
             // Y Axis Mask textboxes
+            tby1.Text = "1";
+            tby2.Text = "4";
+            tby3.Text = "7";
+            tby4.Text = "4";
+            tby5.Text = "1";
+            tby8.Text = "2";
+            tby9.Text = "10";
+            tby10.Text = "17";
+            tby11.Text = "10";
+            tby12.Text = "2";
+            tby15.Text = "0";
+            tby16.Text = "0";
+            tby17.Text = "0";
+            tby18.Text = "0";
+            tby19.Text = "0";
+            tby22.Text = "-2";
+            tby23.Text = "-10";
+            tby24.Text = "-17";
+            tby25.Text = "-10";
+            tby26.Text = "-2";
+            tby29.Text = "-1";
+            tby30.Text = "-4";
+            tby31.Text = "-7";
+            tby32.Text = "-4";
+            tby33.Text = "-1";
+
             tby1.Visibility = Visibility.Visible;
             tby2.Visibility = Visibility.Visible;
             tby3.Visibility = Visibility.Visible;
@@ -302,6 +374,56 @@ namespace ImageEdit_WPF
             ok.Margin = new Thickness(210, 10, 210, 10);
 
             // X Axis Mask textboxes
+            tbx1.Text = "-1";
+            tbx2.Text = "-3";
+            tbx3.Text = "-3";
+            tbx4.Text = "0";
+            tbx5.Text = "3";
+            tbx6.Text = "3";
+            tbx7.Text = "1";
+            tbx8.Text = "-4";
+            tbx9.Text = "-11";
+            tbx10.Text = "-13";
+            tbx11.Text = "0";
+            tbx12.Text = "13";
+            tbx13.Text = "11";
+            tbx14.Text = "4";
+            tbx15.Text = "-9";
+            tbx16.Text = "-26";
+            tbx17.Text = "-30";
+            tbx18.Text = "0";
+            tbx19.Text = "30";
+            tbx20.Text = "26";
+            tbx21.Text = "9";
+            tbx22.Text = "-13";
+            tbx23.Text = "-34";
+            tbx24.Text = "-40";
+            tbx25.Text = "0";
+            tbx26.Text = "40";
+            tbx27.Text = "34";
+            tbx28.Text = "13";
+            tbx29.Text = "-9";
+            tbx30.Text = "-26";
+            tbx31.Text = "-30";
+            tbx32.Text = "0";
+            tbx33.Text = "30";
+            tbx34.Text = "26";
+            tbx35.Text = "9";
+            tbx36.Text = "-4";
+            tbx37.Text = "-11";
+            tbx38.Text = "-13";
+            tbx39.Text = "0";
+            tbx40.Text = "13";
+            tbx41.Text = "11";
+            tbx42.Text = "4";
+            tbx43.Text = "-1";
+            tbx44.Text = "-3";
+            tbx45.Text = "-3";
+            tbx46.Text = "0";
+            tbx47.Text = "3";
+            tbx48.Text = "3";
+            tbx49.Text = "1";
+
             tbx1.Visibility = Visibility.Visible;
             tbx2.Visibility = Visibility.Visible;
             tbx3.Visibility = Visibility.Visible;
@@ -353,6 +475,56 @@ namespace ImageEdit_WPF
             tbx49.Visibility = Visibility.Visible;
 
             // Y Axis Mask textboxes
+            tby1.Text = "1";
+            tby2.Text = "4";
+            tby3.Text = "9";
+            tby4.Text = "13";
+            tby5.Text = "9";
+            tby6.Text = "4";
+            tby7.Text = "1";
+            tby8.Text = "3";
+            tby9.Text = "11";
+            tby10.Text = "26";
+            tby11.Text = "34";
+            tby12.Text = "26";
+            tby13.Text = "11";
+            tby14.Text = "3";
+            tby15.Text = "3";
+            tby16.Text = "13";
+            tby17.Text = "30";
+            tby18.Text = "40";
+            tby19.Text = "30";
+            tby20.Text = "13";
+            tby21.Text = "3";
+            tby22.Text = "0";
+            tby23.Text = "0";
+            tby24.Text = "0";
+            tby25.Text = "0";
+            tby26.Text = "0";
+            tby27.Text = "0";
+            tby28.Text = "0";
+            tby29.Text = "-3";
+            tby30.Text = "-13";
+            tby31.Text = "-30";
+            tby32.Text = "-40";
+            tby33.Text = "-30";
+            tby34.Text = "-13";
+            tby35.Text = "-3";
+            tby36.Text = "-3";
+            tby37.Text = "-11";
+            tby38.Text = "-26";
+            tby39.Text = "-34";
+            tby40.Text = "-26";
+            tby41.Text = "-11";
+            tby42.Text = "-3";
+            tby43.Text = "-1";
+            tby44.Text = "-4";
+            tby45.Text = "-9";
+            tby46.Text = "-13";
+            tby47.Text = "-9";
+            tby48.Text = "-4";
+            tby49.Text = "-1";
+
             tby1.Visibility = Visibility.Visible;
             tby2.Visibility = Visibility.Visible;
             tby3.Visibility = Visibility.Visible;
@@ -408,23 +580,23 @@ namespace ImageEdit_WPF
         {
             Int32 i = 0;
             Int32 j = 0;
-            Int32 k;
-            Int32 l;
-            Double tR;
-            Double tG;
-            Double tB;
-            Double txR;
-            Double txG;
-            Double txB;
-            Double tyR;
-            Double tyG;
-            Double tyB;
-            Double[,] Mask3X;
-            Double[,] Mask3Y;
-            Double[,] Mask5X;
-            Double[,] Mask5Y;
-            Double[,] Mask7X;
-            Double[,] Mask7Y;
+            Int32 k = 0;
+            Int32 l = 0;
+            Double tR = 0.0;
+            Double tG = 0.0;
+            Double tB = 0.0;
+            Int32 txR = 0;
+            Int32 txG = 0;
+            Int32 txB = 0;
+            Int32 tyR = 0;
+            Int32 tyG = 0;
+            Int32 tyB = 0;
+            Int32[,] Mask3X;
+            Int32[,] Mask3Y;
+            Int32[,] Mask5X;
+            Int32[,] Mask5Y;
+            Int32[,] Mask7X;
+            Int32[,] Mask7Y;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
@@ -432,7 +604,7 @@ namespace ImageEdit_WPF
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
-            // Declare an array to hold the bytes of the bitmap. 
+            // Declare an array to hold the bytes of the bitmap.
             Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
             Byte[] rgbValues = new Byte[bytes];
             Byte[] bgrValues = new Byte[bytes];
@@ -444,15 +616,15 @@ namespace ImageEdit_WPF
 
             if (SizeMask == 3)
             {
-                Mask3X = new Double[3, 3] {
-                                        { Double.Parse(tbx1.Text, new CultureInfo("el-GR")), Double.Parse(tbx2.Text, new CultureInfo("el-GR")), Double.Parse(tbx3.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx8.Text, new CultureInfo("el-GR")), Double.Parse(tbx9.Text, new CultureInfo("el-GR")), Double.Parse(tbx10.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx15.Text, new CultureInfo("el-GR")), Double.Parse(tbx16.Text, new CultureInfo("el-GR")), Double.Parse(tbx17.Text, new CultureInfo("el-GR")) }
+                Mask3X = new Int32[3, 3] {
+                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text) },
+                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text) },
+                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text) }
                                      };
-                Mask3Y = new Double[3, 3] {
-                                        { Double.Parse(tby1.Text, new CultureInfo("el-GR")), Double.Parse(tby2.Text, new CultureInfo("el-GR")), Double.Parse(tby3.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby8.Text, new CultureInfo("el-GR")), Double.Parse(tby9.Text, new CultureInfo("el-GR")), Double.Parse(tby10.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby15.Text, new CultureInfo("el-GR")), Double.Parse(tby16.Text, new CultureInfo("el-GR")), Double.Parse(tby17.Text, new CultureInfo("el-GR")) }
+                Mask3Y = new Int32[3, 3] {
+                                        { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text) },
+                                        { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text) },
+                                        { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text) }
                                      };
 
                 for (i = 1; i < bmpOutput.Width - 1; i++)
@@ -461,9 +633,9 @@ namespace ImageEdit_WPF
                     {
                         int index;
 
-                        txR = 0.0;
-                        txG = 0.0;
-                        txB = 0.0;
+                        txR = 0;
+                        txG = 0;
+                        txB = 0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
@@ -475,9 +647,9 @@ namespace ImageEdit_WPF
                             }
                         }
 
-                        tyR = 0.0;
-                        tyG = 0.0;
-                        tyB = 0.0;
+                        tyR = 0;
+                        tyG = 0;
+                        tyB = 0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
@@ -530,49 +702,49 @@ namespace ImageEdit_WPF
             }
             else if (SizeMask == 5)
             {
-                Mask5X = new Double[5, 5] {
-                                        { Double.Parse(tbx1.Text, new CultureInfo("el-GR")), Double.Parse(tbx2.Text, new CultureInfo("el-GR")), Double.Parse(tbx3.Text, new CultureInfo("el-GR")), Double.Parse(tbx4.Text, new CultureInfo("el-GR")), Double.Parse(tbx5.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx8.Text, new CultureInfo("el-GR")), Double.Parse(tbx9.Text, new CultureInfo("el-GR")), Double.Parse(tbx10.Text, new CultureInfo("el-GR")), Double.Parse(tbx11.Text, new CultureInfo("el-GR")), Double.Parse(tbx12.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx15.Text, new CultureInfo("el-GR")), Double.Parse(tbx16.Text, new CultureInfo("el-GR")), Double.Parse(tbx17.Text, new CultureInfo("el-GR")), Double.Parse(tbx18.Text, new CultureInfo("el-GR")), Double.Parse(tbx19.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx22.Text, new CultureInfo("el-GR")), Double.Parse(tbx23.Text, new CultureInfo("el-GR")), Double.Parse(tbx24.Text, new CultureInfo("el-GR")), Double.Parse(tbx25.Text, new CultureInfo("el-GR")), Double.Parse(tbx26.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx29.Text, new CultureInfo("el-GR")), Double.Parse(tbx30.Text, new CultureInfo("el-GR")), Double.Parse(tbx31.Text, new CultureInfo("el-GR")), Double.Parse(tbx32.Text, new CultureInfo("el-GR")), Double.Parse(tbx33.Text, new CultureInfo("el-GR")) }
+                Mask5X = new Int32[5, 5] {
+                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text) },
+                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text) },
+                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text) },
+                                        { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text) },
+                                        { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text) }
                                      };
-                Mask5Y = new Double[5, 5] {
-                                        { Double.Parse(tby1.Text, new CultureInfo("el-GR")), Double.Parse(tby2.Text, new CultureInfo("el-GR")), Double.Parse(tby3.Text, new CultureInfo("el-GR")), Double.Parse(tby4.Text, new CultureInfo("el-GR")), Double.Parse(tby5.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby6.Text, new CultureInfo("el-GR")), Double.Parse(tby7.Text, new CultureInfo("el-GR")), Double.Parse(tby8.Text, new CultureInfo("el-GR")), Double.Parse(tby9.Text, new CultureInfo("el-GR")), Double.Parse(tby10.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby11.Text, new CultureInfo("el-GR")), Double.Parse(tby12.Text, new CultureInfo("el-GR")), Double.Parse(tby13.Text, new CultureInfo("el-GR")), Double.Parse(tby14.Text, new CultureInfo("el-GR")), Double.Parse(tby15.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby16.Text, new CultureInfo("el-GR")), Double.Parse(tby17.Text, new CultureInfo("el-GR")), Double.Parse(tby18.Text, new CultureInfo("el-GR")), Double.Parse(tby19.Text, new CultureInfo("el-GR")), Double.Parse(tby20.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby21.Text, new CultureInfo("el-GR")), Double.Parse(tby22.Text, new CultureInfo("el-GR")), Double.Parse(tby23.Text, new CultureInfo("el-GR")), Double.Parse(tby24.Text, new CultureInfo("el-GR")), Double.Parse(tby25.Text, new CultureInfo("el-GR")) }
+                Mask5Y = new Int32[5, 5] {
+                                        { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text), Int32.Parse(tby4.Text), Int32.Parse(tby5.Text) },
+                                        { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text), Int32.Parse(tby11.Text), Int32.Parse(tby12.Text) },
+                                        { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text), Int32.Parse(tby18.Text), Int32.Parse(tby19.Text) },
+                                        { Int32.Parse(tby22.Text), Int32.Parse(tby23.Text), Int32.Parse(tby24.Text), Int32.Parse(tby25.Text), Int32.Parse(tby26.Text) },
+                                        { Int32.Parse(tby29.Text), Int32.Parse(tby30.Text), Int32.Parse(tby31.Text), Int32.Parse(tby32.Text), Int32.Parse(tby33.Text) }
                                      };
 
-                for (i = 1; i < bmpOutput.Width - 1; i++)
+                for (i = 2; i < bmpOutput.Width - 2; i++)
                 {
-                    for (j = 1; j < bmpOutput.Height - 1; j++)
+                    for (j = 2; j < bmpOutput.Height - 2; j++)
                     {
                         int index;
 
-                        txR = 0.0;
-                        txG = 0.0;
-                        txB = 0.0;
+                        txR = 0;
+                        txG = 0;
+                        txB = 0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                                index = ((j + l - 2) * bmpData.Stride) + ((i + k - 2) * 3);
                                 txR = txR + rgbValues[index + 2] * Mask5X[k, l];
                                 txG = txG + rgbValues[index + 1] * Mask5X[k, l];
                                 txB = txB + rgbValues[index] * Mask5X[k, l];
                             }
                         }
 
-                        tyR = 0.0;
-                        tyG = 0.0;
-                        tyB = 0.0;
+                        tyR = 0;
+                        tyG = 0;
+                        tyB = 0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                                index = ((j + l - 2) * bmpData.Stride) + ((i + k - 2) * 3);
                                 tyR = tyR + rgbValues[index + 2] * Mask5Y[k, l];
                                 tyG = tyG + rgbValues[index + 1] * Mask5Y[k, l];
                                 tyB = tyB + rgbValues[index] * Mask5Y[k, l];
@@ -620,53 +792,53 @@ namespace ImageEdit_WPF
             }
             else if (SizeMask == 7)
             {
-                Mask7X = new Double[7, 7] {
-                                        { Double.Parse(tbx1.Text, new CultureInfo("el-GR")), Double.Parse(tbx2.Text, new CultureInfo("el-GR")), Double.Parse(tbx3.Text, new CultureInfo("el-GR")), Double.Parse(tbx4.Text, new CultureInfo("el-GR")), Double.Parse(tbx5.Text, new CultureInfo("el-GR")), Double.Parse(tbx6.Text, new CultureInfo("el-GR")), Double.Parse(tbx7.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx8.Text, new CultureInfo("el-GR")), Double.Parse(tbx9.Text, new CultureInfo("el-GR")), Double.Parse(tbx10.Text, new CultureInfo("el-GR")), Double.Parse(tbx11.Text, new CultureInfo("el-GR")), Double.Parse(tbx12.Text, new CultureInfo("el-GR")), Double.Parse(tbx13.Text, new CultureInfo("el-GR")), Double.Parse(tbx14.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx15.Text, new CultureInfo("el-GR")), Double.Parse(tbx16.Text, new CultureInfo("el-GR")), Double.Parse(tbx17.Text, new CultureInfo("el-GR")), Double.Parse(tbx18.Text, new CultureInfo("el-GR")), Double.Parse(tbx19.Text, new CultureInfo("el-GR")), Double.Parse(tbx20.Text, new CultureInfo("el-GR")), Double.Parse(tbx21.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx22.Text, new CultureInfo("el-GR")), Double.Parse(tbx23.Text, new CultureInfo("el-GR")), Double.Parse(tbx24.Text, new CultureInfo("el-GR")), Double.Parse(tbx25.Text, new CultureInfo("el-GR")), Double.Parse(tbx26.Text, new CultureInfo("el-GR")), Double.Parse(tbx27.Text, new CultureInfo("el-GR")), Double.Parse(tbx28.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx29.Text, new CultureInfo("el-GR")), Double.Parse(tbx30.Text, new CultureInfo("el-GR")), Double.Parse(tbx31.Text, new CultureInfo("el-GR")), Double.Parse(tbx32.Text, new CultureInfo("el-GR")), Double.Parse(tbx33.Text, new CultureInfo("el-GR")), Double.Parse(tbx34.Text, new CultureInfo("el-GR")), Double.Parse(tbx35.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx36.Text, new CultureInfo("el-GR")), Double.Parse(tbx37.Text, new CultureInfo("el-GR")), Double.Parse(tbx38.Text, new CultureInfo("el-GR")), Double.Parse(tbx39.Text, new CultureInfo("el-GR")), Double.Parse(tbx40.Text, new CultureInfo("el-GR")), Double.Parse(tbx41.Text, new CultureInfo("el-GR")), Double.Parse(tbx42.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tbx43.Text, new CultureInfo("el-GR")), Double.Parse(tbx44.Text, new CultureInfo("el-GR")), Double.Parse(tbx45.Text, new CultureInfo("el-GR")), Double.Parse(tbx46.Text, new CultureInfo("el-GR")), Double.Parse(tbx47.Text, new CultureInfo("el-GR")), Double.Parse(tbx48.Text, new CultureInfo("el-GR")), Double.Parse(tbx49.Text, new CultureInfo("el-GR")) }
+                Mask7X = new Int32[7, 7] {
+                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text), Int32.Parse(tbx6.Text), Int32.Parse(tbx7.Text) },
+                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text), Int32.Parse(tbx13.Text), Int32.Parse(tbx14.Text) },
+                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text), Int32.Parse(tbx20.Text), Int32.Parse(tbx21.Text) },
+                                        { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text), Int32.Parse(tbx27.Text), Int32.Parse(tbx28.Text) },
+                                        { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text), Int32.Parse(tbx34.Text), Int32.Parse(tbx35.Text) },
+                                        { Int32.Parse(tbx36.Text), Int32.Parse(tbx37.Text), Int32.Parse(tbx38.Text), Int32.Parse(tbx39.Text), Int32.Parse(tbx40.Text), Int32.Parse(tbx41.Text), Int32.Parse(tbx42.Text) },
+                                        { Int32.Parse(tbx43.Text), Int32.Parse(tbx44.Text), Int32.Parse(tbx45.Text), Int32.Parse(tbx46.Text), Int32.Parse(tbx47.Text), Int32.Parse(tbx48.Text), Int32.Parse(tbx49.Text) }
                                      };
-                Mask7Y = new Double[7, 7] {
-                                        { Double.Parse(tby1.Text, new CultureInfo("el-GR")), Double.Parse(tby2.Text, new CultureInfo("el-GR")), Double.Parse(tby3.Text, new CultureInfo("el-GR")), Double.Parse(tby4.Text, new CultureInfo("el-GR")), Double.Parse(tby5.Text, new CultureInfo("el-GR")), Double.Parse(tby6.Text, new CultureInfo("el-GR")), Double.Parse(tby7.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby8.Text, new CultureInfo("el-GR")), Double.Parse(tby9.Text, new CultureInfo("el-GR")), Double.Parse(tby10.Text, new CultureInfo("el-GR")), Double.Parse(tby11.Text, new CultureInfo("el-GR")), Double.Parse(tby12.Text, new CultureInfo("el-GR")), Double.Parse(tby13.Text, new CultureInfo("el-GR")), Double.Parse(tby14.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby15.Text, new CultureInfo("el-GR")), Double.Parse(tby16.Text, new CultureInfo("el-GR")), Double.Parse(tby17.Text, new CultureInfo("el-GR")), Double.Parse(tby18.Text, new CultureInfo("el-GR")), Double.Parse(tby19.Text, new CultureInfo("el-GR")), Double.Parse(tby20.Text, new CultureInfo("el-GR")), Double.Parse(tby21.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby22.Text, new CultureInfo("el-GR")), Double.Parse(tby23.Text, new CultureInfo("el-GR")), Double.Parse(tby24.Text, new CultureInfo("el-GR")), Double.Parse(tby25.Text, new CultureInfo("el-GR")), Double.Parse(tby26.Text, new CultureInfo("el-GR")), Double.Parse(tby27.Text, new CultureInfo("el-GR")), Double.Parse(tby28.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby29.Text, new CultureInfo("el-GR")), Double.Parse(tby30.Text, new CultureInfo("el-GR")), Double.Parse(tby31.Text, new CultureInfo("el-GR")), Double.Parse(tby32.Text, new CultureInfo("el-GR")), Double.Parse(tby33.Text, new CultureInfo("el-GR")), Double.Parse(tby34.Text, new CultureInfo("el-GR")), Double.Parse(tby35.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby36.Text, new CultureInfo("el-GR")), Double.Parse(tby37.Text, new CultureInfo("el-GR")), Double.Parse(tby38.Text, new CultureInfo("el-GR")), Double.Parse(tby39.Text, new CultureInfo("el-GR")), Double.Parse(tby40.Text, new CultureInfo("el-GR")), Double.Parse(tby41.Text, new CultureInfo("el-GR")), Double.Parse(tby42.Text, new CultureInfo("el-GR")) },
-                                        { Double.Parse(tby43.Text, new CultureInfo("el-GR")), Double.Parse(tby44.Text, new CultureInfo("el-GR")), Double.Parse(tby45.Text, new CultureInfo("el-GR")), Double.Parse(tby46.Text, new CultureInfo("el-GR")), Double.Parse(tby47.Text, new CultureInfo("el-GR")), Double.Parse(tby48.Text, new CultureInfo("el-GR")), Double.Parse(tby49.Text, new CultureInfo("el-GR")) }
+                Mask7Y = new Int32[7, 7] {
+                                        { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text), Int32.Parse(tby4.Text), Int32.Parse(tby5.Text), Int32.Parse(tby6.Text), Int32.Parse(tby7.Text) },
+                                        { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text), Int32.Parse(tby11.Text), Int32.Parse(tby12.Text), Int32.Parse(tby13.Text), Int32.Parse(tby14.Text) },
+                                        { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text), Int32.Parse(tby18.Text), Int32.Parse(tby19.Text), Int32.Parse(tby20.Text), Int32.Parse(tby21.Text) },
+                                        { Int32.Parse(tby22.Text), Int32.Parse(tby23.Text), Int32.Parse(tby24.Text), Int32.Parse(tby25.Text), Int32.Parse(tby26.Text), Int32.Parse(tby27.Text), Int32.Parse(tby28.Text) },
+                                        { Int32.Parse(tby29.Text), Int32.Parse(tby30.Text), Int32.Parse(tby31.Text), Int32.Parse(tby32.Text), Int32.Parse(tby33.Text), Int32.Parse(tby34.Text), Int32.Parse(tby35.Text) },
+                                        { Int32.Parse(tby36.Text), Int32.Parse(tby37.Text), Int32.Parse(tby38.Text), Int32.Parse(tby39.Text), Int32.Parse(tby40.Text), Int32.Parse(tby41.Text), Int32.Parse(tby42.Text) },
+                                        { Int32.Parse(tby43.Text), Int32.Parse(tby44.Text), Int32.Parse(tby45.Text), Int32.Parse(tby46.Text), Int32.Parse(tby47.Text), Int32.Parse(tby48.Text), Int32.Parse(tby49.Text) }
                                      };
 
-                for (i = 1; i < bmpOutput.Width - 1; i++)
+                for (i = 3; i < bmpOutput.Width - 3; i++)
                 {
-                    for (j = 1; j < bmpOutput.Height - 1; j++)
+                    for (j = 3; j < bmpOutput.Height - 3; j++)
                     {
                         int index;
 
-                        txR = 0.0;
-                        txG = 0.0;
-                        txB = 0.0;
+                        txR = 0;
+                        txG = 0;
+                        txB = 0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                                index = ((j + l - 3) * bmpData.Stride) + ((i + k - 3) * 3);
                                 txR = txR + rgbValues[index + 2] * Mask7X[k, l];
                                 txG = txG + rgbValues[index + 1] * Mask7X[k, l];
                                 txB = txB + rgbValues[index] * Mask7X[k, l];
                             }
                         }
 
-                        tyR = 0.0;
-                        tyG = 0.0;
-                        tyB = 0.0;
+                        tyR = 0;
+                        tyG = 0;
+                        tyB = 0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                                index = ((j + l - 3) * bmpData.Stride) + ((i + k - 3) * 3);
                                 tyR = tyR + rgbValues[index + 2] * Mask7Y[k, l];
                                 tyG = tyG + rgbValues[index + 1] * Mask7Y[k, l];
                                 tyB = tyB + rgbValues[index] * Mask7Y[k, l];
@@ -712,8 +884,6 @@ namespace ImageEdit_WPF
                     }
                 }
             }
-
-            
 
             for (i = 0; i < bmpOutput.Width; i++)
             {

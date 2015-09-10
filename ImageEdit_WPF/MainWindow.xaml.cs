@@ -33,7 +33,9 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 
+// TODO: Bug Undo/Redo (!!)
 // TODO: Color to Grayscale algorithm
+// TODO: Canny Edge detection algorithm
 // TODO: Noise reduction algorithm
 // TODO: Image croping
 // TODO: Rotation algorithm

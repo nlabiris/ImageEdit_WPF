@@ -39,3 +39,7 @@ C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\SaltPepperNoiseBW.g.cs
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\SaltPepperNoiseColor.g.cs
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF.csprojResolveAssemblyReference.cache
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\NoiseReductionMean.baml
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\NoiseReductionMedian.baml
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\NoiseReductionMean.g.cs
+C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\NoiseReductionMedian.g.cs
