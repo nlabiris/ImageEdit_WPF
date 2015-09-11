@@ -522,9 +522,9 @@ namespace ImageEdit_WPF
                 return;
             }
 
-            if(undoStack.Count == 2)
+            if (undoStack.Count == 2)
             {
-                undo.IsEnabled = false ;
+                undo.IsEnabled = false;
             }
 
             bmpUndoRedo = undoStack.Pop();
@@ -586,7 +586,7 @@ namespace ImageEdit_WPF
         #region About
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.26.47.307 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.26.53.369 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -800,6 +800,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }
@@ -884,6 +885,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }
@@ -1213,6 +1215,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }
@@ -1487,6 +1490,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }
@@ -1689,6 +1693,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }
@@ -1801,6 +1806,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }
@@ -1899,6 +1905,7 @@ namespace ImageEdit_WPF
                     bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
                     undoStack.Push(bmpUndoRedo);
                     undo.IsEnabled = true;
+                    redo.IsEnabled = false;
                     redoStack.Clear();
                 }
             }

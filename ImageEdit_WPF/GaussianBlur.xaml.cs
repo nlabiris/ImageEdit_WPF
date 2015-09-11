@@ -51,6 +51,7 @@ namespace ImageEdit_WPF
             bmpUndoRedo = bmpUR;
 
             three.IsChecked = true;
+            ok.Focus();
         }
 
         private void three_Checked(object sender, RoutedEventArgs e)
@@ -332,14 +333,15 @@ namespace ImageEdit_WPF
         {
             Int32 i = 0;
             Int32 j = 0;
-            Int32 k;
-            Int32 l;
-            Int32 tR;
-            Int32 tG;
-            Int32 tB;
+            Int32 k = 0;
+            Int32 l = 0;
+            Double tR = 0.0;
+            Double tG = 0.0;
+            Double tB = 0.0;
             Int32[,] Mask3X;
             Int32[,] Mask5X;
             Int32[,] Mask7X;
+            Int32 sumMask = 0;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
@@ -357,25 +359,21 @@ namespace ImageEdit_WPF
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (i = 0; i < bmpOutput.Width; i++)
-            {
-                for (j = 0; j < bmpOutput.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
-
-                    bgrValues[index + 2] = 0;
-                    bgrValues[index + 1] = 0;
-                    bgrValues[index] = 0;
-                }
-            }
-
             if (SizeMask == 3)
             {
                 Mask3X = new Int32[3, 3] {
-                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text) },
-                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text) },
-                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text) }
-                                     };
+                                            { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text) },
+                                            { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text) },
+                                            { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text) }
+                                         };
+
+                for (i = 0; i < SizeMask; i++)
+                {
+                    for (j = 0; j < SizeMask; j++)
+                    {
+                        sumMask += Mask3X[i, j];
+                    }
+                }
 
                 for (i = 1; i < bmpOutput.Width - 1; i++)
                 {
@@ -383,45 +381,45 @@ namespace ImageEdit_WPF
                     {
                         int index;
 
-                        tR = 0;
-                        tG = 0;
-                        tB = 0;
+                        tR = 0.0;
+                        tG = 0.0;
+                        tB = 0.0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
                                 index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
-                                tR = tR + rgbValues[index + 2] * Mask3X[k, l];
-                                tG = tG + rgbValues[index + 1] * Mask3X[k, l];
-                                tB = tB + rgbValues[index] * Mask3X[k, l];
+                                tR = tR + (rgbValues[index + 2] * Mask3X[k, l]) / sumMask;
+                                tG = tG + (rgbValues[index + 1] * Mask3X[k, l]) / sumMask;
+                                tB = tB + (rgbValues[index] * Mask3X[k, l]) / sumMask;
                             }
                         }
 
-                        if (tR > 255)
+                        if (tR > 255.0)
                         {
-                            tR = 255;
+                            tR = 255.0;
                         }
-                        else if (tR < 0)
+                        else if (tR < 0.0)
                         {
-                            tR = 0;
-                        }
-
-                        if (tG > 255)
-                        {
-                            tG = 255;
-                        }
-                        else if (tG < 0)
-                        {
-                            tG = 0;
+                            tR = 0.0;
                         }
 
-                        if (tB > 255)
+                        if (tG > 255.0)
                         {
-                            tB = 255;
+                            tG = 255.0;
                         }
-                        else if (tB < 0)
+                        else if (tG < 0.0)
                         {
-                            tB = 0;
+                            tG = 0.0;
+                        }
+
+                        if (tB > 255.0)
+                        {
+                            tB = 255.0;
+                        }
+                        else if (tB < 0.0)
+                        {
+                            tB = 0.0;
                         }
 
                         index = (j * bmpData.Stride) + (i * 3);
@@ -435,12 +433,20 @@ namespace ImageEdit_WPF
             else if (SizeMask == 5)
             {
                 Mask5X = new Int32[5, 5] {
-                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text) },
-                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text) },
-                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text) },
-                                        { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text) },
-                                        { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text) }
-                                     };
+                                            { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text) },
+                                            { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text) },
+                                            { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text) },
+                                            { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text) },
+                                            { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text) }
+                                         };
+
+                for (i = 0; i < SizeMask; i++)
+                {
+                    for (j = 0; j < SizeMask; j++)
+                    {
+                        sumMask += Mask5X[i, j];
+                    }
+                }
 
                 for (i = 2; i < bmpOutput.Width - 2; i++)
                 {
@@ -448,45 +454,45 @@ namespace ImageEdit_WPF
                     {
                         int index;
 
-                        tR = 0;
-                        tG = 0;
-                        tB = 0;
+                        tR = 0.0;
+                        tG = 0.0;
+                        tB = 0.0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
                                 index = ((j + l - 2) * bmpData.Stride) + ((i + k - 2) * 3);
-                                tR = tR + rgbValues[index + 2] * Mask5X[k, l];
-                                tG = tG + rgbValues[index + 1] * Mask5X[k, l];
-                                tB = tB + rgbValues[index] * Mask5X[k, l];
+                                tR = tR + (rgbValues[index + 2] * Mask5X[k, l]) / sumMask;
+                                tG = tG + (rgbValues[index + 1] * Mask5X[k, l]) / sumMask;
+                                tB = tB + (rgbValues[index] * Mask5X[k, l]) / sumMask;
                             }
                         }
 
-                        if (tR > 255)
+                        if (tR > 255.0)
                         {
-                            tR = 255;
+                            tR = 255.0;
                         }
-                        else if (tR < 0)
+                        else if (tR < 0.0)
                         {
-                            tR = 0;
-                        }
-
-                        if (tG > 255)
-                        {
-                            tG = 255;
-                        }
-                        else if (tG < 0)
-                        {
-                            tG = 0;
+                            tR = 0.0;
                         }
 
-                        if (tB > 255)
+                        if (tG > 255.0)
                         {
-                            tB = 255;
+                            tG = 255.0;
                         }
-                        else if (tB < 0)
+                        else if (tG < 0.0)
                         {
-                            tB = 0;
+                            tG = 0.0;
+                        }
+
+                        if (tB > 255.0)
+                        {
+                            tB = 255.0;
+                        }
+                        else if (tB < 0.0)
+                        {
+                            tB = 0.0;
                         }
 
                         index = (j * bmpData.Stride) + (i * 3);
@@ -500,14 +506,22 @@ namespace ImageEdit_WPF
             else if (SizeMask == 7)
             {
                 Mask7X = new Int32[7, 7] {
-                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text), Int32.Parse(tbx6.Text), Int32.Parse(tbx7.Text) },
-                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text), Int32.Parse(tbx13.Text), Int32.Parse(tbx14.Text) },
-                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text), Int32.Parse(tbx20.Text), Int32.Parse(tbx21.Text) },
-                                        { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text), Int32.Parse(tbx27.Text), Int32.Parse(tbx28.Text) },
-                                        { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text), Int32.Parse(tbx34.Text), Int32.Parse(tbx35.Text) },
-                                        { Int32.Parse(tbx36.Text), Int32.Parse(tbx37.Text), Int32.Parse(tbx38.Text), Int32.Parse(tbx39.Text), Int32.Parse(tbx40.Text), Int32.Parse(tbx41.Text), Int32.Parse(tbx42.Text) },
-                                        { Int32.Parse(tbx43.Text), Int32.Parse(tbx44.Text), Int32.Parse(tbx45.Text), Int32.Parse(tbx46.Text), Int32.Parse(tbx47.Text), Int32.Parse(tbx48.Text), Int32.Parse(tbx49.Text) }
-                                     };
+                                            { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text), Int32.Parse(tbx6.Text), Int32.Parse(tbx7.Text) },
+                                            { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text), Int32.Parse(tbx13.Text), Int32.Parse(tbx14.Text) },
+                                            { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text), Int32.Parse(tbx20.Text), Int32.Parse(tbx21.Text) },
+                                            { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text), Int32.Parse(tbx27.Text), Int32.Parse(tbx28.Text) },
+                                            { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text), Int32.Parse(tbx34.Text), Int32.Parse(tbx35.Text) },
+                                            { Int32.Parse(tbx36.Text), Int32.Parse(tbx37.Text), Int32.Parse(tbx38.Text), Int32.Parse(tbx39.Text), Int32.Parse(tbx40.Text), Int32.Parse(tbx41.Text), Int32.Parse(tbx42.Text) },
+                                            { Int32.Parse(tbx43.Text), Int32.Parse(tbx44.Text), Int32.Parse(tbx45.Text), Int32.Parse(tbx46.Text), Int32.Parse(tbx47.Text), Int32.Parse(tbx48.Text), Int32.Parse(tbx49.Text) }
+                                         };
+
+                for (i = 0; i < SizeMask; i++)
+                {
+                    for (j = 0; j < SizeMask; j++)
+                    {
+                        sumMask += Mask7X[i, j];
+                    }
+                }
 
                 for (i = 3; i < bmpOutput.Width - 3; i++)
                 {
@@ -515,45 +529,45 @@ namespace ImageEdit_WPF
                     {
                         int index;
 
-                        tR = 0;
-                        tG = 0;
-                        tB = 0;
+                        tR = 0.0;
+                        tG = 0.0;
+                        tB = 0.0;
                         for (k = 0; k < SizeMask; k++)
                         {
                             for (l = 0; l < SizeMask; l++)
                             {
                                 index = ((j + l - 3) * bmpData.Stride) + ((i + k - 3) * 3);
-                                tR = tR + rgbValues[index + 2] * Mask7X[k, l];
-                                tG = tG + rgbValues[index + 1] * Mask7X[k, l];
-                                tB = tB + rgbValues[index] * Mask7X[k, l];
+                                tR = tR + (rgbValues[index + 2] * Mask7X[k, l]) / sumMask;
+                                tG = tG + (rgbValues[index + 1] * Mask7X[k, l]) / sumMask;
+                                tB = tB + (rgbValues[index] * Mask7X[k, l]) / sumMask;
                             }
                         }
 
-                        if (tR > 255)
+                        if (tR > 255.0)
                         {
-                            tR = 255;
+                            tR = 255.0;
                         }
-                        else if (tR < 0)
+                        else if (tR < 0.0)
                         {
-                            tR = 0;
-                        }
-
-                        if (tG > 255)
-                        {
-                            tG = 255;
-                        }
-                        else if (tG < 0)
-                        {
-                            tG = 0;
+                            tR = 0.0;
                         }
 
-                        if (tB > 255)
+                        if (tG > 255.0)
                         {
-                            tB = 255;
+                            tG = 255.0;
                         }
-                        else if (tB < 0)
+                        else if (tG < 0.0)
                         {
-                            tB = 0;
+                            tG = 0.0;
+                        }
+
+                        if (tB > 255.0)
+                        {
+                            tB = 255.0;
+                        }
+                        else if (tB < 0.0)
+                        {
+                            tB = 0.0;
                         }
 
                         index = (j * bmpData.Stride) + (i * 3);
@@ -603,6 +617,7 @@ namespace ImageEdit_WPF
                     if (mainWindow.GetType() == typeof(MainWindow))
                     {
                         (mainWindow as MainWindow).undo.IsEnabled = true;
+                        (mainWindow as MainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();

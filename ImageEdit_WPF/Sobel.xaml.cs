@@ -617,15 +617,15 @@ namespace ImageEdit_WPF
             if (SizeMask == 3)
             {
                 Mask3X = new Int32[3, 3] {
-                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text) },
-                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text) },
-                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text) }
-                                     };
+                                            { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text) },
+                                            { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text) },
+                                            { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text) }
+                                         };
                 Mask3Y = new Int32[3, 3] {
-                                        { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text) },
-                                        { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text) },
-                                        { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text) }
-                                     };
+                                            { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text) },
+                                            { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text) },
+                                            { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text) }
+                                         };
 
                 for (i = 1; i < bmpOutput.Width - 1; i++)
                 {
@@ -703,19 +703,19 @@ namespace ImageEdit_WPF
             else if (SizeMask == 5)
             {
                 Mask5X = new Int32[5, 5] {
-                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text) },
-                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text) },
-                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text) },
-                                        { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text) },
-                                        { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text) }
-                                     };
+                                            { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text) },
+                                            { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text) },
+                                            { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text) },
+                                            { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text) },
+                                            { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text) }
+                                         };
                 Mask5Y = new Int32[5, 5] {
-                                        { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text), Int32.Parse(tby4.Text), Int32.Parse(tby5.Text) },
-                                        { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text), Int32.Parse(tby11.Text), Int32.Parse(tby12.Text) },
-                                        { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text), Int32.Parse(tby18.Text), Int32.Parse(tby19.Text) },
-                                        { Int32.Parse(tby22.Text), Int32.Parse(tby23.Text), Int32.Parse(tby24.Text), Int32.Parse(tby25.Text), Int32.Parse(tby26.Text) },
-                                        { Int32.Parse(tby29.Text), Int32.Parse(tby30.Text), Int32.Parse(tby31.Text), Int32.Parse(tby32.Text), Int32.Parse(tby33.Text) }
-                                     };
+                                            { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text), Int32.Parse(tby4.Text), Int32.Parse(tby5.Text) },
+                                            { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text), Int32.Parse(tby11.Text), Int32.Parse(tby12.Text) },
+                                            { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text), Int32.Parse(tby18.Text), Int32.Parse(tby19.Text) },
+                                            { Int32.Parse(tby22.Text), Int32.Parse(tby23.Text), Int32.Parse(tby24.Text), Int32.Parse(tby25.Text), Int32.Parse(tby26.Text) },
+                                            { Int32.Parse(tby29.Text), Int32.Parse(tby30.Text), Int32.Parse(tby31.Text), Int32.Parse(tby32.Text), Int32.Parse(tby33.Text) }
+                                         };
 
                 for (i = 2; i < bmpOutput.Width - 2; i++)
                 {
@@ -793,23 +793,23 @@ namespace ImageEdit_WPF
             else if (SizeMask == 7)
             {
                 Mask7X = new Int32[7, 7] {
-                                        { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text), Int32.Parse(tbx6.Text), Int32.Parse(tbx7.Text) },
-                                        { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text), Int32.Parse(tbx13.Text), Int32.Parse(tbx14.Text) },
-                                        { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text), Int32.Parse(tbx20.Text), Int32.Parse(tbx21.Text) },
-                                        { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text), Int32.Parse(tbx27.Text), Int32.Parse(tbx28.Text) },
-                                        { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text), Int32.Parse(tbx34.Text), Int32.Parse(tbx35.Text) },
-                                        { Int32.Parse(tbx36.Text), Int32.Parse(tbx37.Text), Int32.Parse(tbx38.Text), Int32.Parse(tbx39.Text), Int32.Parse(tbx40.Text), Int32.Parse(tbx41.Text), Int32.Parse(tbx42.Text) },
-                                        { Int32.Parse(tbx43.Text), Int32.Parse(tbx44.Text), Int32.Parse(tbx45.Text), Int32.Parse(tbx46.Text), Int32.Parse(tbx47.Text), Int32.Parse(tbx48.Text), Int32.Parse(tbx49.Text) }
-                                     };
+                                            { Int32.Parse(tbx1.Text), Int32.Parse(tbx2.Text), Int32.Parse(tbx3.Text), Int32.Parse(tbx4.Text), Int32.Parse(tbx5.Text), Int32.Parse(tbx6.Text), Int32.Parse(tbx7.Text) },
+                                            { Int32.Parse(tbx8.Text), Int32.Parse(tbx9.Text), Int32.Parse(tbx10.Text), Int32.Parse(tbx11.Text), Int32.Parse(tbx12.Text), Int32.Parse(tbx13.Text), Int32.Parse(tbx14.Text) },
+                                            { Int32.Parse(tbx15.Text), Int32.Parse(tbx16.Text), Int32.Parse(tbx17.Text), Int32.Parse(tbx18.Text), Int32.Parse(tbx19.Text), Int32.Parse(tbx20.Text), Int32.Parse(tbx21.Text) },
+                                            { Int32.Parse(tbx22.Text), Int32.Parse(tbx23.Text), Int32.Parse(tbx24.Text), Int32.Parse(tbx25.Text), Int32.Parse(tbx26.Text), Int32.Parse(tbx27.Text), Int32.Parse(tbx28.Text) },
+                                            { Int32.Parse(tbx29.Text), Int32.Parse(tbx30.Text), Int32.Parse(tbx31.Text), Int32.Parse(tbx32.Text), Int32.Parse(tbx33.Text), Int32.Parse(tbx34.Text), Int32.Parse(tbx35.Text) },
+                                            { Int32.Parse(tbx36.Text), Int32.Parse(tbx37.Text), Int32.Parse(tbx38.Text), Int32.Parse(tbx39.Text), Int32.Parse(tbx40.Text), Int32.Parse(tbx41.Text), Int32.Parse(tbx42.Text) },
+                                            { Int32.Parse(tbx43.Text), Int32.Parse(tbx44.Text), Int32.Parse(tbx45.Text), Int32.Parse(tbx46.Text), Int32.Parse(tbx47.Text), Int32.Parse(tbx48.Text), Int32.Parse(tbx49.Text) }
+                                         };
                 Mask7Y = new Int32[7, 7] {
-                                        { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text), Int32.Parse(tby4.Text), Int32.Parse(tby5.Text), Int32.Parse(tby6.Text), Int32.Parse(tby7.Text) },
-                                        { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text), Int32.Parse(tby11.Text), Int32.Parse(tby12.Text), Int32.Parse(tby13.Text), Int32.Parse(tby14.Text) },
-                                        { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text), Int32.Parse(tby18.Text), Int32.Parse(tby19.Text), Int32.Parse(tby20.Text), Int32.Parse(tby21.Text) },
-                                        { Int32.Parse(tby22.Text), Int32.Parse(tby23.Text), Int32.Parse(tby24.Text), Int32.Parse(tby25.Text), Int32.Parse(tby26.Text), Int32.Parse(tby27.Text), Int32.Parse(tby28.Text) },
-                                        { Int32.Parse(tby29.Text), Int32.Parse(tby30.Text), Int32.Parse(tby31.Text), Int32.Parse(tby32.Text), Int32.Parse(tby33.Text), Int32.Parse(tby34.Text), Int32.Parse(tby35.Text) },
-                                        { Int32.Parse(tby36.Text), Int32.Parse(tby37.Text), Int32.Parse(tby38.Text), Int32.Parse(tby39.Text), Int32.Parse(tby40.Text), Int32.Parse(tby41.Text), Int32.Parse(tby42.Text) },
-                                        { Int32.Parse(tby43.Text), Int32.Parse(tby44.Text), Int32.Parse(tby45.Text), Int32.Parse(tby46.Text), Int32.Parse(tby47.Text), Int32.Parse(tby48.Text), Int32.Parse(tby49.Text) }
-                                     };
+                                            { Int32.Parse(tby1.Text), Int32.Parse(tby2.Text), Int32.Parse(tby3.Text), Int32.Parse(tby4.Text), Int32.Parse(tby5.Text), Int32.Parse(tby6.Text), Int32.Parse(tby7.Text) },
+                                            { Int32.Parse(tby8.Text), Int32.Parse(tby9.Text), Int32.Parse(tby10.Text), Int32.Parse(tby11.Text), Int32.Parse(tby12.Text), Int32.Parse(tby13.Text), Int32.Parse(tby14.Text) },
+                                            { Int32.Parse(tby15.Text), Int32.Parse(tby16.Text), Int32.Parse(tby17.Text), Int32.Parse(tby18.Text), Int32.Parse(tby19.Text), Int32.Parse(tby20.Text), Int32.Parse(tby21.Text) },
+                                            { Int32.Parse(tby22.Text), Int32.Parse(tby23.Text), Int32.Parse(tby24.Text), Int32.Parse(tby25.Text), Int32.Parse(tby26.Text), Int32.Parse(tby27.Text), Int32.Parse(tby28.Text) },
+                                            { Int32.Parse(tby29.Text), Int32.Parse(tby30.Text), Int32.Parse(tby31.Text), Int32.Parse(tby32.Text), Int32.Parse(tby33.Text), Int32.Parse(tby34.Text), Int32.Parse(tby35.Text) },
+                                            { Int32.Parse(tby36.Text), Int32.Parse(tby37.Text), Int32.Parse(tby38.Text), Int32.Parse(tby39.Text), Int32.Parse(tby40.Text), Int32.Parse(tby41.Text), Int32.Parse(tby42.Text) },
+                                            { Int32.Parse(tby43.Text), Int32.Parse(tby44.Text), Int32.Parse(tby45.Text), Int32.Parse(tby46.Text), Int32.Parse(tby47.Text), Int32.Parse(tby48.Text), Int32.Parse(tby49.Text) }
+                                         };
 
                 for (i = 3; i < bmpOutput.Width - 3; i++)
                 {
@@ -923,6 +923,7 @@ namespace ImageEdit_WPF
                     if (mainWindow.GetType() == typeof(MainWindow))
                     {
                         (mainWindow as MainWindow).undo.IsEnabled = true;
+                        (mainWindow as MainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();

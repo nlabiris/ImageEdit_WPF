@@ -156,6 +156,7 @@ namespace ImageEdit_WPF
                     if (mainWindow.GetType() == typeof(MainWindow))
                     {
                         (mainWindow as MainWindow).undo.IsEnabled = true;
+                        (mainWindow as MainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();
