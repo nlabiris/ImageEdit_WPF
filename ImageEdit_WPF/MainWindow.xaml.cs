@@ -78,15 +78,15 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private String InputFilename = String.Empty;
-        private String OutputFilename = String.Empty;
-        public static Boolean noChange = true;
-        private BitmapImage bmpInput = null;
-        private System.Drawing.Bitmap bmpOutput = null;
-        public static Stack<System.Drawing.Bitmap> undoStack = new Stack<System.Drawing.Bitmap>();
-        public static Stack<System.Drawing.Bitmap> redoStack = new Stack<System.Drawing.Bitmap>();
+        private string _inputFilename = string.Empty;
+        private string _outputFilename = string.Empty;
+        public static bool NoChange = true;
+        private BitmapImage _bmpInput = null;
+        private System.Drawing.Bitmap _bmpOutput = null;
+        public static Stack<System.Drawing.Bitmap> UndoStack = new Stack<System.Drawing.Bitmap>();
+        public static Stack<System.Drawing.Bitmap> RedoStack = new Stack<System.Drawing.Bitmap>();
         public static ActionType Action;
-        public System.Drawing.Bitmap bmpUndoRedo = null;
+        public System.Drawing.Bitmap BmpUndoRedo = null;
 
         public MainWindow()
         {
@@ -120,41 +120,41 @@ namespace ImageEdit_WPF
 
                 if (openFile.ShowDialog() == true)
                 {
-                    InputFilename = openFile.FileName;
-                    bmpInput = new BitmapImage(new Uri(InputFilename, UriKind.Absolute));
-                    bmpOutput = new System.Drawing.Bitmap(InputFilename);
-                    bmpUndoRedo = new System.Drawing.Bitmap(InputFilename);
-                    mainImage.Source = bmpInput;
+                    _inputFilename = openFile.FileName;
+                    _bmpInput = new BitmapImage(new Uri(_inputFilename, UriKind.Absolute));
+                    _bmpOutput = new System.Drawing.Bitmap(_inputFilename);
+                    BmpUndoRedo = new System.Drawing.Bitmap(_inputFilename);
+                    mainImage.Source = _bmpInput;
 
                     statusBar.Visibility = Visibility.Visible;
 
-                    Int32 bpp = System.Drawing.Image.GetPixelFormatSize(bmpOutput.PixelFormat);
-                    String resolution = bmpOutput.Width + " x " + bmpOutput.Height + " x " + bpp + " bpp";
-                    String size = String.Empty;
-                    FileInfo filesize = new FileInfo(InputFilename);
+                    int bpp = System.Drawing.Image.GetPixelFormatSize(_bmpOutput.PixelFormat);
+                    string resolution = _bmpOutput.Width + " x " + _bmpOutput.Height + " x " + bpp + " bpp";
+                    string size = string.Empty;
+                    FileInfo filesize = new FileInfo(_inputFilename);
                     if (bpp == 8)
                     {
-                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 1) / 1000000 + " MB";
+                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 1) / 1000000 + " MB";
                     }
                     else if (bpp == 16)
                     {
-                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 2) / 1000000 + " MB";
+                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 2) / 1000000 + " MB";
                     }
                     else if (bpp == 24)
                     {
-                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 3) / 1000000 + " MB";
+                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 3) / 1000000 + " MB";
                     }
                     else if (bpp == 32)
                     {
-                        size = filesize.Length / 1000 + " KB" + " / " + (bmpOutput.Width * bmpOutput.Height * 4) / 1000000 + " MB";
+                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 4) / 1000000 + " MB";
                     }
 
                     imageResolution.Text = resolution;
                     imageSize.Text = size;
                     separator.Visibility = Visibility.Visible;
 
-                    undoStack.Push(bmpUndoRedo);
-                    redoStack.Clear();
+                    UndoStack.Push(BmpUndoRedo);
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -181,17 +181,17 @@ namespace ImageEdit_WPF
         {
             try
             {
-                if (InputFilename != String.Empty)
+                if (_inputFilename != string.Empty)
                 {
-                    Uri uri = new Uri(InputFilename, UriKind.Absolute);
-                    bmpInput = new BitmapImage(uri);
-                    bmpOutput = new System.Drawing.Bitmap(InputFilename);
-                    bmpUndoRedo = new System.Drawing.Bitmap(InputFilename);
-                    mainImage.Source = bmpInput;
+                    Uri uri = new Uri(_inputFilename, UriKind.Absolute);
+                    _bmpInput = new BitmapImage(uri);
+                    _bmpOutput = new System.Drawing.Bitmap(_inputFilename);
+                    BmpUndoRedo = new System.Drawing.Bitmap(_inputFilename);
+                    mainImage.Source = _bmpInput;
 
-                    undoStack.Clear();
-                    undoStack.Push(bmpUndoRedo);
-                    redoStack.Clear();
+                    UndoStack.Clear();
+                    UndoStack.Push(BmpUndoRedo);
+                    RedoStack.Clear();
                 }
                 else
                 {
@@ -227,10 +227,10 @@ namespace ImageEdit_WPF
         {
             try
             {
-                if (OutputFilename != String.Empty)
+                if (_outputFilename != string.Empty)
                 {
 
-                    String extension = System.IO.Path.GetExtension(OutputFilename);
+                    string extension = Path.GetExtension(_outputFilename);
 
                     ImageCodecInfo codec;
                     System.Drawing.Imaging.Encoder quality;
@@ -251,7 +251,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         case ".jpeg":
@@ -266,7 +266,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         case ".png":
@@ -281,7 +281,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         case ".bmp":
@@ -296,7 +296,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         default:
@@ -310,8 +310,8 @@ namespace ImageEdit_WPF
 
                     if (saveFile.ShowDialog() == true)
                     {
-                        OutputFilename = saveFile.FileName;
-                        String extension = System.IO.Path.GetExtension(OutputFilename);
+                        _outputFilename = saveFile.FileName;
+                        string extension = Path.GetExtension(_outputFilename);
 
                         ImageCodecInfo codec;
                         System.Drawing.Imaging.Encoder quality;
@@ -332,7 +332,7 @@ namespace ImageEdit_WPF
                                 encoder = new EncoderParameter(quality, 85L);
                                 encoderArray.Param[0] = encoder;
 
-                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+                                _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                                 break;
                             case ".jpeg":
@@ -347,7 +347,7 @@ namespace ImageEdit_WPF
                                 encoder = new EncoderParameter(quality, 85L);
                                 encoderArray.Param[0] = encoder;
 
-                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+                                _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                                 break;
                             case ".png":
@@ -362,7 +362,7 @@ namespace ImageEdit_WPF
                                 encoder = new EncoderParameter(quality, 85L);
                                 encoderArray.Param[0] = encoder;
 
-                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+                                _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                                 break;
                             case ".bmp":
@@ -377,7 +377,7 @@ namespace ImageEdit_WPF
                                 encoder = new EncoderParameter(quality, 85L);
                                 encoderArray.Param[0] = encoder;
 
-                                bmpOutput.Save(OutputFilename, codec, encoderArray);
+                                _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                                 break;
                             default:
@@ -386,7 +386,7 @@ namespace ImageEdit_WPF
                     }
                 }
 
-                noChange = true;
+                NoChange = true;
             }
             catch (EncoderFallbackException ex)
             {
@@ -417,8 +417,8 @@ namespace ImageEdit_WPF
 
                 if (saveFile.ShowDialog() == true)
                 {
-                    OutputFilename = saveFile.FileName;
-                    String extension = System.IO.Path.GetExtension(OutputFilename);
+                    _outputFilename = saveFile.FileName;
+                    string extension = Path.GetExtension(_outputFilename);
 
                     ImageCodecInfo codec;
                     System.Drawing.Imaging.Encoder quality;
@@ -439,7 +439,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         case ".jpeg":
@@ -454,7 +454,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         case ".png":
@@ -469,7 +469,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         case ".bmp":
@@ -484,7 +484,7 @@ namespace ImageEdit_WPF
                             encoder = new EncoderParameter(quality, 85L);
                             encoderArray.Param[0] = encoder;
 
-                            bmpOutput.Save(OutputFilename, codec, encoderArray);
+                            _bmpOutput.Save(_outputFilename, codec, encoderArray);
 
                             break;
                         default:
@@ -492,7 +492,7 @@ namespace ImageEdit_WPF
                     }
                 }
 
-                noChange = true;
+                NoChange = true;
             }
             catch (EncoderFallbackException ex)
             {
@@ -516,21 +516,21 @@ namespace ImageEdit_WPF
         #region Undo
         private void undo_Click(object sender, RoutedEventArgs e)
         {
-            if (undoStack.Count <= 1)
+            if (UndoStack.Count <= 1)
             {
                 undo.IsEnabled = false;
                 return;
             }
 
-            if (undoStack.Count == 2)
+            if (UndoStack.Count == 2)
             {
                 undo.IsEnabled = false;
             }
 
-            bmpUndoRedo = undoStack.Pop();
-            redoStack.Push(bmpUndoRedo);
+            BmpUndoRedo = UndoStack.Pop();
+            RedoStack.Push(BmpUndoRedo);
             redo.IsEnabled = true;
-            bmpOutput = undoStack.Peek();
+            _bmpOutput = UndoStack.Peek();
             BitmapToBitmapImage();
         }
         #endregion
@@ -538,22 +538,22 @@ namespace ImageEdit_WPF
         #region Redo
         private void redo_Click(object sender, RoutedEventArgs e)
         {
-            if (redoStack.Count == 0)
+            if (RedoStack.Count == 0)
             {
                 redo.IsEnabled = false;
                 return;
             }
 
-            if (redoStack.Count == 1)
+            if (RedoStack.Count == 1)
             {
                 redo.IsEnabled = false;
             }
 
-            bmpOutput = bmpUndoRedo = redoStack.Pop();
-            undoStack.Push(bmpUndoRedo);
+            _bmpOutput = BmpUndoRedo = RedoStack.Pop();
+            UndoStack.Push(BmpUndoRedo);
             BitmapToBitmapImage();
 
-            if (undoStack.Count > 1)
+            if (UndoStack.Count > 1)
             {
                 undo.IsEnabled = true;
             }
@@ -593,7 +593,7 @@ namespace ImageEdit_WPF
         #region Information
         private void information_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -601,7 +601,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                Information informationWindow = new Information(InputFilename, bmpOutput);
+                Information informationWindow = new Information(_inputFilename, _bmpOutput);
                 informationWindow.Owner = this;
                 informationWindow.Show();
             }
@@ -631,7 +631,7 @@ namespace ImageEdit_WPF
         #region Shift Bits
         private void shiftBits_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -639,7 +639,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                ShiftBits shiftBitsWindow = new ShiftBits(InputFilename, bmpOutput, bmpUndoRedo);
+                ShiftBits shiftBitsWindow = new ShiftBits(_bmpOutput, BmpUndoRedo);
                 shiftBitsWindow.Owner = this;
                 shiftBitsWindow.Show();
             }
@@ -669,7 +669,7 @@ namespace ImageEdit_WPF
         #region Threshold
         private void threshold_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -677,7 +677,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                Threshold thresholdWindow = new Threshold(InputFilename, bmpOutput, bmpUndoRedo);
+                Threshold thresholdWindow = new Threshold(_bmpOutput, BmpUndoRedo);
                 thresholdWindow.Owner = this;
                 thresholdWindow.Show();
             }
@@ -707,7 +707,7 @@ namespace ImageEdit_WPF
         #region Auto Threshold
         private void autoThreshold_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -715,7 +715,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                AutoThreshold autoThresholdWindow = new AutoThreshold(InputFilename, bmpOutput, bmpUndoRedo);
+                AutoThreshold autoThresholdWindow = new AutoThreshold(_bmpOutput, BmpUndoRedo);
                 autoThresholdWindow.Owner = this;
                 autoThresholdWindow.Show();
             }
@@ -745,7 +745,7 @@ namespace ImageEdit_WPF
         #region Negative
         private void negative_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -754,28 +754,28 @@ namespace ImageEdit_WPF
             try
             {
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
 
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < bmpOutput.Width; i++)
+                for (int i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (int j = 0; j < bmpOutput.Height; j++)
+                    for (int j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (j * bmpData.Stride) + (i * 3);
-                        rgbValues[index + 2] = (Byte)(255 - rgbValues[index + 2]); // R
-                        rgbValues[index + 1] = (Byte)(255 - rgbValues[index + 1]); // G
-                        rgbValues[index] = (Byte)(255 - rgbValues[index]); // B
+                        rgbValues[index + 2] = (byte)(255 - rgbValues[index + 2]); // R
+                        rgbValues[index + 1] = (byte)(255 - rgbValues[index + 1]); // G
+                        rgbValues[index] = (byte)(255 - rgbValues[index]); // B
                     }
                 }
 
@@ -786,22 +786,22 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 BitmapToBitmapImage();
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.Negative;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -830,7 +830,7 @@ namespace ImageEdit_WPF
         #region Square root
         private void squareRoot_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -839,28 +839,28 @@ namespace ImageEdit_WPF
             try
             {
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
 
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < bmpOutput.Width; i++)
+                for (int i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (int j = 0; j < bmpOutput.Height; j++)
+                    for (int j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (j * bmpData.Stride) + (i * 3);
-                        rgbValues[index + 2] = (Byte)Math.Sqrt(rgbValues[index + 2] * 255); // R
-                        rgbValues[index + 1] = (Byte)Math.Sqrt(rgbValues[index + 1] * 255); // G
-                        rgbValues[index] = (Byte)Math.Sqrt(rgbValues[index] * 255); // B
+                        rgbValues[index + 2] = (byte)Math.Sqrt(rgbValues[index + 2] * 255); // R
+                        rgbValues[index + 1] = (byte)Math.Sqrt(rgbValues[index + 1] * 255); // G
+                        rgbValues[index] = (byte)Math.Sqrt(rgbValues[index] * 255); // B
                     }
                 }
 
@@ -871,22 +871,22 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 BitmapToBitmapImage();
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.SquareRoot;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -915,7 +915,7 @@ namespace ImageEdit_WPF
         #region Contrast Enhancement
         private void contrastEnhancement_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -923,9 +923,9 @@ namespace ImageEdit_WPF
 
             try
             {
-                ContrastEnhancement contrastEnhancement = new ContrastEnhancement(InputFilename, bmpOutput, bmpUndoRedo);
-                contrastEnhancement.Owner = this;
-                contrastEnhancement.Show();
+                ContrastEnhancement enhancement = new ContrastEnhancement(_bmpOutput, BmpUndoRedo);
+                enhancement.Owner = this;
+                enhancement.Show();
             }
             catch (FileNotFoundException ex)
             {
@@ -953,7 +953,7 @@ namespace ImageEdit_WPF
         #region Brightness
         private void brightness_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -961,9 +961,9 @@ namespace ImageEdit_WPF
 
             try
             {
-                Brightness brightness = new Brightness(InputFilename, bmpOutput, bmpUndoRedo);
-                brightness.Owner = this;
-                brightness.Show();
+                Brightness brightness1 = new Brightness(_bmpOutput, BmpUndoRedo);
+                brightness1.Owner = this;
+                brightness1.Show();
             }
             catch (FileNotFoundException ex)
             {
@@ -991,7 +991,7 @@ namespace ImageEdit_WPF
         #region Contrast
         private void contrast_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -999,7 +999,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                Contrast contrastWindow = new Contrast(InputFilename, bmpOutput, bmpUndoRedo);
+                Contrast contrastWindow = new Contrast(_bmpOutput, BmpUndoRedo);
                 contrastWindow.Owner = this;
                 contrastWindow.Show();
             }
@@ -1029,7 +1029,7 @@ namespace ImageEdit_WPF
         #region Histogram
         private void histogram_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1037,7 +1037,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                Histogram histogramWindow = new Histogram(InputFilename, bmpOutput);
+                Histogram histogramWindow = new Histogram(_bmpOutput);
                 histogramWindow.Owner = this;
                 histogramWindow.Show();
             }
@@ -1067,7 +1067,7 @@ namespace ImageEdit_WPF
         #region Histogram Equalization [RGB]
         private void histogramEqualizationRGB_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1075,28 +1075,28 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 B;
-                Int32 G;
-                Int32 R;
-                Double[] PossibilityR = new Double[256];
-                Double[] PossibilityG = new Double[256];
-                Double[] PossibilityB = new Double[256];
-                Int32[] HistogramR = new Int32[256];
-                Int32[] HistogramG = new Int32[256];
-                Int32[] HistogramB = new Int32[256];
-                Double[] HistogramEqR = new Double[256];
-                Double[] HistogramEqG = new Double[256];
-                Double[] HistogramEqB = new Double[256];
+                int b;
+                int g;
+                int r;
+                double[] possibilityR = new double[256];
+                double[] possibilityG = new double[256];
+                double[] possibilityB = new double[256];
+                int[] histogramR = new int[256];
+                int[] histogramG = new int[256];
+                int[] histogramB = new int[256];
+                double[] histogramEqR = new double[256];
+                double[] histogramEqG = new double[256];
+                double[] histogramEqB = new double[256];
 
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
@@ -1105,87 +1105,87 @@ namespace ImageEdit_WPF
 
                 for (int i = 0; i < 256; i++)
                 {
-                    HistogramR[i] = 0;
-                    HistogramG[i] = 0;
-                    HistogramB[i] = 0;
+                    histogramR[i] = 0;
+                    histogramG[i] = 0;
+                    histogramB[i] = 0;
                 }
 
-                for (int i = 0; i < bmpOutput.Width; i++)
+                for (int i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (int j = 0; j < bmpOutput.Height; j++)
+                    for (int j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (j * bmpData.Stride) + (i * 3);
 
 
-                        B = rgbValues[index + 2];
-                        HistogramB[B]++;
-                        G = rgbValues[index + 1];
-                        HistogramG[G]++;
-                        R = rgbValues[index];
-                        HistogramR[R]++;
+                        b = rgbValues[index + 2];
+                        histogramB[b]++;
+                        g = rgbValues[index + 1];
+                        histogramG[g]++;
+                        r = rgbValues[index];
+                        histogramR[r]++;
                     }
                 }
 
                 for (int i = 0; i < 256; i++)
                 {
-                    PossibilityB[i] = HistogramB[i] / (Double)(bmpOutput.Width * bmpOutput.Height);
-                    PossibilityG[i] = HistogramG[i] / (Double)(bmpOutput.Width * bmpOutput.Height);
-                    PossibilityR[i] = HistogramR[i] / (Double)(bmpOutput.Width * bmpOutput.Height);
+                    possibilityB[i] = histogramB[i] / (double)(_bmpOutput.Width * _bmpOutput.Height);
+                    possibilityG[i] = histogramG[i] / (double)(_bmpOutput.Width * _bmpOutput.Height);
+                    possibilityR[i] = histogramR[i] / (double)(_bmpOutput.Width * _bmpOutput.Height);
                 }
 
-                HistogramEqB[0] = PossibilityB[0];
-                HistogramEqG[0] = PossibilityG[0];
-                HistogramEqR[0] = PossibilityR[0];
+                histogramEqB[0] = possibilityB[0];
+                histogramEqG[0] = possibilityG[0];
+                histogramEqR[0] = possibilityR[0];
                 for (int i = 1; i < 256; i++)
                 {
-                    HistogramEqB[i] = HistogramEqB[i - 1] + PossibilityB[i];
-                    HistogramEqG[i] = HistogramEqG[i - 1] + PossibilityG[i];
-                    HistogramEqR[i] = HistogramEqR[i - 1] + PossibilityR[i];
+                    histogramEqB[i] = histogramEqB[i - 1] + possibilityB[i];
+                    histogramEqG[i] = histogramEqG[i - 1] + possibilityG[i];
+                    histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
                 }
 
-                for (int i = 0; i < bmpOutput.Width; i++)
+                for (int i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (int j = 0; j < bmpOutput.Height; j++)
+                    for (int j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (j * bmpData.Stride) + (i * 3);
 
-                        B = rgbValues[index + 2];
-                        B = (Int32)Math.Round(HistogramEqB[B] * 255);
-                        G = rgbValues[index + 1];
-                        G = (Int32)Math.Round(HistogramEqG[G] * 255);
-                        R = rgbValues[index];
-                        R = (Int32)Math.Round(HistogramEqR[R] * 255);
+                        b = rgbValues[index + 2];
+                        b = (int)Math.Round(histogramEqB[b] * 255);
+                        g = rgbValues[index + 1];
+                        g = (int)Math.Round(histogramEqG[g] * 255);
+                        r = rgbValues[index];
+                        r = (int)Math.Round(histogramEqR[r] * 255);
 
-                        if (B > 255)
+                        if (b > 255)
                         {
-                            B = 255;
+                            b = 255;
                         }
-                        else if (B < 0)
+                        else if (b < 0)
                         {
-                            B = 0;
-                        }
-
-                        if (G > 255)
-                        {
-                            G = 255;
-                        }
-                        else if (G < 0)
-                        {
-                            G = 0;
+                            b = 0;
                         }
 
-                        if (R > 255)
+                        if (g > 255)
                         {
-                            R = 255;
+                            g = 255;
                         }
-                        else if (R < 0)
+                        else if (g < 0)
                         {
-                            R = 0;
+                            g = 0;
                         }
 
-                        rgbValues[index + 2] = (Byte)B;
-                        rgbValues[index + 1] = (Byte)G;
-                        rgbValues[index] = (Byte)R;
+                        if (r > 255)
+                        {
+                            r = 255;
+                        }
+                        else if (r < 0)
+                        {
+                            r = 0;
+                        }
+
+                        rgbValues[index + 2] = (byte)b;
+                        rgbValues[index + 1] = (byte)g;
+                        rgbValues[index] = (byte)r;
                     }
                 }
 
@@ -1196,27 +1196,27 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
+                _bmpOutput.Save(str, ImageFormat.Bmp);
                 str.Seek(0, SeekOrigin.Begin);
                 BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
                 mainImage.Source = bdc.Frames[0];
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.ImageEqualizationRGB;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1245,7 +1245,7 @@ namespace ImageEdit_WPF
         #region Histogram Equalization [HSV]
         private void histogramEqualizationHSV_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1253,37 +1253,34 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 i;
-                Int32 j;
-                Int32 k = 0;
-                Double Max = 0.0;
-                Double Min = 0.0;
-                Double Chroma = 0.0;
-                Double c = 0.0;
-                Double x = 0.0;
-                Double m = 0.0;
-                Byte[,] ImageR = new Byte[bmpOutput.Width, bmpOutput.Height];
-                Byte[,] ImageG = new Byte[bmpOutput.Width, bmpOutput.Height];
-                Byte[,] ImageB = new Byte[bmpOutput.Width, bmpOutput.Height];
-                Int32[] HistogramV = new Int32[256];
-                Double[] SumHistogramEqualizationV = new Double[256];
-                Double[] SumHistogramV = new Double[256];
+                int i;
+                int j;
+                int k = 0;
+                double max = 0.0;
+                double min = 0.0;
+                double chroma = 0.0;
+                double c = 0.0;
+                double x = 0.0;
+                double m = 0.0;
+                int[] histogramV = new int[256];
+                double[] sumHistogramEqualizationV = new double[256];
+                double[] sumHistogramV = new double[256];
 
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
-                Double[] Red = new Double[bytes];
-                Double[] Green = new Double[bytes];
-                Double[] Blue = new Double[bytes];
-                Double[] Hue = new Double[bytes];
-                Double[] Value = new Double[bytes];
-                Double[] Saturation = new Double[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
+                double[] red = new double[bytes];
+                double[] green = new double[bytes];
+                double[] blue = new double[bytes];
+                double[] hue = new double[bytes];
+                double[] value = new double[bytes];
+                double[] saturation = new double[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
@@ -1292,175 +1289,175 @@ namespace ImageEdit_WPF
 
                 for (i = 0; i < 256; i++)
                 {
-                    HistogramV[i] = 0;
-                    SumHistogramEqualizationV[i] = 0.0;
+                    histogramV[i] = 0;
+                    sumHistogramEqualizationV[i] = 0.0;
                 }
 
-                for (i = 0; i < bmpOutput.Width; i++)
+                for (i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (j = 0; j < bmpOutput.Height; j++)
+                    for (j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (bmpData.Stride * j) + (i * 3);
 
-                        Blue[index] = (Double)rgbValues[index];
-                        Blue[index] = Blue[index] / 255.0;
-                        Green[index + 1] = (Double)rgbValues[index + 1];
-                        Green[index + 1] = Green[index + 1] / 255.0;
-                        Red[index + 2] = (Double)rgbValues[index + 2];
-                        Red[index + 2] = Red[index + 2] / 255.0;
+                        blue[index] = rgbValues[index];
+                        blue[index] = blue[index] / 255.0;
+                        green[index + 1] = rgbValues[index + 1];
+                        green[index + 1] = green[index + 1] / 255.0;
+                        red[index + 2] = rgbValues[index + 2];
+                        red[index + 2] = red[index + 2] / 255.0;
 
 
-                        Min = Math.Min(Red[index + 2], Math.Min(Green[index + 1], Blue[index]));
-                        Max = Math.Max(Red[index + 2], Math.Max(Green[index + 1], Blue[index]));
-                        Chroma = Max - Min;
-                        Hue[index] = 0.0;
-                        Saturation[index + 1] = 0.0;
-                        if (Chroma != 0.0)
+                        min = Math.Min(red[index + 2], Math.Min(green[index + 1], blue[index]));
+                        max = Math.Max(red[index + 2], Math.Max(green[index + 1], blue[index]));
+                        chroma = max - min;
+                        hue[index] = 0.0;
+                        saturation[index + 1] = 0.0;
+                        if (chroma != 0.0)
                         {
-                            if (Math.Abs(Red[index + 2] - Max) < 0.00001)
+                            if (Math.Abs(red[index + 2] - max) < 0.00001)
                             {
-                                Hue[index] = ((Green[index + 1] - Blue[index]) / Chroma);
-                                Hue[index] = Hue[index] % 6.0;
+                                hue[index] = ((green[index + 1] - blue[index]) / chroma);
+                                hue[index] = hue[index] % 6.0;
                             }
-                            else if (Math.Abs(Green[index + 1] - Max) < 0.00001)
+                            else if (Math.Abs(green[index + 1] - max) < 0.00001)
                             {
-                                Hue[index] = ((Blue[index] - Red[index + 2]) / Chroma) + 2;
+                                hue[index] = ((blue[index] - red[index + 2]) / chroma) + 2;
                             }
                             else
                             {
-                                Hue[index] = ((Red[index + 2] - Green[index + 1]) / Chroma) + 4;
+                                hue[index] = ((red[index + 2] - green[index + 1]) / chroma) + 4;
                             }
 
-                            Hue[index] = Hue[index] * 60.0;
-                            if (Hue[index] < 0.0)
+                            hue[index] = hue[index] * 60.0;
+                            if (hue[index] < 0.0)
                             {
-                                Hue[index] = Hue[index] + 360.0;
+                                hue[index] = hue[index] + 360.0;
                             }
-                            Saturation[index + 1] = Chroma / Max;
+                            saturation[index + 1] = chroma / max;
                         }
-                        Value[index + 2] = Max;
+                        value[index + 2] = max;
 
-                        Value[index + 2] = Value[index + 2] * 255.0;
+                        value[index + 2] = value[index + 2] * 255.0;
 
-                        if (Value[index + 2] > 255.0)
+                        if (value[index + 2] > 255.0)
                         {
-                            Value[index + 2] = 255.0;
+                            value[index + 2] = 255.0;
                         }
-                        if (Value[index + 2] < 0.0)
+                        if (value[index + 2] < 0.0)
                         {
-                            Value[index + 2] = 0.0;
+                            value[index + 2] = 0.0;
                         }
 
-                        k = (Int32)Value[index + 2];
-                        HistogramV[k]++;
+                        k = (int)value[index + 2];
+                        histogramV[k]++;
                     }
                 }
 
                 for (i = 0; i < 256; i++)
                 {
-                    SumHistogramEqualizationV[i] = (Double)HistogramV[i] / (Double)(bmpOutput.Width * bmpOutput.Height);
+                    sumHistogramEqualizationV[i] = histogramV[i] / (double)(_bmpOutput.Width * _bmpOutput.Height);
                 }
 
-                SumHistogramV[0] = SumHistogramEqualizationV[0];
+                sumHistogramV[0] = sumHistogramEqualizationV[0];
                 for (i = 1; i < 256; i++)
                 {
-                    SumHistogramV[i] = SumHistogramV[i - 1] + SumHistogramEqualizationV[i];
+                    sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
                 }
 
-                for (i = 0; i < bmpOutput.Width; i++)
+                for (i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (j = 0; j < bmpOutput.Height; j++)
+                    for (j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (bmpData.Stride * j) + (i * 3);
 
-                        k = (Int32)Value[index + 2];
-                        Value[index + 2] = (Byte)Math.Round(SumHistogramV[k] * 255.0);
-                        Value[index + 2] = Value[index + 2] / 255;
+                        k = (int)value[index + 2];
+                        value[index + 2] = (byte)Math.Round(sumHistogramV[k] * 255.0);
+                        value[index + 2] = value[index + 2] / 255;
 
-                        c = Value[index + 2] * Saturation[index + 1];
-                        Hue[index] = Hue[index] / 60.0;
-                        Hue[index] = Hue[index] % 2;
-                        x = c * (1.0 - Math.Abs(Hue[index] - 1.0));
-                        m = Value[index + 2] - c;
+                        c = value[index + 2] * saturation[index + 1];
+                        hue[index] = hue[index] / 60.0;
+                        hue[index] = hue[index] % 2;
+                        x = c * (1.0 - Math.Abs(hue[index] - 1.0));
+                        m = value[index + 2] - c;
 
-                        if (Hue[index] >= 0.0 && Hue[index] < 60.0)
+                        if (hue[index] >= 0.0 && hue[index] < 60.0)
                         {
-                            Red[index + 2] = c;
-                            Green[index + 1] = x;
-                            Blue[index] = 0;
+                            red[index + 2] = c;
+                            green[index + 1] = x;
+                            blue[index] = 0;
                         }
-                        else if (Hue[index] >= 60.0 && Hue[index] < 120.0)
+                        else if (hue[index] >= 60.0 && hue[index] < 120.0)
                         {
-                            Red[index + 2] = x;
-                            Green[index + 1] = c;
-                            Blue[index] = 0;
+                            red[index + 2] = x;
+                            green[index + 1] = c;
+                            blue[index] = 0;
                         }
-                        else if (Hue[index] >= 120.0 && Hue[index] < 180.0)
+                        else if (hue[index] >= 120.0 && hue[index] < 180.0)
                         {
-                            Red[index + 2] = 0;
-                            Green[index + 1] = c;
-                            Blue[index] = x;
+                            red[index + 2] = 0;
+                            green[index + 1] = c;
+                            blue[index] = x;
                         }
-                        else if (Hue[index] >= 180.0 && Hue[index] < 240.0)
+                        else if (hue[index] >= 180.0 && hue[index] < 240.0)
                         {
-                            Red[index + 2] = 0;
-                            Green[index + 1] = x;
-                            Blue[index] = c;
+                            red[index + 2] = 0;
+                            green[index + 1] = x;
+                            blue[index] = c;
                         }
-                        else if (Hue[index] >= 240.0 && Hue[index] < 300.0)
+                        else if (hue[index] >= 240.0 && hue[index] < 300.0)
                         {
-                            Red[index + 2] = x;
-                            Green[index + 1] = 0;
-                            Blue[index] = c;
+                            red[index + 2] = x;
+                            green[index + 1] = 0;
+                            blue[index] = c;
                         }
-                        else if (Hue[index] >= 300.0 && Hue[index] < 360.0)
+                        else if (hue[index] >= 300.0 && hue[index] < 360.0)
                         {
-                            Red[index + 2] = c;
-                            Green[index + 1] = 0;
-                            Blue[index] = x;
-                        }
-
-                        Red[index + 2] = Red[index + 2] + m;
-                        Green[index + 1] = Green[index + 1] + m;
-                        Blue[index] = Blue[index] + m;
-
-                        Red[index + 2] = Red[index + 2] * 255.0;
-                        Green[index + 1] = Green[index + 1] * 255.0;
-                        Blue[index] = Blue[index] * 255.0;
-
-                        if (Red[index + 2] > 255.0)
-                        {
-                            Red[index + 2] = 255.0;
+                            red[index + 2] = c;
+                            green[index + 1] = 0;
+                            blue[index] = x;
                         }
 
-                        if (Red[index + 2] < 0.0)
+                        red[index + 2] = red[index + 2] + m;
+                        green[index + 1] = green[index + 1] + m;
+                        blue[index] = blue[index] + m;
+
+                        red[index + 2] = red[index + 2] * 255.0;
+                        green[index + 1] = green[index + 1] * 255.0;
+                        blue[index] = blue[index] * 255.0;
+
+                        if (red[index + 2] > 255.0)
                         {
-                            Red[index + 2] = 0.0;
+                            red[index + 2] = 255.0;
                         }
 
-                        if (Green[index + 1] > 255.0)
+                        if (red[index + 2] < 0.0)
                         {
-                            Green[index + 1] = 255.0;
+                            red[index + 2] = 0.0;
                         }
 
-                        if (Green[index + 1] < 0.0)
+                        if (green[index + 1] > 255.0)
                         {
-                            Green[index + 1] = 0.0;
+                            green[index + 1] = 255.0;
                         }
 
-                        if (Blue[index] > 255.0)
+                        if (green[index + 1] < 0.0)
                         {
-                            Blue[index] = 255.0;
+                            green[index + 1] = 0.0;
                         }
 
-                        if (Blue[index] < 0.0)
+                        if (blue[index] > 255.0)
                         {
-                            Blue[index] = 0.0;
+                            blue[index] = 255.0;
                         }
 
-                        rgbValues[index + 2] = (Byte)Red[index + 2];
-                        rgbValues[index + 1] = (Byte)Green[index + 1];
-                        rgbValues[index] = (Byte)Blue[index];
+                        if (blue[index] < 0.0)
+                        {
+                            blue[index] = 0.0;
+                        }
+
+                        rgbValues[index + 2] = (byte)red[index + 2];
+                        rgbValues[index + 1] = (byte)green[index + 1];
+                        rgbValues[index] = (byte)blue[index];
                     }
                 }
 
@@ -1471,27 +1468,27 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
+                _bmpOutput.Save(str, ImageFormat.Bmp);
                 str.Seek(0, SeekOrigin.Begin);
                 BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
                 mainImage.Source = bdc.Frames[0];
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.ImageEqualizationHSV;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1520,7 +1517,7 @@ namespace ImageEdit_WPF
         #region Histogram Equalization [YUV]
         private void histogramEqualizationYUV_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1528,31 +1525,28 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 i;
-                Int32 j;
-                Int32 k = 0;
-                Byte[,] ImageR = new Byte[bmpOutput.Width, bmpOutput.Height];
-                Byte[,] ImageG = new Byte[bmpOutput.Width, bmpOutput.Height];
-                Byte[,] ImageB = new Byte[bmpOutput.Width, bmpOutput.Height];
-                Int32[] HistogramY = new Int32[256];
-                Double[] SumHistogramEqualizationY = new Double[256];
-                Double[] SumHistogramY = new Double[256];
+                int i;
+                int j;
+                int k = 0;
+                int[] histogramY = new int[256];
+                double[] sumHistogramEqualizationY = new double[256];
+                double[] sumHistogramY = new double[256];
 
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
-                Double[] Red = new Double[bytes];
-                Double[] Green = new Double[bytes];
-                Double[] Blue = new Double[bytes];
-                Double[] LuminanceY = new Double[bytes];
-                Double[] ChrominanceU = new Double[bytes];
-                Double[] ChrominanceV = new Double[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
+                double[] red = new double[bytes];
+                double[] green = new double[bytes];
+                double[] blue = new double[bytes];
+                double[] luminanceY = new double[bytes];
+                double[] chrominanceU = new double[bytes];
+                double[] chrominanceV = new double[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
@@ -1561,109 +1555,109 @@ namespace ImageEdit_WPF
 
                 for (i = 0; i < 256; i++)
                 {
-                    HistogramY[i] = 0;
+                    histogramY[i] = 0;
                 }
 
-                for (i = 0; i < bmpOutput.Width; i++)
+                for (i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (j = 0; j < bmpOutput.Height; j++)
+                    for (j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (bmpData.Stride * j) + (i * 3);
 
-                        Blue[index] = (Double)rgbValues[index];
-                        Blue[index] = Blue[index] / 255.0;
-                        Green[index + 1] = (Double)rgbValues[index + 1];
-                        Green[index + 1] = Green[index + 1] / 255.0;
-                        Red[index + 2] = (Double)rgbValues[index + 2];
-                        Red[index + 2] = Red[index + 2] / 255.0;
+                        blue[index] = rgbValues[index];
+                        blue[index] = blue[index] / 255.0;
+                        green[index + 1] = rgbValues[index + 1];
+                        green[index + 1] = green[index + 1] / 255.0;
+                        red[index + 2] = rgbValues[index + 2];
+                        red[index + 2] = red[index + 2] / 255.0;
 
-                        LuminanceY[index] = (0.299 * Red[index + 2]) + (0.587 * Green[index + 1]) + (0.114 * Blue[index]);
-                        ChrominanceU[index + 1] = (-0.14713 * Red[index + 2]) - (0.28886 * Green[index + 1]) + (0.436 * Blue[index]);
-                        ChrominanceV[index + 2] = (0.615 * Red[index + 2]) - (0.51499 * Green[index + 1]) - (0.10001 * Blue[index]);
+                        luminanceY[index] = (0.299 * red[index + 2]) + (0.587 * green[index + 1]) + (0.114 * blue[index]);
+                        chrominanceU[index + 1] = (-0.14713 * red[index + 2]) - (0.28886 * green[index + 1]) + (0.436 * blue[index]);
+                        chrominanceV[index + 2] = (0.615 * red[index + 2]) - (0.51499 * green[index + 1]) - (0.10001 * blue[index]);
 
-                        LuminanceY[index] = LuminanceY[index] * 255.0;
-                        if (LuminanceY[index] > 255.0)
+                        luminanceY[index] = luminanceY[index] * 255.0;
+                        if (luminanceY[index] > 255.0)
                         {
-                            LuminanceY[index] = 255.0;
+                            luminanceY[index] = 255.0;
                         }
 
-                        if (LuminanceY[index] < 0.0)
+                        if (luminanceY[index] < 0.0)
                         {
-                            LuminanceY[index] = 0.0;
+                            luminanceY[index] = 0.0;
                         }
 
-                        k = (Int32)LuminanceY[index];
-                        HistogramY[k]++;
+                        k = (int)luminanceY[index];
+                        histogramY[k]++;
                     }
                 }
 
                 for (i = 0; i < 256; i++)
                 {
-                    SumHistogramEqualizationY[i] = 0.0;
+                    sumHistogramEqualizationY[i] = 0.0;
                 }
 
                 for (i = 0; i < 256; i++)
                 {
-                    SumHistogramEqualizationY[i] = (Double)HistogramY[i] / (Double)(bmpOutput.Width * bmpOutput.Height);
+                    sumHistogramEqualizationY[i] = histogramY[i] / (double)(_bmpOutput.Width * _bmpOutput.Height);
                 }
 
-                SumHistogramY[0] = SumHistogramEqualizationY[0];
+                sumHistogramY[0] = sumHistogramEqualizationY[0];
                 for (i = 1; i < 256; i++)
                 {
-                    SumHistogramY[i] = SumHistogramY[i - 1] + SumHistogramEqualizationY[i];
+                    sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
                 }
 
-                for (i = 0; i < bmpOutput.Width; i++)
+                for (i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (j = 0; j < bmpOutput.Height; j++)
+                    for (j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (bmpData.Stride * j) + (i * 3);
 
-                        k = (Int32)LuminanceY[index];
-                        LuminanceY[index] = (Byte)Math.Round(SumHistogramY[k] * 255.0);
-                        LuminanceY[index] = LuminanceY[index] / 255;
+                        k = (int)luminanceY[index];
+                        luminanceY[index] = (byte)Math.Round(sumHistogramY[k] * 255.0);
+                        luminanceY[index] = luminanceY[index] / 255;
 
-                        Red[index + 2] = LuminanceY[index] + (0.0 * ChrominanceU[index + 1]) + (1.13983 * ChrominanceV[index + 2]);
-                        Green[index + 1] = LuminanceY[index] + (-0.39465 * ChrominanceU[index + 1]) + (-0.58060 * ChrominanceV[index + 2]);
-                        Blue[index] = LuminanceY[index] + (2.03211 * ChrominanceU[index + 1]) + (0.0 * ChrominanceV[index + 2]);
+                        red[index + 2] = luminanceY[index] + (0.0 * chrominanceU[index + 1]) + (1.13983 * chrominanceV[index + 2]);
+                        green[index + 1] = luminanceY[index] + (-0.39465 * chrominanceU[index + 1]) + (-0.58060 * chrominanceV[index + 2]);
+                        blue[index] = luminanceY[index] + (2.03211 * chrominanceU[index + 1]) + (0.0 * chrominanceV[index + 2]);
 
-                        Red[index + 2] = Red[index + 2] * 255.0;
-                        Green[index + 1] = Green[index + 1] * 255.0;
-                        Blue[index] = Blue[index] * 255.0;
+                        red[index + 2] = red[index + 2] * 255.0;
+                        green[index + 1] = green[index + 1] * 255.0;
+                        blue[index] = blue[index] * 255.0;
 
-                        if (Red[index + 2] > 255.0)
+                        if (red[index + 2] > 255.0)
                         {
-                            Red[index + 2] = 255.0;
+                            red[index + 2] = 255.0;
                         }
 
-                        if (Red[index + 2] < 0.0)
+                        if (red[index + 2] < 0.0)
                         {
-                            Red[index + 2] = 0.0;
+                            red[index + 2] = 0.0;
                         }
 
-                        if (Green[index + 1] > 255.0)
+                        if (green[index + 1] > 255.0)
                         {
-                            Green[index + 1] = 255.0;
+                            green[index + 1] = 255.0;
                         }
 
-                        if (Green[index + 1] < 0.0)
+                        if (green[index + 1] < 0.0)
                         {
-                            Green[index + 1] = 0.0;
+                            green[index + 1] = 0.0;
                         }
 
-                        if (Blue[index] > 255.0)
+                        if (blue[index] > 255.0)
                         {
-                            Blue[index] = 255.0;
+                            blue[index] = 255.0;
                         }
 
-                        if (Blue[index] < 0.0)
+                        if (blue[index] < 0.0)
                         {
-                            Blue[index] = 0.0;
+                            blue[index] = 0.0;
                         }
 
-                        rgbValues[index + 2] = (Byte)Red[index + 2];
-                        rgbValues[index + 1] = (Byte)Green[index + 1];
-                        rgbValues[index] = (Byte)Blue[index];
+                        rgbValues[index + 2] = (byte)red[index + 2];
+                        rgbValues[index + 1] = (byte)green[index + 1];
+                        rgbValues[index] = (byte)blue[index];
                     }
                 }
 
@@ -1674,27 +1668,27 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
+                _bmpOutput.Save(str, ImageFormat.Bmp);
                 str.Seek(0, SeekOrigin.Begin);
                 BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
                 mainImage.Source = bdc.Frames[0];
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.ImageEqualizationYUV;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1723,7 +1717,7 @@ namespace ImageEdit_WPF
         #region Image Summarization
         private void imageSummarization_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1731,52 +1725,52 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 B;
-                Int32 G;
-                Int32 R;
+                int b;
+                int g;
+                int r;
 
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
 
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < bmpOutput.Width; i++)
+                for (int i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (int j = 0; j < bmpOutput.Height; j++)
+                    for (int j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (j * bmpData.Stride) + (i * 3);
-                        R = rgbValues[index + 2] + rgbValues[index + 2]; // R
-                        G = rgbValues[index + 1] + rgbValues[index + 1]; // G
-                        B = rgbValues[index] + rgbValues[index]; // B
+                        r = rgbValues[index + 2] + rgbValues[index + 2]; // R
+                        g = rgbValues[index + 1] + rgbValues[index + 1]; // G
+                        b = rgbValues[index] + rgbValues[index]; // B
 
-                        if (R > 255)
+                        if (r > 255)
                         {
-                            R = 255;
+                            r = 255;
                         }
 
-                        if (G > 255)
+                        if (g > 255)
                         {
-                            G = 255;
+                            g = 255;
                         }
 
-                        if (B > 255)
+                        if (b > 255)
                         {
-                            B = 255;
+                            b = 255;
                         }
 
-                        rgbValues[index + 2] = (Byte)R; // R
-                        rgbValues[index + 1] = (Byte)G; // G
-                        rgbValues[index] = (Byte)B; // B
+                        rgbValues[index + 2] = (byte)r; // R
+                        rgbValues[index + 1] = (byte)g; // G
+                        rgbValues[index] = (byte)b; // B
                     }
                 }
 
@@ -1787,27 +1781,27 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
+                _bmpOutput.Save(str, ImageFormat.Bmp);
                 str.Seek(0, SeekOrigin.Begin);
                 BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
                 mainImage.Source = bdc.Frames[0];
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.ImageSummarization;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1836,7 +1830,7 @@ namespace ImageEdit_WPF
         #region Image Subtraction
         private void imageSubtraction_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1844,38 +1838,38 @@ namespace ImageEdit_WPF
 
             try
             {
-                Int32 B;
-                Int32 G;
-                Int32 R;
+                int b;
+                int g;
+                int r;
 
                 // Lock the bitmap's bits.  
-                BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+                BitmapData bmpData = _bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-                Byte[] rgbValues = new Byte[bytes];
+                int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+                byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
                 Marshal.Copy(ptr, rgbValues, 0, bytes);
 
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < bmpOutput.Width; i++)
+                for (int i = 0; i < _bmpOutput.Width; i++)
                 {
-                    for (int j = 0; j < bmpOutput.Height; j++)
+                    for (int j = 0; j < _bmpOutput.Height; j++)
                     {
                         int index = (j * bmpData.Stride) + (i * 3);
 
-                        R = rgbValues[index + 2] - rgbValues[index + 2]; // R
-                        G = rgbValues[index + 1] - rgbValues[index + 1]; // G
-                        B = rgbValues[index] - rgbValues[index]; // B
+                        r = rgbValues[index + 2] - rgbValues[index + 2]; // R
+                        g = rgbValues[index + 1] - rgbValues[index + 1]; // G
+                        b = rgbValues[index] - rgbValues[index]; // B
 
-                        rgbValues[index + 2] = (Byte)R; // R
-                        rgbValues[index + 1] = (Byte)G; // G
-                        rgbValues[index] = (Byte)B; // B
+                        rgbValues[index + 2] = (byte)r; // R
+                        rgbValues[index + 1] = (byte)g; // G
+                        rgbValues[index] = (byte)b; // B
                     }
                 }
 
@@ -1886,27 +1880,27 @@ namespace ImageEdit_WPF
                 Marshal.Copy(rgbValues, 0, ptr, bytes);
 
                 // Unlock the bits.
-                bmpOutput.UnlockBits(bmpData);
+                _bmpOutput.UnlockBits(bmpData);
 
                 // Convert Bitmap to BitmapImage
                 MemoryStream str = new MemoryStream();
-                bmpOutput.Save(str, ImageFormat.Bmp);
+                _bmpOutput.Save(str, ImageFormat.Bmp);
                 str.Seek(0, SeekOrigin.Begin);
                 BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
                 mainImage.Source = bdc.Frames[0];
 
-                String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+                string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
-                    noChange = false;
+                    NoChange = false;
                     Action = ActionType.ImageSubtraction;
-                    bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                    undoStack.Push(bmpUndoRedo);
+                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
-                    redoStack.Clear();
+                    RedoStack.Clear();
                 }
             }
             catch (FileNotFoundException ex)
@@ -1935,7 +1929,7 @@ namespace ImageEdit_WPF
         #region Edge detection (Sobel)
         private void sobel_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1943,7 +1937,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                Sobel sobelWindow = new Sobel(InputFilename, bmpOutput, bmpUndoRedo);
+                Sobel sobelWindow = new Sobel(_bmpOutput, BmpUndoRedo);
                 sobelWindow.Owner = this;
                 sobelWindow.Show();
             }
@@ -1973,7 +1967,7 @@ namespace ImageEdit_WPF
         #region Gaussian Blur
         private void gaussianBlur_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1981,7 +1975,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                GaussianBlur gaussianBlurWindow = new GaussianBlur(InputFilename, bmpOutput, bmpUndoRedo);
+                GaussianBlur gaussianBlurWindow = new GaussianBlur(_bmpOutput, BmpUndoRedo);
                 gaussianBlurWindow.Owner = this;
                 gaussianBlurWindow.Show();
             }
@@ -2011,7 +2005,7 @@ namespace ImageEdit_WPF
         #region Sharpen
         private void sharpen_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -2019,7 +2013,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                Sharpen sharpenWindow = new Sharpen(InputFilename, bmpOutput, bmpUndoRedo);
+                Sharpen sharpenWindow = new Sharpen(_bmpOutput, BmpUndoRedo);
                 sharpenWindow.Owner = this;
                 sharpenWindow.Show();
             }
@@ -2049,7 +2043,7 @@ namespace ImageEdit_WPF
         #region Salt-and-Pepper Noise (Color)
         private void noiseColor_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -2057,7 +2051,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                SaltPepperNoiseColor saltPepperNoiseColorWindow = new SaltPepperNoiseColor(InputFilename, bmpOutput, bmpUndoRedo);
+                SaltPepperNoiseColor saltPepperNoiseColorWindow = new SaltPepperNoiseColor(_bmpOutput, BmpUndoRedo);
                 saltPepperNoiseColorWindow.Owner = this;
                 saltPepperNoiseColorWindow.Show();
             }
@@ -2087,7 +2081,7 @@ namespace ImageEdit_WPF
         #region Salt-and-Pepper Noise (Black/White)
         private void noiseBW_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -2095,9 +2089,9 @@ namespace ImageEdit_WPF
 
             try
             {
-                SaltPepperNoiseBW saltPepperNoiseBWWindow = new SaltPepperNoiseBW(InputFilename, bmpOutput, bmpUndoRedo);
-                saltPepperNoiseBWWindow.Owner = this;
-                saltPepperNoiseBWWindow.Show();
+                SaltPepperNoiseBW saltPepperNoiseBwWindow = new SaltPepperNoiseBW(_bmpOutput, BmpUndoRedo);
+                saltPepperNoiseBwWindow.Owner = this;
+                saltPepperNoiseBwWindow.Show();
             }
             catch (FileNotFoundException ex)
             {
@@ -2125,7 +2119,7 @@ namespace ImageEdit_WPF
         #region Noise reduction (Mean)
         private void noiseReductionMean_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -2133,7 +2127,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                NoiseReductionMean noiseReductionMeanWindow = new NoiseReductionMean(InputFilename, bmpOutput, bmpUndoRedo);
+                NoiseReductionMean noiseReductionMeanWindow = new NoiseReductionMean(_bmpOutput, BmpUndoRedo);
                 noiseReductionMeanWindow.Owner = this;
                 noiseReductionMeanWindow.Show();
             }
@@ -2163,7 +2157,7 @@ namespace ImageEdit_WPF
         #region Noise reduction (Median)
         private void noiseReductionMedian_Click(object sender, RoutedEventArgs e)
         {
-            if (InputFilename == String.Empty || bmpOutput == null)
+            if (_inputFilename == string.Empty || _bmpOutput == null)
             {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -2171,7 +2165,7 @@ namespace ImageEdit_WPF
 
             try
             {
-                NoiseReductionMedian noiseReductionMedianWindow = new NoiseReductionMedian(InputFilename, bmpOutput, bmpUndoRedo);
+                NoiseReductionMedian noiseReductionMedianWindow = new NoiseReductionMedian(_bmpOutput, BmpUndoRedo);
                 noiseReductionMedianWindow.Owner = this;
                 noiseReductionMedianWindow.Show();
             }
@@ -2202,7 +2196,7 @@ namespace ImageEdit_WPF
         {
             // Convert Bitmap to BitmapImage
             MemoryStream str = new MemoryStream();
-            bmpOutput.Save(str, ImageFormat.Bmp);
+            _bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
@@ -2225,7 +2219,7 @@ namespace ImageEdit_WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (noChange == false)
+            if (NoChange == false)
             {
                 MessageBoxResult result = MessageBox.Show("Quit without saving?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.No)

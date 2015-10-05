@@ -33,55 +33,49 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Information : Window
     {
-        private String filename;
-        private Bitmap bmpOutput = null;
-
-        public Information(String fname, Bitmap bmpO)
+        public Information(string fname, Bitmap bmpO)
         {
             InitializeComponent();
 
-            filename = fname;
-            bmpOutput = bmpO;
-
-            FileInfo file = new FileInfo(filename);
-            ImageFormat format = bmpOutput.RawFormat;
-            Int32 bpp = System.Drawing.Image.GetPixelFormatSize(bmpOutput.PixelFormat);
-            String disksize = String.Empty;
-            String memorysize = String.Empty;
+            FileInfo file = new FileInfo(fname);
+            ImageFormat format = bmpO.RawFormat;
+            int bpp = Image.GetPixelFormatSize(bmpO.PixelFormat);
+            string disksize = string.Empty;
+            string memorysize = string.Empty;
 
             if (bpp == 8)
             {
                 disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpOutput.Width * bmpOutput.Height * 1) / 1000000 + " MB" + " (" + bmpOutput.Width * bmpOutput.Height * 1 + " Bytes)";
+                memorysize = (bmpO.Width * bmpO.Height * 1) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 1 + " Bytes)";
             }
             else if (bpp == 16)
             {
                 disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpOutput.Width * bmpOutput.Height * 2) / 1000000 + " MB" + " (" + bmpOutput.Width * bmpOutput.Height * 2 + " Bytes)";
+                memorysize = (bmpO.Width * bmpO.Height * 2) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 2 + " Bytes)";
             }
             else if (bpp == 24)
             {
                 disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpOutput.Width * bmpOutput.Height * 3) / 1000000 + " MB" + " (" + bmpOutput.Width * bmpOutput.Height * 3 + " Bytes)";
+                memorysize = (bmpO.Width * bmpO.Height * 3) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 3 + " Bytes)";
             }
             else if (bpp == 32)
             {
                 disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpOutput.Width * bmpOutput.Height * 4) / 1000000 + " MB" + " (" + bmpOutput.Width * bmpOutput.Height * 4 + " Bytes)";
+                memorysize = (bmpO.Width * bmpO.Height * 4) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 4 + " Bytes)";
             }
 
             filenameTbx.Text = file.Name;
             directoryTbx.Text = file.DirectoryName;
             pathTbx.Text = file.FullName;
             compressionTbx.Text = GetEncoderInfo(format);
-            resolutionTbx.Text = bmpOutput.Width + " x " + bmpOutput.Height + " Pixels";
+            resolutionTbx.Text = bmpO.Width + " x " + bmpO.Height + " Pixels";
             colorsTbx.Text = Math.Pow(2, bpp).ToString();
             disksizeTbx.Text = disksize;
             memorysizeTbx.Text = memorysize;
             filedatetimeTbx.Text = file.LastWriteTime.ToString();
         }
 
-        private String GetEncoderInfo(ImageFormat format)
+        private string GetEncoderInfo(ImageFormat format)
         {
             while(true)
             {

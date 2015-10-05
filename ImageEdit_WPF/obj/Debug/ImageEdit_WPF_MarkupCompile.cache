@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\
 ImageEdit_WPF
 none
 false
 DEBUG;TRACE
-C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\App.xaml
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\App.xaml
 16-1340589396
 
 21399816959
-141012385901
+14292479516
 AutoThreshold.xaml;Brightness.xaml;Contrast.xaml;ContrastEnhancement.xaml;GaussianBlur.xaml;Histogram.xaml;Information.xaml;MainWindow.xaml;NoiseReductionMean.xaml;NoiseReductionMedian.xaml;SaltPepperNoiseBW.xaml;SaltPepperNoiseColor.xaml;Sharpen.xaml;ShiftBits.xaml;Sobel.xaml;Threshold.xaml;
 
 False

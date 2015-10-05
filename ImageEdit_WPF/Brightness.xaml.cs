@@ -36,31 +36,29 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Brightness : Window
     {
-        private String filename;
-        private Bitmap bmpOutput = null;
-        private Bitmap bmpUndoRedo = null;
+        private readonly Bitmap _bmpOutput = null;
+        private Bitmap _bmpUndoRedo = null;
 
-        public Brightness(String fname, Bitmap bmpO, Bitmap bmpUR)
+        public Brightness(Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
 
-            filename = fname;
-            bmpOutput = bmpO;
-            bmpUndoRedo = bmpUR;
+            _bmpOutput = bmpO;
+            _bmpUndoRedo = bmpUR;
 
             textboxBrightness.Focus();
         }
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            Int32 brightness = 0;
-            Int32 R = 0;
-            Int32 G = 0;
-            Int32 B = 0;
+            int brightness = 0;
+            int r = 0;
+            int g = 0;
+            int b = 0;
 
             try
             {
-                brightness = Int32.Parse(textboxBrightness.Text);
+                brightness = int.Parse(textboxBrightness.Text);
                 //if (brightness > 255 || brightness < 0)
                 //{
                 //    String message = "Wrong range" + Environment.NewLine + Environment.NewLine + "Give a number between 0 and 255";
@@ -94,60 +92,60 @@ namespace ImageEdit_WPF
             }
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = bmpOutput.LockBits(new System.Drawing.Rectangle(0, 0, bmpOutput.Width, bmpOutput.Height), ImageLockMode.ReadWrite, bmpOutput.PixelFormat);
+            BitmapData bmpData = _bmpOutput.LockBits(new Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            Int32 bytes = Math.Abs(bmpData.Stride) * bmpOutput.Height;
-            Byte[] rgbValues = new Byte[bytes];
+            int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+            byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (int i = 0; i < bmpOutput.Width; i++)
+            for (int i = 0; i < _bmpOutput.Width; i++)
             {
-                for (int j = 0; j < bmpOutput.Height; j++)
+                for (int j = 0; j < _bmpOutput.Height; j++)
                 {
                     int index = (j * bmpData.Stride) + (i * 3);
 
-                    R = rgbValues[index + 2] + brightness;
-                    G = rgbValues[index + 1] + brightness;
-                    B = rgbValues[index] + brightness;
+                    r = rgbValues[index + 2] + brightness;
+                    g = rgbValues[index + 1] + brightness;
+                    b = rgbValues[index] + brightness;
 
-                    if (R > 255)
+                    if (r > 255)
                     {
-                        R = 255;
+                        r = 255;
                     }
-                    else if (R < 0)
+                    else if (r < 0)
                     {
-                        R = 0;
-                    }
-
-                    if (G > 255)
-                    {
-                        G = 255;
-                    }
-                    else if (G < 0)
-                    {
-                        G = 0;
+                        r = 0;
                     }
 
-                    if (B > 255)
+                    if (g > 255)
                     {
-                        B = 255;
+                        g = 255;
                     }
-                    else if (B < 0)
+                    else if (g < 0)
                     {
-                        B = 0;
+                        g = 0;
                     }
 
-                    rgbValues[index + 2] = (Byte)R;
-                    rgbValues[index + 1] = (Byte)G;
-                    rgbValues[index] = (Byte)B;
+                    if (b > 255)
+                    {
+                        b = 255;
+                    }
+                    else if (b < 0)
+                    {
+                        b = 0;
+                    }
+
+                    rgbValues[index + 2] = (byte)r;
+                    rgbValues[index + 1] = (byte)g;
+                    rgbValues[index] = (byte)b;
                 }
             }
 
@@ -158,26 +156,26 @@ namespace ImageEdit_WPF
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            bmpOutput.UnlockBits(bmpData);
+            _bmpOutput.UnlockBits(bmpData);
 
             // Convert Bitmap to BitmapImage
             BitmapToBitmapImage();
 
-            String messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK)
             {
-                MainWindow.noChange = false;
+                MainWindow.NoChange = false;
                 MainWindow.Action = ActionType.Brightness;
-                bmpUndoRedo = bmpOutput.Clone() as System.Drawing.Bitmap;
-                MainWindow.undoStack.Push(bmpUndoRedo);
-                MainWindow.redoStack.Clear();
+                _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
+                MainWindow.UndoStack.Push(_bmpUndoRedo);
+                MainWindow.RedoStack.Clear();
                 foreach (Window mainWindow in Application.Current.Windows)
                 {
                     if (mainWindow.GetType() == typeof(MainWindow))
                     {
-                        (mainWindow as MainWindow).undo.IsEnabled = true;
-                        (mainWindow as MainWindow).redo.IsEnabled = false;
+                        ((MainWindow) mainWindow).undo.IsEnabled = true;
+                        ((MainWindow) mainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();
@@ -187,7 +185,7 @@ namespace ImageEdit_WPF
         public void BitmapToBitmapImage()
         {
             MemoryStream str = new MemoryStream();
-            bmpOutput.Save(str, ImageFormat.Bmp);
+            _bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
@@ -195,7 +193,7 @@ namespace ImageEdit_WPF
             {
                 if (mainWindow.GetType() == typeof(MainWindow))
                 {
-                    (mainWindow as MainWindow).mainImage.Source = bdc.Frames[0];
+                    ((MainWindow) mainWindow).mainImage.Source = bdc.Frames[0];
                 }
             }
         }
