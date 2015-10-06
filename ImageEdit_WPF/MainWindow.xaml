@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="open_Executed" CanExecute="open_CanExecute" />
         <CommandBinding Command="ApplicationCommands.Save" Executed="save_Executed" CanExecute="save_CanExecute" />
+        <CommandBinding Command="local:InformationCommand.Information" Executed="Information_Executed" CanExecute="Information_CanExecute"></CommandBinding>
+        <CommandBinding Command="local:HelpCommand.Help" Executed="Help_Executed" CanExecute="Help_CanExecute"></CommandBinding>
+        <CommandBinding Command="local:UndoCommand.Undo" Executed="Undo_Executed" CanExecute="Undo_CanExecute"></CommandBinding>
+        <CommandBinding Command="local:RedoCommand.Redo" Executed="Redo_Executed" CanExecute="Redo_CanExecute"></CommandBinding>
     </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Grid.Column="0">
+        <Menu Name="menuBar" Grid.Row="0" Grid.Column="0">
             <MenuItem Header="File" StaysOpenOnClick="True">
                 <MenuItem Name="open" Header="Open..." Command="ApplicationCommands.Open"></MenuItem>
                 <MenuItem Name="reopen" Header="Reopen last image" Click="reopen_Click"></MenuItem>
@@ -44,11 +48,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edit" StaysOpenOnClick="True">
-                <MenuItem x:Name="undo" Header="Undo" Click="undo_Click" x:FieldModifier="public"></MenuItem>
-                <MenuItem x:Name="redo" Header="Redo" Click="redo_Click" x:FieldModifier="public"></MenuItem>
+                <MenuItem x:Name="undo" Header="Undo" Command="local:UndoCommand.Undo" x:FieldModifier="public"></MenuItem>
+                <MenuItem x:Name="redo" Header="Redo" Command="local:RedoCommand.Redo" x:FieldModifier="public"></MenuItem>
             </MenuItem>
             <MenuItem Header="Image" StaysOpenOnClick="True">
-                <MenuItem Name="information" Header="Information" Click="information_Click"></MenuItem>
+                <MenuItem Name="information" Header="Information" Command="local:InformationCommand.Information"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Name="shiftBits" Header="Shift bits" Click="shiftBits_Click"></MenuItem>
                 <MenuItem Name="threshold" Header="Threshold" Click="threshold_Click"></MenuItem>
@@ -79,10 +83,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <MenuItem Header="Options" StaysOpenOnClick="True">
                 <MenuItem Name="preferences" Header="Preferences"></MenuItem>
                 <Separator></Separator>
+                <MenuItem Name="menuBarShowHide" Header="Show/Hide menu bar" Click="menuBarShowHide_Click"></MenuItem>
                 <MenuItem Name="statusBarShowHide" Header="Show/Hide status bar" Click="statusBarShowHide_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Help" StaysOpenOnClick="True">
-                <MenuItem Name="help" Header="Help/Documentation" Click="help_Click"></MenuItem>
+                <MenuItem Name="help" Header="Help/Documentation" Command="local:HelpCommand.Help"></MenuItem>
                 <MenuItem Name="about" Header="About..." Click="about_Click"></MenuItem>
             </MenuItem>
         </Menu>

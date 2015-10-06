@@ -74,15 +74,18 @@
     <Compile Include="GaussianBlur.xaml.cs">
       <DependentUpon>GaussianBlur.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HelpCommand.cs" />
     <Compile Include="Information.xaml.cs">
       <DependentUpon>Information.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InformationCommand.cs" />
     <Compile Include="NoiseReductionMean.xaml.cs">
       <DependentUpon>NoiseReductionMean.xaml</DependentUpon>
     </Compile>
     <Compile Include="NoiseReductionMedian.xaml.cs">
       <DependentUpon>NoiseReductionMedian.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RedoCommand.cs" />
     <Compile Include="SaltPepperNoiseBW.xaml.cs">
       <DependentUpon>SaltPepperNoiseBW.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,7 @@
     <Compile Include="Threshold.xaml.cs">
       <DependentUpon>Threshold.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UndoCommand.cs" />
     <Compile Include="ZoomBorder.cs" />
     <Page Include="AutoThreshold.xaml">
       <SubType>Designer</SubType>

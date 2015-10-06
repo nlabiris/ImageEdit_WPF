@@ -46,7 +46,6 @@ using System.Windows.Media.Imaging;
 // TODO: Pixelization
 // TODO: null action in enum
 // TODO: Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
-// TODO: Key shortcuts (Undo/Redo system), Commands
 // TODO: Check sum of kernel windows
 // TODO: Progress bar on every algorithm window
 // TODO: Preferences window
@@ -132,7 +131,7 @@ namespace ImageEdit_WPF
         #region MainWindow constructor
         /// <summary>
         /// Main Window constructor. Here we initialize the state of some menu items
-        /// as well as checking of the status bar.
+        /// as well as checking the visibility of the status bar.
         /// </summary>
         public MainWindow()
         {
@@ -141,6 +140,15 @@ namespace ImageEdit_WPF
             undo.IsEnabled = false;
             redo.IsEnabled = false;
             preferences.IsEnabled = false;
+
+            if (menuBar.Visibility == Visibility.Visible)
+            {
+                menuBarShowHide.IsChecked = true;
+            }
+            else
+            {
+                menuBarShowHide.IsChecked = false;
+            }
 
             if (statusBar.Visibility == Visibility.Visible)
             {
@@ -592,11 +600,21 @@ namespace ImageEdit_WPF
 
         #region Undo
         /// <summary>
-        /// Undo the last action.
+        /// Command implementation of Undo menu item. Check if the command can execute.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void undo_Click(object sender, RoutedEventArgs e)
+        private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// Command implementation of Undo menu item. Executing command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (UndoStack.Count <= 1)
             {
@@ -619,11 +637,21 @@ namespace ImageEdit_WPF
 
         #region Redo
         /// <summary>
-        /// Redo the last action.
+        /// Command implementation of Redo menu item. Check if the command can execute.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void redo_Click(object sender, RoutedEventArgs e)
+        private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// Command implementation of Redo menu item. Executing command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (RedoStack.Count == 0)
             {
@@ -643,6 +671,27 @@ namespace ImageEdit_WPF
             if (UndoStack.Count > 1)
             {
                 undo.IsEnabled = true;
+            }
+        }
+        #endregion
+
+        #region Menu bar
+        /// <summary>
+        /// Get and set the visibility of menu bar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuBarShowHide_Click(object sender, RoutedEventArgs e)
+        {
+            if (menuBar.Visibility == Visibility.Collapsed)
+            {
+                menuBar.Visibility = Visibility.Visible;
+                menuBarShowHide.IsChecked = true;
+            }
+            else
+            {
+                menuBar.Visibility = Visibility.Collapsed;
+                menuBarShowHide.IsChecked = false;
             }
         }
         #endregion
@@ -670,11 +719,21 @@ namespace ImageEdit_WPF
 
         #region Help
         /// <summary>
-        /// Help, Documentation (Under construction).
+        /// Command implementation of Help menu item. Check if the command can execute.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void help_Click(object sender, RoutedEventArgs e)
+        private void Help_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// Command implementation of Help menu item. Executing command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Help_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             MessageBox.Show("This is the help window", "Help", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -688,17 +747,27 @@ namespace ImageEdit_WPF
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.26.53.369 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.27.53.393 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
         #region Information
         /// <summary>
-        /// Information about the loaded image.
+        /// Command implementation of Information menu item. Check if the command can execute.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void information_Click(object sender, RoutedEventArgs e)
+        private void Information_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// Command implementation of Information menu item. Executing command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Information_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
             {
