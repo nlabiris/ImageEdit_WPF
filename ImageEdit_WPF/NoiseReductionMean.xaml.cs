@@ -36,10 +36,27 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class NoiseReductionMean : Window
     {
+        /// <summary>
+        /// Output image.
+        /// </summary>
         private readonly Bitmap _bmpOutput = null;
+
+        /// <summary>
+        /// Image used at the Undo/Redo system.
+        /// </summary>
         private Bitmap _bmpUndoRedo = null;
+
+        /// <summary>
+        /// Size of the kernel.
+        /// </summary>
         private int _sizeMask = 0;
 
+        /// <summary>
+        /// Noise Reduction (Mean filter) <c>constructor</c>.
+        /// Here we initialiaze the images and also we set the default kernel.
+        /// </summary>
+        /// <param name="bmpO">Output image.</param>
+        /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
         public NoiseReductionMean(Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
@@ -50,21 +67,41 @@ namespace ImageEdit_WPF
             three.IsChecked = true;
         }
 
+        /// <summary>
+        /// If 3x3 radioBox is checked, set kernel's size.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void three_Checked(object sender, RoutedEventArgs e)
         {
             _sizeMask = 3;
         }
 
+        /// <summary>
+        /// If 5x5 radioBox is checked, set kernel's size.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void five_Checked(object sender, RoutedEventArgs e)
         {
             _sizeMask = 5;
         }
 
+        /// <summary>
+        /// If 7x7 radioBox is checked, set kernel's size.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void seven_Checked(object sender, RoutedEventArgs e)
         {
             _sizeMask = 7;
         }
 
+        /// <summary>
+        /// Implementation of the Noise Reduction (Mean filter) algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             int i = 0;
@@ -217,6 +254,9 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
+        /// </summary>
         public void BitmapToBitmapImage()
         {
             MemoryStream str = new MemoryStream();

@@ -36,18 +36,66 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Histogram : Window, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Input image.
+        /// </summary>
         private readonly Bitmap _bmpForEditing = null;
-        private PointCollection _luminanceHistogramPoints = null;
+
+        /// <summary>
+        /// Points that represent the values of the histogram.
+        /// </summary>
+        private PointCollection _histogramPoints = null;
+
+        /// <summary>
+        /// Histogram of the Red channel.
+        /// </summary>
         private readonly int[] _histogramR = new int[256];
+
+        /// <summary>
+        /// Histogram of the Green channel.
+        /// </summary>
         private readonly int[] _histogramG = new int[256];
+
+        /// <summary>
+        /// Histogram of the Blue channel.
+        /// </summary>
         private readonly int[] _histogramB = new int[256];
+
+        /// <summary>
+        /// Histogram of the Luminance values.
+        /// </summary>
         private readonly int[] _histogramY = new int[256];
+
+        /// <summary>
+        /// Check if the histogram of the red channel has been already calculated.
+        /// </summary>
         private bool _isCalculatedR = false;
+
+        /// <summary>
+        /// Check if the histogram of the green channel has been already calculated.
+        /// </summary>
         private bool _isCalculatedG = false;
+
+        /// <summary>
+        /// Check if the histogram of the blue channel has been already calculated.
+        /// </summary>
         private bool _isCalculatedB = false;
+
+        /// <summary>
+        /// Check if the histogram of the luminance values has been already calculated.
+        /// </summary>
         private bool _isCalculatedY = false;
+
+        /// <summary>
+        /// Get or set histogram's points.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Histogram <c>constructor</c>.
+        /// Here we initialiaze the image, the data binding of the histogram diagram and the default hitogram that will be loaded.
+        /// </summary>
+        /// <param name="bmp">Input image.</param>
         public Histogram(Bitmap bmp)
         {
             InitializeComponent();
@@ -59,17 +107,20 @@ namespace ImageEdit_WPF
             gray.IsChecked = true;
         }
 
+        /// <summary>
+        /// Get or set histogram's points. Checking if we have a different set of points to show.
+        /// </summary>
         public PointCollection LuminanceHistogramPoints
         {
             get
             {
-                return this._luminanceHistogramPoints;
+                return this._histogramPoints;
             }
             set
             {
-                if (this._luminanceHistogramPoints != value)
+                if (this._histogramPoints != value)
                 {
-                    this._luminanceHistogramPoints = value;
+                    this._histogramPoints = value;
                     if (this.PropertyChanged != null)
                     {
                         PropertyChanged(this, new PropertyChangedEventArgs("LuminanceHistogramPoints"));
@@ -78,6 +129,12 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// Calculating the histogram of the red channel.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the red channel.
+        /// </returns>
         public int[] HistogramRed()
         {
             int r;
@@ -122,6 +179,12 @@ namespace ImageEdit_WPF
             return _histogramR;
         }
 
+        /// <summary>
+        /// Calculating the histogram of the green channel.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the green channel.
+        /// </returns>
         public int[] HistogramGreen()
         {
             int g;
@@ -166,6 +229,12 @@ namespace ImageEdit_WPF
             return _histogramG;
         }
 
+        /// <summary>
+        /// Calculating the histogram of the blue channel.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the blue channel.
+        /// </returns>
         public int[] HistogramBlue()
         {
             int b;
@@ -210,8 +279,12 @@ namespace ImageEdit_WPF
             return _histogramB;
         }
 
-
-
+        /// <summary>
+        /// Calculating the histogram for the luminance values.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the luminance values.
+        /// </returns>
         public int[] HistogramLuminance()
         {
             int r;
@@ -247,7 +320,7 @@ namespace ImageEdit_WPF
                     g = rgbValues[index + 1];
                     b = rgbValues[index];
 
-                    y = (int)(0.2126 * r + 0.7152 * g + 0.0722 * b);
+                    y = (int)(0.2126 * r + 0.7152 * g + 0.0722 * b); // source = ????
 
                     _histogramY[y]++;
                 }
@@ -264,6 +337,13 @@ namespace ImageEdit_WPF
             return _histogramY;
         }
 
+        /// <summary>
+        /// Convert raw integer values into a <c>PointCollection</c>.
+        /// </summary>
+        /// <param name="values">Histogram for each channel as well as the one with the luminance values.</param>
+        /// <returns>
+        /// A set of <c>PointCollection</c> for the prefered histogram.
+        /// </returns>
         private PointCollection ConvertToPointCollection(int[] values)
         {
             int max = values.Max();
@@ -282,6 +362,12 @@ namespace ImageEdit_WPF
             return points;
         }
 
+        /// <summary>
+        /// If gray radioBox is selected, calculate or just show the histogram of the luminance values.
+        /// groupBox header is also changed to reflect the current selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gray_Checked(object sender, RoutedEventArgs e)
         {
             groupBox.Header = "Luminosity (Gray)";
@@ -296,6 +382,12 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// If red radioBox is selected, calculate or just show the histogram of the red channel.
+        /// groupBox header is also changed to reflect the current selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void red_Checked(object sender, RoutedEventArgs e)
         {
             groupBox.Header = "Red";
@@ -310,6 +402,12 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// If red radioBox is selected, calculate or just show the histogram of the green channel.
+        /// groupBox header is also changed to reflect the current selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void green_Checked(object sender, RoutedEventArgs e)
         {
             groupBox.Header = "Green";
@@ -324,6 +422,12 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// If red radioBox is selected, calculate or just show the histogram of the blue channel.
+        /// groupBox header is also changed to reflect the current selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void blue_Checked(object sender, RoutedEventArgs e)
         {
             groupBox.Header = "Blue";

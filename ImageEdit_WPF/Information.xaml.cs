@@ -33,6 +33,12 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Information : Window
     {
+        /// <summary>
+        /// Information <c>constructor</c>.
+        /// Here we calculate all the neccesary information about some aspects of the image.
+        /// </summary>
+        /// <param name="fname">Input filename.</param>
+        /// <param name="bmpO">Input image.</param>
         public Information(string fname, Bitmap bmpO)
         {
             InitializeComponent();
@@ -43,25 +49,24 @@ namespace ImageEdit_WPF
             string disksize = string.Empty;
             string memorysize = string.Empty;
 
-            if (bpp == 8)
+            switch (bpp)
             {
-                disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpO.Width * bmpO.Height * 1) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 1 + " Bytes)";
-            }
-            else if (bpp == 16)
-            {
-                disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpO.Width * bmpO.Height * 2) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 2 + " Bytes)";
-            }
-            else if (bpp == 24)
-            {
-                disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpO.Width * bmpO.Height * 3) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 3 + " Bytes)";
-            }
-            else if (bpp == 32)
-            {
-                disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                memorysize = (bmpO.Width * bmpO.Height * 4) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 4 + " Bytes)";
+                case 8:
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (bmpO.Width * bmpO.Height * 1) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 1 + " Bytes)";
+                    break;
+                case 16:
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (bmpO.Width * bmpO.Height * 2) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 2 + " Bytes)";
+                    break;
+                case 24:
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (bmpO.Width * bmpO.Height * 3) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 3 + " Bytes)";
+                    break;
+                case 32:
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (bmpO.Width * bmpO.Height * 4) / 1000000 + " MB" + " (" + bmpO.Width * bmpO.Height * 4 + " Bytes)";
+                    break;
             }
 
             filenameTbx.Text = file.Name;
@@ -75,7 +80,14 @@ namespace ImageEdit_WPF
             filedatetimeTbx.Text = file.LastWriteTime.ToString();
         }
 
-        private string GetEncoderInfo(ImageFormat format)
+        /// <summary>
+        /// Get the format of the image.
+        /// </summary>
+        /// <param name="format">Format of the image.</param>
+        /// <returns>
+        /// A string with the name of the format - compression.
+        /// </returns>
+        private static string GetEncoderInfo(ImageFormat format)
         {
             while(true)
             {

@@ -36,9 +36,22 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Threshold : Window
     {
+        /// <summary>
+        /// Output image.
+        /// </summary>
         private readonly Bitmap _bmpOutput = null;
+
+        /// <summary>
+        /// Image used at the Undo/Redo system.
+        /// </summary>
         private Bitmap _bmpUndoRedo = null;
 
+        /// <summary>
+        /// Threshold <c>constructor</c>.
+        /// Here we initialiaze the images and also we set the focus at the textBox being used.
+        /// </summary>
+        /// <param name="bmpO"></param>
+        /// <param name="bmpUR"></param>
         public Threshold(Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
@@ -49,6 +62,11 @@ namespace ImageEdit_WPF
             textboxThreshold.Focus();
         }
 
+        /// <summary>
+        /// Implementation of the Threshold algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             int threshold = 0;
@@ -182,6 +200,9 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
+        /// </summary>
         public void BitmapToBitmapImage()
         {
             MemoryStream str = new MemoryStream();

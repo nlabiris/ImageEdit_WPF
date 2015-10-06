@@ -37,9 +37,22 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Contrast : Window
     {
+        /// <summary>
+        /// Output image.
+        /// </summary>
         private readonly Bitmap _bmpOutput = null;
+
+        /// <summary>
+        /// Image used at the Undo/Redo system.
+        /// </summary>
         private Bitmap _bmpUndoRedo = null;
 
+        /// <summary>
+        /// Contrast <c>constructor</c>
+        /// Here we initialiaze the images and also we set the focus at the textBox being used.
+        /// </summary>
+        /// <param name="bmpO">Output image.</param>
+        /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
         public Contrast(Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
@@ -50,6 +63,11 @@ namespace ImageEdit_WPF
             textboxContrast.Focus();
         }
 
+        /// <summary>
+        /// Implementation of the Contrast algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             double contrast = 0;
@@ -183,6 +201,9 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
+        /// </summary>
         public void BitmapToBitmapImage()
         {
             MemoryStream str = new MemoryStream();

@@ -34,4 +34,4 @@ Currently supports the following file formats:
 
 You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* to clone the repository.
 
-[ImageEdit v0.26.53.369 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.26.53.369_beta.rar?raw=true)
+[ImageEdit v0.26.53.380 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.26.53.380_beta.rar?raw=true)

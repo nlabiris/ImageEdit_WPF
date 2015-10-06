@@ -29,24 +29,63 @@ using System.Windows.Media;
 
 namespace ImageEdit_WPF
 {
+    /// <summary>
+    /// Implementation of Pan and Zoom capabilities of the interface.
+    /// </summary>
     public class ZoomBorder : Border
     {
+        /// <summary>
+        /// The border.
+        /// </summary>
         private UIElement _child = null;
+
+        /// <summary>
+        /// Is the left click of the mouse still pressed?
+        /// </summary>
         private bool _isStillDownLeft = false;
+
+        /// <summary>
+        /// Is the middle click of the mouse still pressed?
+        /// </summary>
         private bool _isStillDownMiddle = false;
+
+        /// <summary>
+        /// Original position of the mouse pointer.
+        /// </summary>
         private Point _origin;
+
+        /// <summary>
+        /// start position of the mouse pointer.
+        /// </summary>
         private Point _start;
 
+        /// <summary>
+        /// Move the mouse pointer (delta expression).
+        /// </summary>
+        /// <param name="element">The border.</param>
+        /// <returns>
+        /// New position of the mouse pointer.
+        /// </returns>
         private static TranslateTransform GetTranslateTransform(UIElement element)
         {
             return (TranslateTransform)((TransformGroup)element.RenderTransform).Children.First(tr => tr is TranslateTransform);
         }
 
+        /// <summary>
+        /// Scale the border as well as the image (delta expression).
+        /// </summary>
+        /// <param name="element">The border.</param>
+        /// <returns>
+        /// New size of the border - image.
+        /// </returns>
         private static ScaleTransform GetScaleTransform(UIElement element)
         {
             return (ScaleTransform)((TransformGroup)element.RenderTransform).Children.First(tr => tr is ScaleTransform);
         }
 
+        /// <summary>
+        /// Get or set the <c>UIElement</c>, which is the border.
+        /// </summary>
         public override UIElement Child
         {
             get
@@ -63,6 +102,11 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// Initialization of the user-made border (<c>ZoomBorder</c>).
+        /// Initialize the position of the mouse pointer (upper-left corner) as well as the events that take place.
+        /// </summary>
+        /// <param name="element">The border.</param>
         public void Initialize(UIElement element)
         {
             this._child = element;
@@ -83,6 +127,12 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>MouseUp</c> event. Concerns the left or middle buttons.
+        /// Note that when the left is released then we stop mouse capturing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void child_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _isStillDownLeft = false;
@@ -102,6 +152,13 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>MouseDown</c> event.
+        /// If the middle button is pressed then start capturing the movement of the mouse pointer.
+        /// If the left button is pressed then get the current position (under construction).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void child_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (_child != null)
@@ -127,6 +184,9 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// Reset the Pan and Zoom.
+        /// </summary>
         public void Reset()
         {
             if (_child != null)
@@ -143,6 +203,11 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>MouseWheel</c> event. Here we implement the zoom function.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void child_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (_child != null)
@@ -169,11 +234,22 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>RightButtonDown</c> event. If the right click of the mouse is pressed then we reset the Pan and Zoom.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.Reset();
         }
 
+        /// <summary>
+        /// <c>MouseMove</c> event. When moving the mouse, we keep tracking its position only if the middle button is pressed.
+        /// If the left clickof the mouse is pressed then we keep that position in order to create a rectangle (under construction).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void child_MouseMove(object sender, MouseEventArgs e)
         {
             if (_child != null)

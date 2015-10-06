@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
@@ -33,7 +34,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 
-// TODO: Bug Undo/Redo (!!)
+// BUG:  Undo/Redo (!!)
 // TODO: Color to Grayscale algorithm
 // TODO: Canny Edge detection algorithm
 // TODO: Noise reduction algorithm
@@ -45,15 +46,17 @@ using System.Windows.Media.Imaging;
 // TODO: Pixelization
 // TODO: null action in enum
 // TODO: Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
-// TODO: Key shortcuts (Undo/Redo system)
+// TODO: Key shortcuts (Undo/Redo system), Commands
 // TODO: Check sum of kernel windows
 // TODO: Progress bar on every algorithm window
 // TODO: Preferences window
-// TODO: Documentation of the source code
 
 
 namespace ImageEdit_WPF
 {
+    /// <summary>
+    /// <c>ActionType</c> enumeration is used at the Undo/Redo sytem (not now).
+    /// </summary>
     public enum ActionType
     {
         ShiftBits = 0,
@@ -74,26 +77,70 @@ namespace ImageEdit_WPF
 
 
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml.
+    /// Here we have all the main components that appear on the main window.
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Input filename of the image.
+        /// </summary>
         private string _inputFilename = string.Empty;
+
+        /// <summary>
+        /// Output filename of the image.
+        /// </summary>
         private string _outputFilename = string.Empty;
+
+        /// <summary>
+        /// Check if the image has been modified
+        /// </summary>
         public static bool NoChange = true;
+
+        /// <summary>
+        /// Input image used only for displaying purposes.
+        /// </summary>
         private BitmapImage _bmpInput = null;
+
+        /// <summary>
+        /// Output image that carries all changes until saved.
+        /// </summary>
         private System.Drawing.Bitmap _bmpOutput = null;
+
+        /// <summary>
+        /// Stack that contains all undone actions.
+        /// </summary>
         public static Stack<System.Drawing.Bitmap> UndoStack = new Stack<System.Drawing.Bitmap>();
+
+        /// <summary>
+        /// Stack that contains actions to be redone.
+        /// </summary>
         public static Stack<System.Drawing.Bitmap> RedoStack = new Stack<System.Drawing.Bitmap>();
+
+        /// <summary>
+        /// Type of action (which algorithm used).
+        /// </summary>
         public static ActionType Action;
+
+        /// <summary>
+        /// Image used at the Undo/Redo system.
+        /// </summary>
         public System.Drawing.Bitmap BmpUndoRedo = null;
 
+
+
+        #region MainWindow constructor
+        /// <summary>
+        /// Main Window constructor. Here we initialize the state of some menu items
+        /// as well as checking of the status bar.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
 
             undo.IsEnabled = false;
             redo.IsEnabled = false;
+            preferences.IsEnabled = false;
 
             if (statusBar.Visibility == Visibility.Visible)
             {
@@ -104,13 +151,24 @@ namespace ImageEdit_WPF
                 statusBarShowHide.IsChecked = false;
             }
         }
+        #endregion
 
         #region Open
+        /// <summary>
+        /// Command implementation of Open menu item. Check if the command can execute.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
 
+        /// <summary>
+        /// Command implementation of Open menu item. Executing command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             try
@@ -132,21 +190,20 @@ namespace ImageEdit_WPF
                     string resolution = _bmpOutput.Width + " x " + _bmpOutput.Height + " x " + bpp + " bpp";
                     string size = string.Empty;
                     FileInfo filesize = new FileInfo(_inputFilename);
-                    if (bpp == 8)
+                    switch (bpp)
                     {
-                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 1) / 1000000 + " MB";
-                    }
-                    else if (bpp == 16)
-                    {
-                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 2) / 1000000 + " MB";
-                    }
-                    else if (bpp == 24)
-                    {
-                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 3) / 1000000 + " MB";
-                    }
-                    else if (bpp == 32)
-                    {
-                        size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 4) / 1000000 + " MB";
+                        case 8:
+                            size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 1) / 1000000 + " MB";
+                            break;
+                        case 16:
+                            size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 2) / 1000000 + " MB";
+                            break;
+                        case 24:
+                            size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 3) / 1000000 + " MB";
+                            break;
+                        case 32:
+                            size = filesize.Length / 1000 + " KB" + " / " + (_bmpOutput.Width * _bmpOutput.Height * 4) / 1000000 + " MB";
+                            break;
                     }
 
                     imageResolution.Text = resolution;
@@ -177,6 +234,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Reopen
+        /// <summary>
+        /// Reopen last image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void reopen_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -218,11 +280,21 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Save
+        /// <summary>
+        /// Command implementation of Save menu item. Check if the command can execute.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
 
+        /// <summary>
+        /// Command implementation of Save menu item. Executing command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             try
@@ -408,6 +480,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Save as...
+        /// <summary>
+        /// Save image at a preferred format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saveAs_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -514,6 +591,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Undo
+        /// <summary>
+        /// Undo the last action.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void undo_Click(object sender, RoutedEventArgs e)
         {
             if (UndoStack.Count <= 1)
@@ -536,6 +618,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Redo
+        /// <summary>
+        /// Redo the last action.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void redo_Click(object sender, RoutedEventArgs e)
         {
             if (RedoStack.Count == 0)
@@ -561,6 +648,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Status bar
+        /// <summary>
+        /// Get and set the visibility of status bar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void statusBarShowHide_Click(object sender, RoutedEventArgs e)
         {
             if (statusBar.Visibility == Visibility.Collapsed)
@@ -577,6 +669,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Help
+        /// <summary>
+        /// Help, Documentation (Under construction).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void help_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This is the help window", "Help", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -584,6 +681,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region About
+        /// <summary>
+        /// About window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("ImageEdit v0.26.53.369 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -591,6 +693,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Information
+        /// <summary>
+        /// Information about the loaded image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void information_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -629,6 +736,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Shift Bits
+        /// <summary>
+        /// Shift Bits algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void shiftBits_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -667,6 +779,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Threshold
+        /// <summary>
+        /// Threshold algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void threshold_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -705,6 +822,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Auto Threshold
+        /// <summary>
+        /// Auto Threshold algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void autoThreshold_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -743,6 +865,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Negative
+        /// <summary>
+        /// Negative algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void negative_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -828,6 +955,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Square root
+        /// <summary>
+        /// Square root algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void squareRoot_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -913,6 +1045,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Contrast Enhancement
+        /// <summary>
+        /// Contrast Enhancement algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contrastEnhancement_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -951,6 +1088,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Brightness
+        /// <summary>
+        /// Brightness algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void brightness_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -989,6 +1131,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Contrast
+        /// <summary>
+        /// Contrast algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contrast_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1027,6 +1174,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Histogram
+        /// <summary>
+        /// Histogram algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void histogram_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1065,6 +1217,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Histogram Equalization [RGB]
+        /// <summary>
+        /// Histogram Equalization algorithm for the RGB color space.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void histogramEqualizationRGB_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1243,6 +1400,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Histogram Equalization [HSV]
+        /// <summary>
+        /// Histogram Equalization algorithm for the HSV color space.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void histogramEqualizationHSV_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1515,6 +1677,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Histogram Equalization [YUV]
+        /// <summary>
+        /// Histogram Equalization algorithm for the YUV color space.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void histogramEqualizationYUV_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1715,6 +1882,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Image Summarization
+        /// <summary>
+        /// Image Summarization algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void imageSummarization_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1828,6 +2000,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Image Subtraction
+        /// <summary>
+        /// Image Subtraction algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void imageSubtraction_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1927,6 +2104,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Edge detection (Sobel)
+        /// <summary>
+        /// Edge Detection algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void sobel_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -1965,6 +2147,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Gaussian Blur
+        /// <summary>
+        /// Gaussian Blur algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gaussianBlur_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -2003,6 +2190,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Sharpen
+        /// <summary>
+        /// Sharpen algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void sharpen_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -2041,6 +2233,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Salt-and-Pepper Noise (Color)
+        /// <summary>
+        /// Colored Salt-and-Pepper Noise algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void noiseColor_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -2079,6 +2276,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Salt-and-Pepper Noise (Black/White)
+        /// <summary>
+        /// Black and White Salt-and-Pepper Noise algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void noiseBW_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -2117,6 +2319,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Noise reduction (Mean)
+        /// <summary>
+        /// Noise Reduction (Mean filter) algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void noiseReductionMean_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -2155,6 +2362,11 @@ namespace ImageEdit_WPF
         #endregion
 
         #region Noise reduction (Median)
+        /// <summary>
+        /// Noise Reduction (Median filter) algorithm. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void noiseReductionMedian_Click(object sender, RoutedEventArgs e)
         {
             if (_inputFilename == string.Empty || _bmpOutput == null)
@@ -2192,6 +2404,10 @@ namespace ImageEdit_WPF
         }
         #endregion
 
+        #region Bitmap To BitmapImage
+        /// <summary>
+        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
+        /// </summary>
         public void BitmapToBitmapImage()
         {
             // Convert Bitmap to BitmapImage
@@ -2202,8 +2418,15 @@ namespace ImageEdit_WPF
 
             mainImage.Source = bdc.Frames[0];
         }
+        #endregion
 
-        private ImageCodecInfo GetEncoder(ImageFormat format)
+        #region GetEncoder
+        /// <summary>
+        /// Get the encoder info in order to use it at <c>Save</c> or <c>Save as...</c> method.
+        /// </summary>
+        /// <param name="format">Format of the image</param>
+        /// <returns></returns>
+        private static ImageCodecInfo GetEncoder(ImageFormat format)
         {
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
 
@@ -2216,8 +2439,16 @@ namespace ImageEdit_WPF
             }
             return null;
         }
+        #endregion
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        #region Window_Closing
+        /// <summary>
+        /// Event that fires when we are trying to close the window.
+        /// It is used to check if there are any unsaved changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (NoChange == false)
             {
@@ -2228,5 +2459,6 @@ namespace ImageEdit_WPF
                 }
             }
         }
+        #endregion
     }
 }

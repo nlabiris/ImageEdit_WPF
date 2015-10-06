@@ -36,10 +36,28 @@ namespace ImageEdit_WPF
     /// </summary>
     public partial class Sharpen : Window
     {
+        /// <summary>
+        /// Output image.
+        /// </summary>
         private readonly Bitmap _bmpOutput = null;
+
+        /// <summary>
+        /// Image used at the Undo/Redo system.
+        /// </summary>
         private Bitmap _bmpUndoRedo = null;
+
+        /// <summary>
+        /// Size of the kernel.
+        /// </summary>
         private int _sizeMask = 0;
 
+        /// <summary>
+        /// Sharpen <c>constructor</c>.
+        /// Here we initialiaze the images and also we set the focus
+        /// at the 'OK' button and at one of the three radio boxes (kernel size).
+        /// </summary>
+        /// <param name="bmpO">Output image.</param>
+        /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
         public Sharpen(Bitmap bmpO, Bitmap bmpUR)
         {
             InitializeComponent();
@@ -50,6 +68,53 @@ namespace ImageEdit_WPF
             three.IsChecked = true;
         }
 
+        /// <summary>
+        /// If kernel's size is 3x3, the following attributes are set.
+        /// <list type="bullet">
+        ///     <item>
+        ///     <description>
+        ///         Kernel size.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Height of the window.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Width of the window.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Group box width.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Group box height.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         OK button attributes.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Text Boxes visibility and values.
+        ///     </description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <remarks>
+        /// As for the textBoxes that hold the values of the kernel,
+        /// some of them are not visible because is not needed to.
+        /// They exist only for bigger kernels.
+        /// </remarks>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void three_Checked(object sender, RoutedEventArgs e)
         {
             _sizeMask = 3;
@@ -123,6 +188,53 @@ namespace ImageEdit_WPF
             tbx49.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// If kernel's size is 5x5, the following attributes are set.
+        /// <list type="bullet">
+        ///     <item>
+        ///     <description>
+        ///         Kernel size.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Height of the window.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Width of the window.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Group box width.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Group box height.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         OK button attributes.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Text Boxes visibility and values.
+        ///     </description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <remarks>
+        /// As for the textBoxes that hold the values of the kernel,
+        /// some of them are not visible because is not needed to.
+        /// They exist only for bigger kernels.
+        /// </remarks>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void five_Checked(object sender, RoutedEventArgs e)
         {
             _sizeMask = 5;
@@ -212,6 +324,48 @@ namespace ImageEdit_WPF
             tbx49.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// If kernel's size is 7x7, the following attributes are set.
+        /// <list type="bullet">
+        ///     <item>
+        ///     <description>
+        ///         Kernel size.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Height of the window.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Width of the window.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Group box width.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Group box height.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         OK button attributes.
+        ///     </description>
+        ///     </item>
+        ///     <item>
+        ///     <description>
+        ///         Text Boxes visibility and values.
+        ///     </description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void seven_Checked(object sender, RoutedEventArgs e)
         {
             _sizeMask = 7;
@@ -325,6 +479,11 @@ namespace ImageEdit_WPF
             tbx49.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Implementation of the Sharpen algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             int i = 0;
@@ -620,6 +779,9 @@ namespace ImageEdit_WPF
             }
         }
 
+        /// <summary>
+        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
+        /// </summary>
         public void BitmapToBitmapImage()
         {
             MemoryStream str = new MemoryStream();
