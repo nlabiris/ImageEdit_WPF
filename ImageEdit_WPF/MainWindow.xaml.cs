@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -218,6 +219,7 @@ namespace ImageEdit_WPF
                     imageSize.Text = size;
                     separator.Visibility = Visibility.Visible;
 
+                    UndoStack.Clear();
                     UndoStack.Push(BmpUndoRedo);
                     RedoStack.Clear();
                 }
@@ -747,7 +749,7 @@ namespace ImageEdit_WPF
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ImageEdit v0.27.53.393 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.27.53 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -993,7 +995,7 @@ namespace ImageEdit_WPF
                 {
                     NoChange = false;
                     Action = ActionType.Negative;
-                    BmpUndoRedo = _bmpOutput.Clone() as System.Drawing.Bitmap;
+                    BmpUndoRedo = _bmpOutput.Clone() as Bitmap;
                     UndoStack.Push(BmpUndoRedo);
                     undo.IsEnabled = true;
                     redo.IsEnabled = false;
