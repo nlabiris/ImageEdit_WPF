@@ -125,7 +125,7 @@ namespace ImageEdit_WPF
         /// <summary>
         /// Image used at the Undo/Redo system.
         /// </summary>
-        public System.Drawing.Bitmap BmpUndoRedo = null;
+        public Bitmap BmpUndoRedo = null;
 
 
 
