@@ -11,8 +11,8 @@ using System.Windows;
 [assembly: AssemblyDescription("Image processing software")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ImageEdit")]
-[assembly: AssemblyCopyright("Copyright © 2015")]
+[assembly: AssemblyProduct("ImageEdit - Image processing software")]
+[assembly: AssemblyCopyright("GNU General Public License v.3")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,7 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.27.53.400")]
-[assembly: AssemblyFileVersion("0.27.53.400")]
+[assembly: AssemblyVersion("0.27.53.405")]
+[assembly: AssemblyFileVersion("0.27.53.405")]
+[assembly: NeutralResourcesLanguageAttribute("en")]
+[assembly: GuidAttribute("11149732-04ff-4d16-b15f-f24d1c42f7a2")]

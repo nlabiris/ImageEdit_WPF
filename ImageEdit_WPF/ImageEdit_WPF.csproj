@@ -13,6 +13,21 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,78 +74,78 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AutoThreshold.xaml.cs">
+    <Compile Include="Windows\AutoThreshold.xaml.cs">
       <DependentUpon>AutoThreshold.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Brightness.xaml.cs">
+    <Compile Include="Windows\Brightness.xaml.cs">
       <DependentUpon>Brightness.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Contrast.xaml.cs">
+    <Compile Include="Windows\Contrast.xaml.cs">
       <DependentUpon>Contrast.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ContrastEnhancement.xaml.cs">
+    <Compile Include="Windows\ContrastEnhancement.xaml.cs">
       <DependentUpon>ContrastEnhancement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GaussianBlur.xaml.cs">
+    <Compile Include="Windows\GaussianBlur.xaml.cs">
       <DependentUpon>GaussianBlur.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HelpCommand.cs" />
-    <Compile Include="Information.xaml.cs">
+    <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="Windows\Information.xaml.cs">
       <DependentUpon>Information.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InformationCommand.cs" />
-    <Compile Include="NoiseReductionMean.xaml.cs">
+    <Compile Include="Commands\InformationCommand.cs" />
+    <Compile Include="Windows\NoiseReductionMean.xaml.cs">
       <DependentUpon>NoiseReductionMean.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NoiseReductionMedian.xaml.cs">
+    <Compile Include="Windows\NoiseReductionMedian.xaml.cs">
       <DependentUpon>NoiseReductionMedian.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RedoCommand.cs" />
-    <Compile Include="SaltPepperNoiseBW.xaml.cs">
+    <Compile Include="Commands\RedoCommand.cs" />
+    <Compile Include="Windows\SaltPepperNoiseBW.xaml.cs">
       <DependentUpon>SaltPepperNoiseBW.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SaltPepperNoiseColor.xaml.cs">
+    <Compile Include="Windows\SaltPepperNoiseColor.xaml.cs">
       <DependentUpon>SaltPepperNoiseColor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sharpen.xaml.cs">
+    <Compile Include="Windows\Sharpen.xaml.cs">
       <DependentUpon>Sharpen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShiftBits.xaml.cs">
+    <Compile Include="Windows\ShiftBits.xaml.cs">
       <DependentUpon>ShiftBits.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sobel.xaml.cs">
+    <Compile Include="Windows\Sobel.xaml.cs">
       <DependentUpon>Sobel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Threshold.xaml.cs">
+    <Compile Include="Windows\Threshold.xaml.cs">
       <DependentUpon>Threshold.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UndoCommand.cs" />
+    <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="ZoomBorder.cs" />
-    <Page Include="AutoThreshold.xaml">
+    <Page Include="Windows\AutoThreshold.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Brightness.xaml">
+    <Page Include="Windows\Brightness.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Contrast.xaml">
+    <Page Include="Windows\Contrast.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ContrastEnhancement.xaml">
+    <Page Include="Windows\ContrastEnhancement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GaussianBlur.xaml">
+    <Page Include="Windows\GaussianBlur.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Histogram.xaml">
+    <Page Include="Windows\Histogram.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Information.xaml">
+    <Page Include="Windows\Information.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -142,42 +157,42 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Histogram.xaml.cs">
+    <Compile Include="Windows\Histogram.xaml.cs">
       <DependentUpon>Histogram.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NoiseReductionMean.xaml">
+    <Page Include="Windows\NoiseReductionMean.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="NoiseReductionMedian.xaml">
+    <Page Include="Windows\NoiseReductionMedian.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SaltPepperNoiseBW.xaml">
+    <Page Include="Windows\SaltPepperNoiseBW.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SaltPepperNoiseColor.xaml">
+    <Page Include="Windows\SaltPepperNoiseColor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sharpen.xaml">
+    <Page Include="Windows\Sharpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ShiftBits.xaml">
+    <Page Include="Windows\ShiftBits.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sobel.xaml">
+    <Page Include="Windows\Sobel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Threshold.xaml">
+    <Page Include="Windows\Threshold.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -209,6 +224,24 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

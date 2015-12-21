@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\App.xaml
-16-1340589396
+161076856878
 
-25-1357270858
+25-1172730159
 14292479516
-AutoThreshold.xaml;Brightness.xaml;Contrast.xaml;ContrastEnhancement.xaml;GaussianBlur.xaml;Histogram.xaml;Information.xaml;MainWindow.xaml;NoiseReductionMean.xaml;NoiseReductionMedian.xaml;SaltPepperNoiseBW.xaml;SaltPepperNoiseColor.xaml;Sharpen.xaml;ShiftBits.xaml;Sobel.xaml;Threshold.xaml;
+Windows\AutoThreshold.xaml;Windows\Brightness.xaml;Windows\Contrast.xaml;Windows\ContrastEnhancement.xaml;Windows\GaussianBlur.xaml;Windows\Histogram.xaml;Windows\Information.xaml;MainWindow.xaml;Windows\NoiseReductionMean.xaml;Windows\NoiseReductionMedian.xaml;Windows\SaltPepperNoiseBW.xaml;Windows\SaltPepperNoiseColor.xaml;Windows\Sharpen.xaml;Windows\ShiftBits.xaml;Windows\Sobel.xaml;Windows\Threshold.xaml;
 
 False
 

@@ -24,14 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ImageEdit_WPF"
-        Title="Image Edit" Height="350" Width="525" Background="Black" Closing="Window_Closing">
+        xmlns:commands="clr-namespace:ImageEdit_WPF.Commands"
+        Title="ImageEdit" Height="350" Width="525" Background="Black" Closing="Window_Closing">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="open_Executed" CanExecute="open_CanExecute" />
         <CommandBinding Command="ApplicationCommands.Save" Executed="save_Executed" CanExecute="save_CanExecute" />
-        <CommandBinding Command="local:InformationCommand.Information" Executed="Information_Executed" CanExecute="Information_CanExecute"></CommandBinding>
-        <CommandBinding Command="local:HelpCommand.Help" Executed="Help_Executed" CanExecute="Help_CanExecute"></CommandBinding>
-        <CommandBinding Command="local:UndoCommand.Undo" Executed="Undo_Executed" CanExecute="Undo_CanExecute"></CommandBinding>
-        <CommandBinding Command="local:RedoCommand.Redo" Executed="Redo_Executed" CanExecute="Redo_CanExecute"></CommandBinding>
+        <CommandBinding Command="commands:InformationCommand.Information" Executed="Information_Executed" CanExecute="Information_CanExecute"></CommandBinding>
+        <CommandBinding Command="commands:HelpCommand.Help" Executed="Help_Executed" CanExecute="Help_CanExecute"></CommandBinding>
+        <CommandBinding Command="commands:UndoCommand.Undo" Executed="Undo_Executed" CanExecute="Undo_CanExecute"></CommandBinding>
+        <CommandBinding Command="commands:RedoCommand.Redo" Executed="Redo_Executed" CanExecute="Redo_CanExecute"></CommandBinding>
     </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -48,11 +49,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="saveAs" Header="Save as..." Click="saveAs_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edit" StaysOpenOnClick="True">
-                <MenuItem x:Name="undo" Header="Undo" Command="local:UndoCommand.Undo" x:FieldModifier="public"></MenuItem>
-                <MenuItem x:Name="redo" Header="Redo" Command="local:RedoCommand.Redo" x:FieldModifier="public"></MenuItem>
+                <MenuItem x:Name="undo" Header="Undo" Command="commands:UndoCommand.Undo" x:FieldModifier="public"></MenuItem>
+                <MenuItem x:Name="redo" Header="Redo" Command="commands:RedoCommand.Redo" x:FieldModifier="public"></MenuItem>
             </MenuItem>
             <MenuItem Header="Image" StaysOpenOnClick="True">
-                <MenuItem Name="information" Header="Information" Command="local:InformationCommand.Information"></MenuItem>
+                <MenuItem Name="information" Header="Information" Command="commands:InformationCommand.Information"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Name="shiftBits" Header="Shift bits" Click="shiftBits_Click"></MenuItem>
                 <MenuItem Name="threshold" Header="Threshold" Click="threshold_Click"></MenuItem>
@@ -87,7 +88,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="statusBarShowHide" Header="Show/Hide status bar" Click="statusBarShowHide_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Help" StaysOpenOnClick="True">
-                <MenuItem Name="help" Header="Help/Documentation" Command="local:HelpCommand.Help"></MenuItem>
+                <MenuItem Name="help" Header="Help/Documentation" Command="commands:HelpCommand.Help"></MenuItem>
                 <MenuItem Name="about" Header="About..." Click="about_Click"></MenuItem>
             </MenuItem>
         </Menu>
