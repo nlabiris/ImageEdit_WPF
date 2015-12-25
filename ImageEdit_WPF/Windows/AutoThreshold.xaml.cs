@@ -27,13 +27,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace ImageEdit_WPF.Windows
-{
+namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for AutoThreshold.xaml
     /// </summary>
-    public partial class AutoThreshold : Window
-    {
+    public partial class AutoThreshold : Window {
         /// <summary>
         /// Output image.
         /// </summary>
@@ -55,8 +53,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="bmpO">Output image.</param>
         /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
-        public AutoThreshold(Bitmap bmpO, Bitmap bmpUR, ref bool nochange)
-        {
+        public AutoThreshold(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
             InitializeComponent();
 
             _bmpOutput = bmpO;
@@ -71,8 +68,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ok_Click(object sender, RoutedEventArgs e)
-        {
+        private void ok_Click(object sender, RoutedEventArgs e) {
             int distance = 0;
             int i;
             int j;
@@ -108,36 +104,26 @@ namespace ImageEdit_WPF.Windows
             int[] positionG = new int[256];
             int[] positionB = new int[256];
 
-            try
-            {
+            try {
                 distance = int.Parse(textboxDistance.Text);
-                if (distance > 255 || distance < 0)
-                {
+                if (distance > 255 || distance < 0) {
                     string message = "Wrong range" + Environment.NewLine + Environment.NewLine + "Give a number between 0 and 255";
                     MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-            }
-            catch (ArgumentNullException ex)
-            {
+            } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
-            }
-            catch (FormatException ex)
-            {
+            } catch (FormatException ex) {
                 MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
-            }
-            catch (OverflowException ex)
-            {
+            } catch (OverflowException ex) {
                 MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
@@ -150,7 +136,7 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -158,8 +144,7 @@ namespace ImageEdit_WPF.Windows
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (i = 0; i < 256; i++)
-            {
+            for (i = 0; i < 256; i++) {
                 histogramR[i] = 0;
                 histogramG[i] = 0;
                 histogramB[i] = 0;
@@ -171,11 +156,9 @@ namespace ImageEdit_WPF.Windows
                 positionB[i] = i;
             }
 
-            for (i = 0; i < _bmpOutput.Width; i++)
-            {
-                for (j = 0; j < _bmpOutput.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (i = 0; i < _bmpOutput.Width; i++) {
+                for (j = 0; j < _bmpOutput.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     b = rgbValues[index];
                     histogramB[b]++;
@@ -189,12 +172,9 @@ namespace ImageEdit_WPF.Windows
                 }
             }
 
-            for (k = 1; k < 256; k++)
-            {
-                for (l = 255; l >= k; l--)
-                {
-                    if (histogramSortR[l - 1] < histogramSortR[l])
-                    {
+            for (k = 1; k < 256; k++) {
+                for (l = 255; l >= k; l--) {
+                    if (histogramSortR[l - 1] < histogramSortR[l]) {
                         temp = histogramSortR[l - 1];
                         histogramSortR[l - 1] = histogramSortR[l];
                         histogramSortR[l] = temp;
@@ -203,8 +183,7 @@ namespace ImageEdit_WPF.Windows
                         positionR[l] = temp;
                     }
 
-                    if (histogramSortG[l - 1] < histogramSortG[l])
-                    {
+                    if (histogramSortG[l - 1] < histogramSortG[l]) {
                         temp = histogramSortG[l - 1];
                         histogramSortG[l - 1] = histogramSortG[l];
                         histogramSortG[l] = temp;
@@ -213,8 +192,7 @@ namespace ImageEdit_WPF.Windows
                         positionG[l] = temp;
                     }
 
-                    if (histogramSortB[l - 1] < histogramSortB[l])
-                    {
+                    if (histogramSortB[l - 1] < histogramSortB[l]) {
                         temp = histogramSortB[l - 1];
                         histogramSortB[l - 1] = histogramSortB[l];
                         histogramSortB[l] = temp;
@@ -232,23 +210,19 @@ namespace ImageEdit_WPF.Windows
             z1B = histogramSortB[0];
             positionz1B = positionB[0];
 
-            for (i = 1; i < 256; i++)
-            {
-                if ((Math.Abs(positionR[i] - positionz1R)) > distance)
-                {
+            for (i = 1; i < 256; i++) {
+                if ((Math.Abs(positionR[i] - positionz1R)) > distance) {
                     z2R = histogramSortR[i];
                     positionz2R = positionR[i];
                     break;
                 }
-                if ((Math.Abs(positionG[i] - positionz1G)) > distance)
-                {
+                if ((Math.Abs(positionG[i] - positionz1G)) > distance) {
                     z2G = histogramSortG[i];
                     positionz2G = positionG[i];
                     break;
                 }
 
-                if ((Math.Abs(positionB[i] - positionz1B)) > distance)
-                {
+                if ((Math.Abs(positionB[i] - positionz1B)) > distance) {
                     z2B = histogramSortB[i];
                     positionz2B = positionB[i];
                     break;
@@ -256,115 +230,83 @@ namespace ImageEdit_WPF.Windows
             }
 
 
-            if (positionz1R < positionz2R)
-            {
-                z = histogramR[positionz1R + 1] * 1.0 / z2R;
-                for (i = positionz1R + 1; i < positionz2R; i++)
-                {
-                    if ((histogramR[i] * 1.0 / z2R) < z)
-                    {
-                        z = histogramR[i] * 1.0 / z2R;
+            if (positionz1R < positionz2R) {
+                z = histogramR[positionz1R + 1]*1.0/z2R;
+                for (i = positionz1R + 1; i < positionz2R; i++) {
+                    if ((histogramR[i]*1.0/z2R) < z) {
+                        z = histogramR[i]*1.0/z2R;
                         thresholdR = i;
                     }
                 }
-            }
-            else
-            {
-                z = histogramR[positionz2R + 1] * 1.0 / z1R;
-                for (i = positionz2R + 1; i < positionz1R; i++)
-                {
-                    if ((histogramR[i] * 1.0 / z1R) < z)
-                    {
-                        z = histogramR[i] * 1.0 / z1R;
+            } else {
+                z = histogramR[positionz2R + 1]*1.0/z1R;
+                for (i = positionz2R + 1; i < positionz1R; i++) {
+                    if ((histogramR[i]*1.0/z1R) < z) {
+                        z = histogramR[i]*1.0/z1R;
                         thresholdR = i;
                     }
                 }
             }
 
-            if (positionz1G < positionz2G)
-            {
-                z = histogramG[positionz1G + 1] * 1.0 / z2G;
-                for (i = positionz1G + 1; i < positionz2G; i++)
-                {
-                    if ((histogramG[i] * 1.0 / z2G) < z)
-                    {
-                        z = histogramG[i] * 1.0 / z2G;
+            if (positionz1G < positionz2G) {
+                z = histogramG[positionz1G + 1]*1.0/z2G;
+                for (i = positionz1G + 1; i < positionz2G; i++) {
+                    if ((histogramG[i]*1.0/z2G) < z) {
+                        z = histogramG[i]*1.0/z2G;
                         thresholdG = i;
                     }
                 }
-            }
-            else
-            {
-                z = histogramG[positionz2G + 1] * 1.0 / z1G;
-                for (i = positionz2G + 1; i < positionz1G; i++)
-                {
-                    if ((histogramG[i] * 1.0 / z1G) < z)
-                    {
-                        z = histogramG[i] * 1.0 / z1G;
+            } else {
+                z = histogramG[positionz2G + 1]*1.0/z1G;
+                for (i = positionz2G + 1; i < positionz1G; i++) {
+                    if ((histogramG[i]*1.0/z1G) < z) {
+                        z = histogramG[i]*1.0/z1G;
                         thresholdG = i;
                     }
                 }
             }
 
-            if (positionz1B < positionz2B)
-            {
-                z = histogramB[positionz1B + 1] * 1.0 / z2B;
-                for (i = positionz1B + 1; i < positionz2B; i++)
-                {
-                    if ((histogramB[i] * 1.0 / z2B) < z)
-                    {
-                        z = histogramB[i] * 1.0 / z2B;
+            if (positionz1B < positionz2B) {
+                z = histogramB[positionz1B + 1]*1.0/z2B;
+                for (i = positionz1B + 1; i < positionz2B; i++) {
+                    if ((histogramB[i]*1.0/z2B) < z) {
+                        z = histogramB[i]*1.0/z2B;
                         thresholdB = i;
                     }
                 }
-            }
-            else
-            {
-                z = histogramB[positionz2B + 1] * 1.0 / z1B;
-                for (i = positionz2B + 1; i < positionz1B; i++)
-                {
-                    if ((histogramB[i] * 1.0 / z1B) < z)
-                    {
-                        z = histogramB[i] * 1.0 / z1B;
+            } else {
+                z = histogramB[positionz2B + 1]*1.0/z1B;
+                for (i = positionz2B + 1; i < positionz1B; i++) {
+                    if ((histogramB[i]*1.0/z1B) < z) {
+                        z = histogramB[i]*1.0/z1B;
                         thresholdB = i;
                     }
                 }
             }
 
-            for (i = 0; i < _bmpOutput.Width; i++)
-            {
-                for (j = 0; j < _bmpOutput.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (i = 0; i < _bmpOutput.Width; i++) {
+                for (j = 0; j < _bmpOutput.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
                     g = rgbValues[index + 1];
                     b = rgbValues[index];
 
-                    if (r < thresholdR)
-                    {
+                    if (r < thresholdR) {
                         r = 0;
-                    }
-                    else
-                    {
+                    } else {
                         r = 255;
                     }
 
-                    if (g < thresholdG)
-                    {
+                    if (g < thresholdG) {
                         g = 0;
-                    }
-                    else
-                    {
+                    } else {
                         g = 255;
                     }
 
-                    if (b < thresholdB)
-                    {
+                    if (b < thresholdB) {
                         b = 0;
-                    }
-                    else
-                    {
+                    } else {
                         b = 255;
                     }
 
@@ -388,19 +330,16 @@ namespace ImageEdit_WPF.Windows
 
             string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Threshold (RED) set at: " + thresholdR + Environment.NewLine + "Threshold (GREEN) set at: " + thresholdG + Environment.NewLine + "Threshold (BLUE) set at: " + thresholdB + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK)
-            {
+            if (result == MessageBoxResult.OK) {
                 _nochange = false;
                 MainWindow.Action = ActionType.AutoThreshold;
                 _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
                 MainWindow.UndoStack.Push(_bmpUndoRedo);
                 MainWindow.RedoStack.Clear();
-                foreach (Window mainWindow in Application.Current.Windows)
-                {
-                    if (mainWindow.GetType() == typeof(MainWindow))
-                    {
-                        ((MainWindow) mainWindow).undo.IsEnabled = true;
-                        ((MainWindow) mainWindow).redo.IsEnabled = false;
+                foreach (Window mainWindow in Application.Current.Windows) {
+                    if (mainWindow.GetType() == typeof (MainWindow)) {
+                        ((MainWindow)mainWindow).undo.IsEnabled = true;
+                        ((MainWindow)mainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();
@@ -410,18 +349,15 @@ namespace ImageEdit_WPF.Windows
         /// <summary>
         /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
         /// </summary>
-        public void BitmapToBitmapImage()
-        {
+        public void BitmapToBitmapImage() {
             MemoryStream str = new MemoryStream();
             _bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
-            foreach (Window mainWindow in Application.Current.Windows)
-            {
-                if (mainWindow.GetType() == typeof(MainWindow))
-                {
-                    ((MainWindow) mainWindow).mainImage.Source = bdc.Frames[0];
+            foreach (Window mainWindow in Application.Current.Windows) {
+                if (mainWindow.GetType() == typeof (MainWindow)) {
+                    ((MainWindow)mainWindow).mainImage.Source = bdc.Frames[0];
                 }
             }
         }

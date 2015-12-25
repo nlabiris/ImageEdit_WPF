@@ -27,13 +27,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace ImageEdit_WPF.Windows
-{
+namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for NoiseReductionMedian.xaml
     /// </summary>
-    public partial class NoiseReductionMedian : Window
-    {
+    public partial class NoiseReductionMedian : Window {
         /// <summary>
         /// Output image.
         /// </summary>
@@ -60,8 +58,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="bmpO">Output image.</param>
         /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
-        public NoiseReductionMedian(Bitmap bmpO, Bitmap bmpUR, ref bool nochange)
-        {
+        public NoiseReductionMedian(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
             InitializeComponent();
 
             _bmpOutput = bmpO;
@@ -76,8 +73,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void three_Checked(object sender, RoutedEventArgs e)
-        {
+        private void three_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 3;
         }
 
@@ -86,8 +82,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void five_Checked(object sender, RoutedEventArgs e)
-        {
+        private void five_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 5;
         }
 
@@ -96,8 +91,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void seven_Checked(object sender, RoutedEventArgs e)
-        {
+        private void seven_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 7;
         }
 
@@ -106,8 +100,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ok_Click(object sender, RoutedEventArgs e)
-        {
+        private void ok_Click(object sender, RoutedEventArgs e) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -127,7 +120,7 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -135,20 +128,15 @@ namespace ImageEdit_WPF.Windows
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            if (_sizeMask == 3)
-            {
-                for (i = _sizeMask / 2; i < _bmpOutput.Width - _sizeMask / 2; i++)
-                {
-                    for (j = _sizeMask / 2; j < _bmpOutput.Height - _sizeMask / 2; j++)
-                    {
+            if (_sizeMask == 3) {
+                for (i = _sizeMask/2; i < _bmpOutput.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < _bmpOutput.Height - _sizeMask/2; j++) {
                         int index;
                         z = 0;
 
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
                                 arR[z] = rgbValues[index + 2];
                                 arG[z] = rgbValues[index + 1];
                                 arB[z] = rgbValues[index];
@@ -156,25 +144,21 @@ namespace ImageEdit_WPF.Windows
                             }
                         }
 
-                        for (k = 1; k <= _sizeMask * _sizeMask - 1; k++)
-                        {
+                        for (k = 1; k <= _sizeMask*_sizeMask - 1; k++) {
                             aR = arR[k];
                             aG = arG[k];
                             aB = arB[k];
                             l = k - 1;
 
-                            while (l >= 0 && arR[l] > aR)
-                            {
+                            while (l >= 0 && arR[l] > aR) {
                                 arR[l + 1] = arR[l];
                                 l--;
                             }
-                            while (l >= 0 && arG[l] > aG)
-                            {
+                            while (l >= 0 && arG[l] > aG) {
                                 arG[l + 1] = arG[l];
                                 l--;
                             }
-                            while (l >= 0 && arB[l] > aB)
-                            {
+                            while (l >= 0 && arB[l] > aB) {
                                 arB[l + 1] = arB[l];
                                 l--;
                             }
@@ -184,28 +168,22 @@ namespace ImageEdit_WPF.Windows
                             arB[l + 1] = aB;
                         }
 
-                        index = (j * bmpData.Stride) + (i * 3);
+                        index = (j*bmpData.Stride) + (i*3);
 
-                        rgbValues[index + 2] = (byte)arR[_sizeMask * _sizeMask / 2];
-                        rgbValues[index + 1] = (byte)arG[_sizeMask * _sizeMask / 2];
-                        rgbValues[index] = (byte)arB[_sizeMask * _sizeMask / 2];
+                        rgbValues[index + 2] = (byte)arR[_sizeMask*_sizeMask/2];
+                        rgbValues[index + 1] = (byte)arG[_sizeMask*_sizeMask/2];
+                        rgbValues[index] = (byte)arB[_sizeMask*_sizeMask/2];
                     }
                 }
-            }
-            else if (_sizeMask == 5)
-            {
-                for (i = _sizeMask / 2; i < _bmpOutput.Width - _sizeMask / 2; i++)
-                {
-                    for (j = _sizeMask / 2; j < _bmpOutput.Height - _sizeMask / 2; j++)
-                    {
+            } else if (_sizeMask == 5) {
+                for (i = _sizeMask/2; i < _bmpOutput.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < _bmpOutput.Height - _sizeMask/2; j++) {
                         int index;
                         z = 0;
 
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
                                 arR[z] = rgbValues[index + 2];
                                 arG[z] = rgbValues[index + 1];
                                 arB[z] = rgbValues[index];
@@ -213,25 +191,21 @@ namespace ImageEdit_WPF.Windows
                             }
                         }
 
-                        for (k = 1; k <= _sizeMask * _sizeMask - 1; k++)
-                        {
+                        for (k = 1; k <= _sizeMask*_sizeMask - 1; k++) {
                             aR = arR[k];
                             aG = arG[k];
                             aB = arB[k];
                             l = k - 1;
 
-                            while (l >= 0 && arR[l] > aR)
-                            {
+                            while (l >= 0 && arR[l] > aR) {
                                 arR[l + 1] = arR[l];
                                 l--;
                             }
-                            while (l >= 0 && arG[l] > aG)
-                            {
+                            while (l >= 0 && arG[l] > aG) {
                                 arG[l + 1] = arG[l];
                                 l--;
                             }
-                            while (l >= 0 && arB[l] > aB)
-                            {
+                            while (l >= 0 && arB[l] > aB) {
                                 arB[l + 1] = arB[l];
                                 l--;
                             }
@@ -241,28 +215,22 @@ namespace ImageEdit_WPF.Windows
                             arB[l + 1] = aB;
                         }
 
-                        index = (j * bmpData.Stride) + (i * 3);
+                        index = (j*bmpData.Stride) + (i*3);
 
-                        rgbValues[index + 2] = (byte)arR[_sizeMask * _sizeMask / 2];
-                        rgbValues[index + 1] = (byte)arG[_sizeMask * _sizeMask / 2];
-                        rgbValues[index] = (byte)arB[_sizeMask * _sizeMask / 2];
+                        rgbValues[index + 2] = (byte)arR[_sizeMask*_sizeMask/2];
+                        rgbValues[index + 1] = (byte)arG[_sizeMask*_sizeMask/2];
+                        rgbValues[index] = (byte)arB[_sizeMask*_sizeMask/2];
                     }
                 }
-            }
-            else if (_sizeMask == 7)
-            {
-                for (i = _sizeMask / 2; i < _bmpOutput.Width - _sizeMask / 2; i++)
-                {
-                    for (j = _sizeMask / 2; j < _bmpOutput.Height - _sizeMask / 2; j++)
-                    {
+            } else if (_sizeMask == 7) {
+                for (i = _sizeMask/2; i < _bmpOutput.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < _bmpOutput.Height - _sizeMask/2; j++) {
                         int index;
                         z = 0;
 
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
                                 arR[z] = rgbValues[index + 2];
                                 arG[z] = rgbValues[index + 1];
                                 arB[z] = rgbValues[index];
@@ -270,25 +238,21 @@ namespace ImageEdit_WPF.Windows
                             }
                         }
 
-                        for (k = 1; k <= _sizeMask * _sizeMask - 1; k++)
-                        {
+                        for (k = 1; k <= _sizeMask*_sizeMask - 1; k++) {
                             aR = arR[k];
                             aG = arG[k];
                             aB = arB[k];
                             l = k - 1;
 
-                            while (l >= 0 && arR[l] > aR)
-                            {
+                            while (l >= 0 && arR[l] > aR) {
                                 arR[l + 1] = arR[l];
                                 l--;
                             }
-                            while (l >= 0 && arG[l] > aG)
-                            {
+                            while (l >= 0 && arG[l] > aG) {
                                 arG[l + 1] = arG[l];
                                 l--;
                             }
-                            while (l >= 0 && arB[l] > aB)
-                            {
+                            while (l >= 0 && arB[l] > aB) {
                                 arB[l + 1] = arB[l];
                                 l--;
                             }
@@ -298,11 +262,11 @@ namespace ImageEdit_WPF.Windows
                             arB[l + 1] = aB;
                         }
 
-                        index = (j * bmpData.Stride) + (i * 3);
+                        index = (j*bmpData.Stride) + (i*3);
 
-                        rgbValues[index + 2] = (byte)arR[_sizeMask * _sizeMask / 2];
-                        rgbValues[index + 1] = (byte)arG[_sizeMask * _sizeMask / 2];
-                        rgbValues[index] = (byte)arB[_sizeMask * _sizeMask / 2];
+                        rgbValues[index + 2] = (byte)arR[_sizeMask*_sizeMask/2];
+                        rgbValues[index + 1] = (byte)arG[_sizeMask*_sizeMask/2];
+                        rgbValues[index] = (byte)arB[_sizeMask*_sizeMask/2];
                     }
                 }
             }
@@ -321,19 +285,16 @@ namespace ImageEdit_WPF.Windows
 
             string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK)
-            {
+            if (result == MessageBoxResult.OK) {
                 _nochange = false;
                 MainWindow.Action = ActionType.ImageConvolution;
                 _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
                 MainWindow.UndoStack.Push(_bmpUndoRedo);
                 MainWindow.RedoStack.Clear();
-                foreach (Window mainWindow in Application.Current.Windows)
-                {
-                    if (mainWindow.GetType() == typeof(MainWindow))
-                    {
-                        ((MainWindow) mainWindow).undo.IsEnabled = true;
-                        ((MainWindow) mainWindow).redo.IsEnabled = false;
+                foreach (Window mainWindow in Application.Current.Windows) {
+                    if (mainWindow.GetType() == typeof (MainWindow)) {
+                        ((MainWindow)mainWindow).undo.IsEnabled = true;
+                        ((MainWindow)mainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();
@@ -343,18 +304,15 @@ namespace ImageEdit_WPF.Windows
         /// <summary>
         /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
         /// </summary>
-        public void BitmapToBitmapImage()
-        {
+        public void BitmapToBitmapImage() {
             MemoryStream str = new MemoryStream();
             _bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
-            foreach (Window mainWindow in Application.Current.Windows)
-            {
-                if (mainWindow.GetType() == typeof(MainWindow))
-                {
-                    ((MainWindow) mainWindow).mainImage.Source = bdc.Frames[0];
+            foreach (Window mainWindow in Application.Current.Windows) {
+                if (mainWindow.GetType() == typeof (MainWindow)) {
+                    ((MainWindow)mainWindow).mainImage.Source = bdc.Frames[0];
                 }
             }
         }

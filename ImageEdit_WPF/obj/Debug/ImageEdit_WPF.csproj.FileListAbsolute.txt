@@ -12,7 +12,6 @@ c:\users\sonic\documents\visual studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF
 c:\users\sonic\documents\visual studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF.pdb
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF_MarkupCompile.lref
 C:\Users\sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF.csprojResolveAssemblyReference.cache
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Windows\AutoThreshold.baml
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Windows\Brightness.baml
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Windows\Contrast.baml
@@ -43,3 +42,8 @@ C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Windows\ShiftBits.g.cs
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Windows\Sobel.g.cs
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\Windows\Threshold.g.cs
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\WPFToolkit.dll
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.pdb
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\WPFToolkit.pdb
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF.csprojResolveAssemblyReference.cache

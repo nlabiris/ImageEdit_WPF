@@ -27,13 +27,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 
-namespace ImageEdit_WPF.Windows
-{
+namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Histogram.xaml
     /// </summary>
-    public partial class Histogram : Window, INotifyPropertyChanged
-    {
+    public partial class Histogram : Window, INotifyPropertyChanged {
         /// <summary>
         /// Input image.
         /// </summary>
@@ -85,7 +83,7 @@ namespace ImageEdit_WPF.Windows
         private bool _isCalculatedY = false;
 
         /// <summary>
-        /// Get or set histogram's points.
+        /// Event for detecting changes in properties.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -94,47 +92,40 @@ namespace ImageEdit_WPF.Windows
         /// Here we initialiaze the image, the data binding of the histogram diagram and the default hitogram that will be loaded.
         /// </summary>
         /// <param name="bmp">Input image.</param>
-        public Histogram(Bitmap bmp)
-        {
+        public Histogram(Bitmap bmp) {
             InitializeComponent();
-
             _bmpForEditing = bmp;
-
-            this.DataContext = this;
-
+            DataContext = this;
             gray.IsChecked = true;
         }
 
         /// <summary>
         /// Get or set histogram's points. Checking if we have a different set of points to show.
         /// </summary>
-        public PointCollection LuminanceHistogramPoints
-        {
-            get
-            {
-                return this._histogramPoints;
-            }
-            set
-            {
-                if (this._histogramPoints != value)
-                {
-                    this._histogramPoints = value;
-                    if (this.PropertyChanged != null)
-                    {
-                        PropertyChanged(this, new PropertyChangedEventArgs("LuminanceHistogramPoints"));
-                    }
+        public PointCollection HistogramPoints {
+            get { return _histogramPoints; }
+            set {
+                if (_histogramPoints != value) {
+                    _histogramPoints = value;
+                    OnPropertytChanged("HistogramPoints");
                 }
             }
         }
 
+        private void OnPropertytChanged(string propertyName) {
+            if (PropertyChanged != null) {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #region Histogram calculations
         /// <summary>
         /// Calculating the histogram of the red channel.
         /// </summary>
         /// <returns>
         /// Histogram of the red channel.
         /// </returns>
-        public int[] HistogramRed()
-        {
+        public int[] HistogramRed() {
             int r;
 
             // Lock the bitmap's bits.  
@@ -144,22 +135,19 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 _histogramR[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++)
-            {
-                for (int j = 0; j < _bmpForEditing.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (int i = 0; i < _bmpForEditing.Width; i++) {
+                for (int j = 0; j < _bmpForEditing.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
                     _histogramR[r]++;
@@ -183,8 +171,7 @@ namespace ImageEdit_WPF.Windows
         /// <returns>
         /// Histogram of the green channel.
         /// </returns>
-        public int[] HistogramGreen()
-        {
+        public int[] HistogramGreen() {
             int g;
 
             // Lock the bitmap's bits.  
@@ -194,22 +181,19 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 _histogramG[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++)
-            {
-                for (int j = 0; j < _bmpForEditing.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (int i = 0; i < _bmpForEditing.Width; i++) {
+                for (int j = 0; j < _bmpForEditing.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     g = rgbValues[index + 1];
                     _histogramG[g]++;
@@ -233,8 +217,7 @@ namespace ImageEdit_WPF.Windows
         /// <returns>
         /// Histogram of the blue channel.
         /// </returns>
-        public int[] HistogramBlue()
-        {
+        public int[] HistogramBlue() {
             int b;
 
             // Lock the bitmap's bits.  
@@ -244,22 +227,19 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 _histogramB[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++)
-            {
-                for (int j = 0; j < _bmpForEditing.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (int i = 0; i < _bmpForEditing.Width; i++) {
+                for (int j = 0; j < _bmpForEditing.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     b = rgbValues[index];
                     _histogramB[b]++;
@@ -283,8 +263,7 @@ namespace ImageEdit_WPF.Windows
         /// <returns>
         /// Histogram of the luminance values.
         /// </returns>
-        public int[] HistogramLuminance()
-        {
+        public int[] HistogramLuminance() {
             int r;
             int g;
             int b;
@@ -297,28 +276,25 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 _histogramY[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++)
-            {
-                for (int j = 0; j < _bmpForEditing.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (int i = 0; i < _bmpForEditing.Width; i++) {
+                for (int j = 0; j < _bmpForEditing.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
                     g = rgbValues[index + 1];
                     b = rgbValues[index];
 
-                    y = (int)(0.2126 * r + 0.7152 * g + 0.0722 * b); // source = ????
+                    y = (int)(0.2126*r + 0.7152*g + 0.0722*b); // source = ????
 
                     _histogramY[y]++;
                 }
@@ -334,7 +310,9 @@ namespace ImageEdit_WPF.Windows
 
             return _histogramY;
         }
+        #endregion
 
+        #region Channels
         /// <summary>
         /// Convert raw integer values into a <c>PointCollection</c>.
         /// </summary>
@@ -342,16 +320,14 @@ namespace ImageEdit_WPF.Windows
         /// <returns>
         /// A set of <c>PointCollection</c> for the prefered histogram.
         /// </returns>
-        private PointCollection ConvertToPointCollection(int[] values)
-        {
+        private PointCollection ConvertToPointCollection(int[] values) {
             int max = values.Max();
 
             PointCollection points = new PointCollection();
             // first point (lower-left corner)
             points.Add(new System.Windows.Point(0, max));
             // middle points
-            for (int i = 0; i < values.Length; i++)
-            {
+            for (int i = 0; i < values.Length; i++) {
                 points.Add(new System.Windows.Point(i, max - values[i]));
             }
             // last point (lower-right corner)
@@ -366,17 +342,13 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void gray_Checked(object sender, RoutedEventArgs e)
-        {
+        private void gray_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Luminosity (Gray)";
             polygon.Fill = new SolidColorBrush(Colors.Black);
-            if (_isCalculatedY)
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(_histogramY);
-            }
-            else
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(HistogramLuminance());
+            if (_isCalculatedY) {
+                HistogramPoints = ConvertToPointCollection(_histogramY);
+            } else {
+                HistogramPoints = ConvertToPointCollection(HistogramLuminance());
             }
         }
 
@@ -386,17 +358,13 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void red_Checked(object sender, RoutedEventArgs e)
-        {
+        private void red_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Red";
             polygon.Fill = new SolidColorBrush(Colors.Red);
-            if (_isCalculatedR)
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(_histogramR);
-            }
-            else
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(HistogramRed());
+            if (_isCalculatedR) {
+                HistogramPoints = ConvertToPointCollection(_histogramR);
+            } else {
+                HistogramPoints = ConvertToPointCollection(HistogramRed());
             }
         }
 
@@ -406,17 +374,13 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void green_Checked(object sender, RoutedEventArgs e)
-        {
+        private void green_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Green";
             polygon.Fill = new SolidColorBrush(Colors.Green);
-            if (_isCalculatedG)
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(_histogramG);
-            }
-            else
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(HistogramGreen());
+            if (_isCalculatedG) {
+                HistogramPoints = ConvertToPointCollection(_histogramG);
+            } else {
+                HistogramPoints = ConvertToPointCollection(HistogramGreen());
             }
         }
 
@@ -426,18 +390,15 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void blue_Checked(object sender, RoutedEventArgs e)
-        {
+        private void blue_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Blue";
             polygon.Fill = new SolidColorBrush(Colors.Blue);
-            if (_isCalculatedB)
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(_histogramB);
+            if (_isCalculatedB) {
+                HistogramPoints = ConvertToPointCollection(_histogramB);
+            } else {
+                HistogramPoints = ConvertToPointCollection(HistogramBlue());
             }
-            else
-            {
-                this.LuminanceHistogramPoints = ConvertToPointCollection(HistogramBlue());
-            }
-        } 
+        }
+        #endregion
     }
 }

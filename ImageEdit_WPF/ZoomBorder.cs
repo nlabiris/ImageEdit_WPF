@@ -27,13 +27,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ImageEdit_WPF
-{
+namespace ImageEdit_WPF {
     /// <summary>
     /// Implementation of Pan and Zoom capabilities of the interface.
     /// </summary>
-    public class ZoomBorder : Border
-    {
+    public class ZoomBorder : Border {
         /// <summary>
         /// The border.
         /// </summary>
@@ -66,8 +64,7 @@ namespace ImageEdit_WPF
         /// <returns>
         /// New position of the mouse pointer.
         /// </returns>
-        private static TranslateTransform GetTranslateTransform(UIElement element)
-        {
+        private static TranslateTransform GetTranslateTransform(UIElement element) {
             return (TranslateTransform)((TransformGroup)element.RenderTransform).Children.First(tr => tr is TranslateTransform);
         }
 
@@ -78,24 +75,17 @@ namespace ImageEdit_WPF
         /// <returns>
         /// New size of the border - image.
         /// </returns>
-        private static ScaleTransform GetScaleTransform(UIElement element)
-        {
+        private static ScaleTransform GetScaleTransform(UIElement element) {
             return (ScaleTransform)((TransformGroup)element.RenderTransform).Children.First(tr => tr is ScaleTransform);
         }
 
         /// <summary>
         /// Get or set the <c>UIElement</c>, which is the border.
         /// </summary>
-        public override UIElement Child
-        {
-            get
-            {
-                return base.Child;
-            }
-            set
-            {
-                if (value != null && value != this.Child)
-                {
+        public override UIElement Child {
+            get { return base.Child; }
+            set {
+                if (value != null && value != this.Child) {
                     this.Initialize(value);
                 }
                 base.Child = value;
@@ -107,11 +97,9 @@ namespace ImageEdit_WPF
         /// Initialize the position of the mouse pointer (upper-left corner) as well as the events that take place.
         /// </summary>
         /// <param name="element">The border.</param>
-        public void Initialize(UIElement element)
-        {
+        public void Initialize(UIElement element) {
             this._child = element;
-            if (_child != null)
-            {
+            if (_child != null) {
                 TransformGroup group = new TransformGroup();
                 ScaleTransform st = new ScaleTransform();
                 group.Children.Add(st);
@@ -133,20 +121,16 @@ namespace ImageEdit_WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void child_MouseUp(object sender, MouseButtonEventArgs e)
-        {
+        private void child_MouseUp(object sender, MouseButtonEventArgs e) {
             _isStillDownLeft = false;
             _isStillDownMiddle = false;
 
-            if (_child != null)
-            {
-                if (e.ChangedButton == MouseButton.Middle)
-                {
+            if (_child != null) {
+                if (e.ChangedButton == MouseButton.Middle) {
                     _child.ReleaseMouseCapture();
                     this.Cursor = Cursors.Cross;
                 }
-                if (e.ChangedButton == MouseButton.Left)
-                {
+                if (e.ChangedButton == MouseButton.Left) {
                     this.Cursor = Cursors.Cross;
                 }
             }
@@ -159,26 +143,21 @@ namespace ImageEdit_WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void child_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (_child != null)
-            {
-                if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
-                {
+        private void child_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (_child != null) {
+                if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed) {
                     TranslateTransform tt = GetTranslateTransform(_child);
                     _start = e.GetPosition(this);
                     _origin = new Point(tt.X, tt.Y);
                     this.Cursor = Cursors.SizeAll;
                     _child.CaptureMouse();
                     _isStillDownMiddle = true;
-                }
-                else if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
-                {
+                } else if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed) {
                     //TranslateTransform tt = GetTranslateTransform(child);
                     _start = e.GetPosition(this);
                     //origin = new Point(tt.X, tt.Y);
                     this.Cursor = Cursors.Cross;
-                    
+
                     _isStillDownLeft = true;
                 }
             }
@@ -187,10 +166,8 @@ namespace ImageEdit_WPF
         /// <summary>
         /// Reset the Pan and Zoom.
         /// </summary>
-        public void Reset()
-        {
-            if (_child != null)
-            {
+        public void Reset() {
+            if (_child != null) {
                 // reset zoom
                 var st = GetScaleTransform(_child);
                 st.ScaleX = 1.0;
@@ -208,10 +185,8 @@ namespace ImageEdit_WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void child_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (_child != null)
-            {
+        private void child_MouseWheel(object sender, MouseWheelEventArgs e) {
+            if (_child != null) {
                 ScaleTransform st = GetScaleTransform(_child);
                 TranslateTransform tt = GetTranslateTransform(_child);
 
@@ -223,14 +198,14 @@ namespace ImageEdit_WPF
                 double abosuluteX;
                 double abosuluteY;
 
-                abosuluteX = relative.X * st.ScaleX + tt.X;
-                abosuluteY = relative.Y * st.ScaleY + tt.Y;
+                abosuluteX = relative.X*st.ScaleX + tt.X;
+                abosuluteY = relative.Y*st.ScaleY + tt.Y;
 
                 st.ScaleX += zoom;
                 st.ScaleY += zoom;
 
-                tt.X = abosuluteX - relative.X * st.ScaleX;
-                tt.Y = abosuluteY - relative.Y * st.ScaleY;
+                tt.X = abosuluteX - relative.X*st.ScaleX;
+                tt.Y = abosuluteY - relative.Y*st.ScaleY;
             }
         }
 
@@ -239,8 +214,7 @@ namespace ImageEdit_WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
+        void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e) {
             this.Reset();
         }
 
@@ -250,21 +224,16 @@ namespace ImageEdit_WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void child_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (_child != null)
-            {
-                if (_isStillDownMiddle)
-                {
+        private void child_MouseMove(object sender, MouseEventArgs e) {
+            if (_child != null) {
+                if (_isStillDownMiddle) {
                     TranslateTransform tt = GetTranslateTransform(_child);
                     Vector v = _start - e.GetPosition(this);
                     tt.X = _origin.X - v.X;
                     tt.Y = _origin.Y - v.Y;
                     //rect.Width = (int)tt.X;
                     //rect.Height = (int)tt.Y;
-                }
-                else if (_isStillDownLeft)
-                {
+                } else if (_isStillDownLeft) {
                     Point pos = e.GetPosition(this);
 
                     double x = Math.Min(pos.X, _start.X);

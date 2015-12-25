@@ -27,13 +27,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace ImageEdit_WPF.Windows
-{
+namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Sobel.xaml
     /// </summary>
-    public partial class Sobel : Window
-    {
+    public partial class Sobel : Window {
         /// <summary>
         /// Output image.
         /// </summary>
@@ -61,8 +59,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="bmpO"></param>
         /// <param name="bmpUR"></param>
-        public Sobel(Bitmap bmpO, Bitmap bmpUR, ref bool nochange)
-        {
+        public Sobel(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
             InitializeComponent();
 
             _bmpOutput = bmpO;
@@ -129,8 +126,7 @@ namespace ImageEdit_WPF.Windows
         /// </remarks>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void three_Checked(object sender, RoutedEventArgs e)
-        {
+        private void three_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 3;
 
             this.Height = 250;
@@ -323,8 +319,7 @@ namespace ImageEdit_WPF.Windows
         /// </remarks>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void five_Checked(object sender, RoutedEventArgs e)
-        {
+        private void five_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 5;
 
             this.Height = 290;
@@ -544,8 +539,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void seven_Checked(object sender, RoutedEventArgs e)
-        {
+        private void seven_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 7;
 
             this.Height = 330;
@@ -766,8 +760,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ok_Click(object sender, RoutedEventArgs e)
-        {
+        private void ok_Click(object sender, RoutedEventArgs e) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -795,7 +788,7 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
             byte[] bgrValues = new byte[bytes];
 
@@ -804,269 +797,219 @@ namespace ImageEdit_WPF.Windows
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            if (_sizeMask == 3)
-            {
+            if (_sizeMask == 3) {
                 mask3X = new int[3, 3] {
-                                            { int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text) },
-                                            { int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text) },
-                                            { int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text) }
-                                         };
+                    {int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text)},
+                    {int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text)},
+                    {int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text)}
+                };
                 mask3Y = new int[3, 3] {
-                                            { int.Parse(tby1.Text), int.Parse(tby2.Text), int.Parse(tby3.Text) },
-                                            { int.Parse(tby8.Text), int.Parse(tby9.Text), int.Parse(tby10.Text) },
-                                            { int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text) }
-                                         };
+                    {int.Parse(tby1.Text), int.Parse(tby2.Text), int.Parse(tby3.Text)},
+                    {int.Parse(tby8.Text), int.Parse(tby9.Text), int.Parse(tby10.Text)},
+                    {int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text)}
+                };
 
-                for (i = 1; i < _bmpOutput.Width - 1; i++)
-                {
-                    for (j = 1; j < _bmpOutput.Height - 1; j++)
-                    {
+                for (i = 1; i < _bmpOutput.Width - 1; i++) {
+                    for (j = 1; j < _bmpOutput.Height - 1; j++) {
                         int index;
 
                         txR = 0;
                         txG = 0;
                         txB = 0;
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
-                                txR = txR + rgbValues[index + 2] * mask3X[k, l];
-                                txG = txG + rgbValues[index + 1] * mask3X[k, l];
-                                txB = txB + rgbValues[index] * mask3X[k, l];
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                                txR = txR + rgbValues[index + 2]*mask3X[k, l];
+                                txG = txG + rgbValues[index + 1]*mask3X[k, l];
+                                txB = txB + rgbValues[index]*mask3X[k, l];
                             }
                         }
 
                         tyR = 0;
                         tyG = 0;
                         tyB = 0;
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 1) * bmpData.Stride) + ((i + k - 1) * 3);
-                                tyR = tyR + rgbValues[index + 2] * mask3Y[k, l];
-                                tyG = tyG + rgbValues[index + 1] * mask3Y[k, l];
-                                tyB = tyB + rgbValues[index] * mask3Y[k, l];
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                                tyR = tyR + rgbValues[index + 2]*mask3Y[k, l];
+                                tyG = tyG + rgbValues[index + 1]*mask3Y[k, l];
+                                tyB = tyB + rgbValues[index]*mask3Y[k, l];
                             }
                         }
 
-                        tR = Math.Sqrt(txR * txR + tyR * tyR);
-                        tG = Math.Sqrt(txG * txG + tyG * tyG);
-                        tB = Math.Sqrt(txB * txB + tyB * tyB);
+                        tR = Math.Sqrt(txR*txR + tyR*tyR);
+                        tG = Math.Sqrt(txG*txG + tyG*tyG);
+                        tB = Math.Sqrt(txB*txB + tyB*tyB);
 
-                        if (tR > 255.0)
-                        {
+                        if (tR > 255.0) {
                             tR = 255.0;
-                        }
-                        else if (tR < 0.0)
-                        {
+                        } else if (tR < 0.0) {
                             tR = 0.0;
                         }
 
-                        if (tG > 255.0)
-                        {
+                        if (tG > 255.0) {
                             tG = 255.0;
-                        }
-                        else if (tG < 0.0)
-                        {
+                        } else if (tG < 0.0) {
                             tG = 0.0;
                         }
 
-                        if (tB > 255.0)
-                        {
+                        if (tB > 255.0) {
                             tB = 255.0;
-                        }
-                        else if (tB < 0.0)
-                        {
+                        } else if (tB < 0.0) {
                             tB = 0.0;
                         }
 
-                        index = (j * bmpData.Stride) + (i * 3);
+                        index = (j*bmpData.Stride) + (i*3);
 
                         bgrValues[index + 2] = (byte)tR;
                         bgrValues[index + 1] = (byte)tG;
                         bgrValues[index] = (byte)tB;
                     }
                 }
-            }
-            else if (_sizeMask == 5)
-            {
+            } else if (_sizeMask == 5) {
                 mask5X = new int[5, 5] {
-                                            { int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text), int.Parse(tbx4.Text), int.Parse(tbx5.Text) },
-                                            { int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text), int.Parse(tbx11.Text), int.Parse(tbx12.Text) },
-                                            { int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text), int.Parse(tbx18.Text), int.Parse(tbx19.Text) },
-                                            { int.Parse(tbx22.Text), int.Parse(tbx23.Text), int.Parse(tbx24.Text), int.Parse(tbx25.Text), int.Parse(tbx26.Text) },
-                                            { int.Parse(tbx29.Text), int.Parse(tbx30.Text), int.Parse(tbx31.Text), int.Parse(tbx32.Text), int.Parse(tbx33.Text) }
-                                         };
+                    {int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text), int.Parse(tbx4.Text), int.Parse(tbx5.Text)},
+                    {int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text), int.Parse(tbx11.Text), int.Parse(tbx12.Text)},
+                    {int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text), int.Parse(tbx18.Text), int.Parse(tbx19.Text)},
+                    {int.Parse(tbx22.Text), int.Parse(tbx23.Text), int.Parse(tbx24.Text), int.Parse(tbx25.Text), int.Parse(tbx26.Text)},
+                    {int.Parse(tbx29.Text), int.Parse(tbx30.Text), int.Parse(tbx31.Text), int.Parse(tbx32.Text), int.Parse(tbx33.Text)}
+                };
                 mask5Y = new int[5, 5] {
-                                            { int.Parse(tby1.Text), int.Parse(tby2.Text), int.Parse(tby3.Text), int.Parse(tby4.Text), int.Parse(tby5.Text) },
-                                            { int.Parse(tby8.Text), int.Parse(tby9.Text), int.Parse(tby10.Text), int.Parse(tby11.Text), int.Parse(tby12.Text) },
-                                            { int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text), int.Parse(tby18.Text), int.Parse(tby19.Text) },
-                                            { int.Parse(tby22.Text), int.Parse(tby23.Text), int.Parse(tby24.Text), int.Parse(tby25.Text), int.Parse(tby26.Text) },
-                                            { int.Parse(tby29.Text), int.Parse(tby30.Text), int.Parse(tby31.Text), int.Parse(tby32.Text), int.Parse(tby33.Text) }
-                                         };
+                    {int.Parse(tby1.Text), int.Parse(tby2.Text), int.Parse(tby3.Text), int.Parse(tby4.Text), int.Parse(tby5.Text)},
+                    {int.Parse(tby8.Text), int.Parse(tby9.Text), int.Parse(tby10.Text), int.Parse(tby11.Text), int.Parse(tby12.Text)},
+                    {int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text), int.Parse(tby18.Text), int.Parse(tby19.Text)},
+                    {int.Parse(tby22.Text), int.Parse(tby23.Text), int.Parse(tby24.Text), int.Parse(tby25.Text), int.Parse(tby26.Text)},
+                    {int.Parse(tby29.Text), int.Parse(tby30.Text), int.Parse(tby31.Text), int.Parse(tby32.Text), int.Parse(tby33.Text)}
+                };
 
-                for (i = 2; i < _bmpOutput.Width - 2; i++)
-                {
-                    for (j = 2; j < _bmpOutput.Height - 2; j++)
-                    {
+                for (i = 2; i < _bmpOutput.Width - 2; i++) {
+                    for (j = 2; j < _bmpOutput.Height - 2; j++) {
                         int index;
 
                         txR = 0;
                         txG = 0;
                         txB = 0;
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 2) * bmpData.Stride) + ((i + k - 2) * 3);
-                                txR = txR + rgbValues[index + 2] * mask5X[k, l];
-                                txG = txG + rgbValues[index + 1] * mask5X[k, l];
-                                txB = txB + rgbValues[index] * mask5X[k, l];
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
+                                txR = txR + rgbValues[index + 2]*mask5X[k, l];
+                                txG = txG + rgbValues[index + 1]*mask5X[k, l];
+                                txB = txB + rgbValues[index]*mask5X[k, l];
                             }
                         }
 
                         tyR = 0;
                         tyG = 0;
                         tyB = 0;
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 2) * bmpData.Stride) + ((i + k - 2) * 3);
-                                tyR = tyR + rgbValues[index + 2] * mask5Y[k, l];
-                                tyG = tyG + rgbValues[index + 1] * mask5Y[k, l];
-                                tyB = tyB + rgbValues[index] * mask5Y[k, l];
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
+                                tyR = tyR + rgbValues[index + 2]*mask5Y[k, l];
+                                tyG = tyG + rgbValues[index + 1]*mask5Y[k, l];
+                                tyB = tyB + rgbValues[index]*mask5Y[k, l];
                             }
                         }
 
-                        tR = Math.Sqrt(txR * txR + tyR * tyR);
-                        tG = Math.Sqrt(txG * txG + tyG * tyG);
-                        tB = Math.Sqrt(txB * txB + tyB * tyB);
+                        tR = Math.Sqrt(txR*txR + tyR*tyR);
+                        tG = Math.Sqrt(txG*txG + tyG*tyG);
+                        tB = Math.Sqrt(txB*txB + tyB*tyB);
 
-                        if (tR > 255.0)
-                        {
+                        if (tR > 255.0) {
                             tR = 255.0;
-                        }
-                        else if (tR < 0.0)
-                        {
+                        } else if (tR < 0.0) {
                             tR = 0.0;
                         }
 
-                        if (tG > 255.0)
-                        {
+                        if (tG > 255.0) {
                             tG = 255.0;
-                        }
-                        else if (tG < 0.0)
-                        {
+                        } else if (tG < 0.0) {
                             tG = 0.0;
                         }
 
-                        if (tB > 255.0)
-                        {
+                        if (tB > 255.0) {
                             tB = 255.0;
-                        }
-                        else if (tB < 0.0)
-                        {
+                        } else if (tB < 0.0) {
                             tB = 0.0;
                         }
 
-                        index = (j * bmpData.Stride) + (i * 3);
+                        index = (j*bmpData.Stride) + (i*3);
 
                         bgrValues[index + 2] = (byte)tR;
                         bgrValues[index + 1] = (byte)tG;
                         bgrValues[index] = (byte)tB;
                     }
                 }
-            }
-            else if (_sizeMask == 7)
-            {
+            } else if (_sizeMask == 7) {
                 mask7X = new int[7, 7] {
-                                            { int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text), int.Parse(tbx4.Text), int.Parse(tbx5.Text), int.Parse(tbx6.Text), int.Parse(tbx7.Text) },
-                                            { int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text), int.Parse(tbx11.Text), int.Parse(tbx12.Text), int.Parse(tbx13.Text), int.Parse(tbx14.Text) },
-                                            { int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text), int.Parse(tbx18.Text), int.Parse(tbx19.Text), int.Parse(tbx20.Text), int.Parse(tbx21.Text) },
-                                            { int.Parse(tbx22.Text), int.Parse(tbx23.Text), int.Parse(tbx24.Text), int.Parse(tbx25.Text), int.Parse(tbx26.Text), int.Parse(tbx27.Text), int.Parse(tbx28.Text) },
-                                            { int.Parse(tbx29.Text), int.Parse(tbx30.Text), int.Parse(tbx31.Text), int.Parse(tbx32.Text), int.Parse(tbx33.Text), int.Parse(tbx34.Text), int.Parse(tbx35.Text) },
-                                            { int.Parse(tbx36.Text), int.Parse(tbx37.Text), int.Parse(tbx38.Text), int.Parse(tbx39.Text), int.Parse(tbx40.Text), int.Parse(tbx41.Text), int.Parse(tbx42.Text) },
-                                            { int.Parse(tbx43.Text), int.Parse(tbx44.Text), int.Parse(tbx45.Text), int.Parse(tbx46.Text), int.Parse(tbx47.Text), int.Parse(tbx48.Text), int.Parse(tbx49.Text) }
-                                         };
+                    {int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text), int.Parse(tbx4.Text), int.Parse(tbx5.Text), int.Parse(tbx6.Text), int.Parse(tbx7.Text)},
+                    {int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text), int.Parse(tbx11.Text), int.Parse(tbx12.Text), int.Parse(tbx13.Text), int.Parse(tbx14.Text)},
+                    {int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text), int.Parse(tbx18.Text), int.Parse(tbx19.Text), int.Parse(tbx20.Text), int.Parse(tbx21.Text)},
+                    {int.Parse(tbx22.Text), int.Parse(tbx23.Text), int.Parse(tbx24.Text), int.Parse(tbx25.Text), int.Parse(tbx26.Text), int.Parse(tbx27.Text), int.Parse(tbx28.Text)},
+                    {int.Parse(tbx29.Text), int.Parse(tbx30.Text), int.Parse(tbx31.Text), int.Parse(tbx32.Text), int.Parse(tbx33.Text), int.Parse(tbx34.Text), int.Parse(tbx35.Text)},
+                    {int.Parse(tbx36.Text), int.Parse(tbx37.Text), int.Parse(tbx38.Text), int.Parse(tbx39.Text), int.Parse(tbx40.Text), int.Parse(tbx41.Text), int.Parse(tbx42.Text)},
+                    {int.Parse(tbx43.Text), int.Parse(tbx44.Text), int.Parse(tbx45.Text), int.Parse(tbx46.Text), int.Parse(tbx47.Text), int.Parse(tbx48.Text), int.Parse(tbx49.Text)}
+                };
                 mask7Y = new int[7, 7] {
-                                            { int.Parse(tby1.Text), int.Parse(tby2.Text), int.Parse(tby3.Text), int.Parse(tby4.Text), int.Parse(tby5.Text), int.Parse(tby6.Text), int.Parse(tby7.Text) },
-                                            { int.Parse(tby8.Text), int.Parse(tby9.Text), int.Parse(tby10.Text), int.Parse(tby11.Text), int.Parse(tby12.Text), int.Parse(tby13.Text), int.Parse(tby14.Text) },
-                                            { int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text), int.Parse(tby18.Text), int.Parse(tby19.Text), int.Parse(tby20.Text), int.Parse(tby21.Text) },
-                                            { int.Parse(tby22.Text), int.Parse(tby23.Text), int.Parse(tby24.Text), int.Parse(tby25.Text), int.Parse(tby26.Text), int.Parse(tby27.Text), int.Parse(tby28.Text) },
-                                            { int.Parse(tby29.Text), int.Parse(tby30.Text), int.Parse(tby31.Text), int.Parse(tby32.Text), int.Parse(tby33.Text), int.Parse(tby34.Text), int.Parse(tby35.Text) },
-                                            { int.Parse(tby36.Text), int.Parse(tby37.Text), int.Parse(tby38.Text), int.Parse(tby39.Text), int.Parse(tby40.Text), int.Parse(tby41.Text), int.Parse(tby42.Text) },
-                                            { int.Parse(tby43.Text), int.Parse(tby44.Text), int.Parse(tby45.Text), int.Parse(tby46.Text), int.Parse(tby47.Text), int.Parse(tby48.Text), int.Parse(tby49.Text) }
-                                         };
+                    {int.Parse(tby1.Text), int.Parse(tby2.Text), int.Parse(tby3.Text), int.Parse(tby4.Text), int.Parse(tby5.Text), int.Parse(tby6.Text), int.Parse(tby7.Text)},
+                    {int.Parse(tby8.Text), int.Parse(tby9.Text), int.Parse(tby10.Text), int.Parse(tby11.Text), int.Parse(tby12.Text), int.Parse(tby13.Text), int.Parse(tby14.Text)},
+                    {int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text), int.Parse(tby18.Text), int.Parse(tby19.Text), int.Parse(tby20.Text), int.Parse(tby21.Text)},
+                    {int.Parse(tby22.Text), int.Parse(tby23.Text), int.Parse(tby24.Text), int.Parse(tby25.Text), int.Parse(tby26.Text), int.Parse(tby27.Text), int.Parse(tby28.Text)},
+                    {int.Parse(tby29.Text), int.Parse(tby30.Text), int.Parse(tby31.Text), int.Parse(tby32.Text), int.Parse(tby33.Text), int.Parse(tby34.Text), int.Parse(tby35.Text)},
+                    {int.Parse(tby36.Text), int.Parse(tby37.Text), int.Parse(tby38.Text), int.Parse(tby39.Text), int.Parse(tby40.Text), int.Parse(tby41.Text), int.Parse(tby42.Text)},
+                    {int.Parse(tby43.Text), int.Parse(tby44.Text), int.Parse(tby45.Text), int.Parse(tby46.Text), int.Parse(tby47.Text), int.Parse(tby48.Text), int.Parse(tby49.Text)}
+                };
 
-                for (i = 3; i < _bmpOutput.Width - 3; i++)
-                {
-                    for (j = 3; j < _bmpOutput.Height - 3; j++)
-                    {
+                for (i = 3; i < _bmpOutput.Width - 3; i++) {
+                    for (j = 3; j < _bmpOutput.Height - 3; j++) {
                         int index;
 
                         txR = 0;
                         txG = 0;
                         txB = 0;
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 3) * bmpData.Stride) + ((i + k - 3) * 3);
-                                txR = txR + rgbValues[index + 2] * mask7X[k, l];
-                                txG = txG + rgbValues[index + 1] * mask7X[k, l];
-                                txB = txB + rgbValues[index] * mask7X[k, l];
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
+                                txR = txR + rgbValues[index + 2]*mask7X[k, l];
+                                txG = txG + rgbValues[index + 1]*mask7X[k, l];
+                                txB = txB + rgbValues[index]*mask7X[k, l];
                             }
                         }
 
                         tyR = 0;
                         tyG = 0;
                         tyB = 0;
-                        for (k = 0; k < _sizeMask; k++)
-                        {
-                            for (l = 0; l < _sizeMask; l++)
-                            {
-                                index = ((j + l - 3) * bmpData.Stride) + ((i + k - 3) * 3);
-                                tyR = tyR + rgbValues[index + 2] * mask7Y[k, l];
-                                tyG = tyG + rgbValues[index + 1] * mask7Y[k, l];
-                                tyB = tyB + rgbValues[index] * mask7Y[k, l];
+                        for (k = 0; k < _sizeMask; k++) {
+                            for (l = 0; l < _sizeMask; l++) {
+                                index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
+                                tyR = tyR + rgbValues[index + 2]*mask7Y[k, l];
+                                tyG = tyG + rgbValues[index + 1]*mask7Y[k, l];
+                                tyB = tyB + rgbValues[index]*mask7Y[k, l];
                             }
                         }
 
-                        tR = Math.Sqrt(txR * txR + tyR * tyR);
-                        tG = Math.Sqrt(txG * txG + tyG * tyG);
-                        tB = Math.Sqrt(txB * txB + tyB * tyB);
+                        tR = Math.Sqrt(txR*txR + tyR*tyR);
+                        tG = Math.Sqrt(txG*txG + tyG*tyG);
+                        tB = Math.Sqrt(txB*txB + tyB*tyB);
 
-                        if (tR > 255.0)
-                        {
+                        if (tR > 255.0) {
                             tR = 255.0;
-                        }
-                        else if (tR < 0.0)
-                        {
+                        } else if (tR < 0.0) {
                             tR = 0.0;
                         }
 
-                        if (tG > 255.0)
-                        {
+                        if (tG > 255.0) {
                             tG = 255.0;
-                        }
-                        else if (tG < 0.0)
-                        {
+                        } else if (tG < 0.0) {
                             tG = 0.0;
                         }
 
-                        if (tB > 255.0)
-                        {
+                        if (tB > 255.0) {
                             tB = 255.0;
-                        }
-                        else if (tB < 0.0)
-                        {
+                        } else if (tB < 0.0) {
                             tB = 0.0;
                         }
 
-                        index = (j * bmpData.Stride) + (i * 3);
+                        index = (j*bmpData.Stride) + (i*3);
 
                         bgrValues[index + 2] = (byte)tR;
                         bgrValues[index + 1] = (byte)tG;
@@ -1075,11 +1018,9 @@ namespace ImageEdit_WPF.Windows
                 }
             }
 
-            for (i = 0; i < _bmpOutput.Width; i++)
-            {
-                for (j = 0; j < _bmpOutput.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (i = 0; i < _bmpOutput.Width; i++) {
+                for (j = 0; j < _bmpOutput.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
                     rgbValues[index + 1] = bgrValues[index + 1];
@@ -1101,19 +1042,16 @@ namespace ImageEdit_WPF.Windows
 
             string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK)
-            {
+            if (result == MessageBoxResult.OK) {
                 _nochange = false;
                 MainWindow.Action = ActionType.ImageConvolution;
                 _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
                 MainWindow.UndoStack.Push(_bmpUndoRedo);
                 MainWindow.RedoStack.Clear();
-                foreach (Window mainWindow in Application.Current.Windows)
-                {
-                    if (mainWindow.GetType() == typeof(MainWindow))
-                    {
-                        ((MainWindow) mainWindow).undo.IsEnabled = true;
-                        ((MainWindow) mainWindow).redo.IsEnabled = false;
+                foreach (Window mainWindow in Application.Current.Windows) {
+                    if (mainWindow.GetType() == typeof (MainWindow)) {
+                        ((MainWindow)mainWindow).undo.IsEnabled = true;
+                        ((MainWindow)mainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();
@@ -1123,18 +1061,15 @@ namespace ImageEdit_WPF.Windows
         /// <summary>
         /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
         /// </summary>
-        public void BitmapToBitmapImage()
-        {
+        public void BitmapToBitmapImage() {
             MemoryStream str = new MemoryStream();
             _bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
-            foreach (Window mainWindow in Application.Current.Windows)
-            {
-                if (mainWindow.GetType() == typeof(MainWindow))
-                {
-                    ((MainWindow) mainWindow).mainImage.Source = bdc.Frames[0];
+            foreach (Window mainWindow in Application.Current.Windows) {
+                if (mainWindow.GetType() == typeof (MainWindow)) {
+                    ((MainWindow)mainWindow).mainImage.Source = bdc.Frames[0];
                 }
             }
         }

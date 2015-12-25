@@ -27,13 +27,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace ImageEdit_WPF.Windows
-{
+namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Threshold.xaml
     /// </summary>
-    public partial class Threshold : Window
-    {
+    public partial class Threshold : Window {
         /// <summary>
         /// Output image.
         /// </summary>
@@ -55,8 +53,7 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="bmpO"></param>
         /// <param name="bmpUR"></param>
-        public Threshold(Bitmap bmpO, Bitmap bmpUR, ref bool nochange)
-        {
+        public Threshold(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
             InitializeComponent();
 
             _bmpOutput = bmpO;
@@ -71,43 +68,32 @@ namespace ImageEdit_WPF.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ok_Click(object sender, RoutedEventArgs e)
-        {
+        private void ok_Click(object sender, RoutedEventArgs e) {
             int threshold = 0;
             int r = 0;
             int g = 0;
             int b = 0;
 
-            try
-            {
+            try {
                 threshold = int.Parse(textboxThreshold.Text);
-                if (threshold > 255 || threshold < 0)
-                {
+                if (threshold > 255 || threshold < 0) {
                     string message = "Wrong range" + Environment.NewLine + Environment.NewLine + "Give a number between 0 and 255";
                     MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-            }
-            catch (ArgumentNullException ex)
-            {
+            } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
-            }
-            catch (FormatException ex)
-            {
+            } catch (FormatException ex) {
                 MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
-            }
-            catch (OverflowException ex)
-            {
+            } catch (OverflowException ex) {
                 MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
@@ -120,7 +106,7 @@ namespace ImageEdit_WPF.Windows
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * _bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -128,40 +114,29 @@ namespace ImageEdit_WPF.Windows
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (int i = 0; i < _bmpOutput.Width; i++)
-            {
-                for (int j = 0; j < _bmpOutput.Height; j++)
-                {
-                    int index = (j * bmpData.Stride) + (i * 3);
+            for (int i = 0; i < _bmpOutput.Width; i++) {
+                for (int j = 0; j < _bmpOutput.Height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
                     g = rgbValues[index + 1];
                     b = rgbValues[index];
 
-                    if (r < threshold)
-                    {
+                    if (r < threshold) {
                         r = 0;
-                    }
-                    else
-                    {
+                    } else {
                         r = 255;
                     }
 
-                    if (g < threshold)
-                    {
+                    if (g < threshold) {
                         g = 0;
-                    }
-                    else
-                    {
+                    } else {
                         g = 255;
                     }
 
-                    if (b < threshold)
-                    {
+                    if (b < threshold) {
                         b = 0;
-                    }
-                    else
-                    {
+                    } else {
                         b = 255;
                     }
 
@@ -185,19 +160,16 @@ namespace ImageEdit_WPF.Windows
 
             string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK)
-            {
+            if (result == MessageBoxResult.OK) {
                 _nochange = false;
                 MainWindow.Action = ActionType.Threshold;
                 _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
                 MainWindow.UndoStack.Push(_bmpUndoRedo);
                 MainWindow.RedoStack.Clear();
-                foreach (Window mainWindow in Application.Current.Windows)
-                {
-                    if (mainWindow.GetType() == typeof(MainWindow))
-                    {
-                        ((MainWindow) mainWindow).undo.IsEnabled = true;
-                        ((MainWindow) mainWindow).redo.IsEnabled = false;
+                foreach (Window mainWindow in Application.Current.Windows) {
+                    if (mainWindow.GetType() == typeof (MainWindow)) {
+                        ((MainWindow)mainWindow).undo.IsEnabled = true;
+                        ((MainWindow)mainWindow).redo.IsEnabled = false;
                     }
                 }
                 this.Close();
@@ -207,18 +179,15 @@ namespace ImageEdit_WPF.Windows
         /// <summary>
         /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
         /// </summary>
-        public void BitmapToBitmapImage()
-        {
+        public void BitmapToBitmapImage() {
             MemoryStream str = new MemoryStream();
             _bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
-            foreach (Window mainWindow in Application.Current.Windows)
-            {
-                if (mainWindow.GetType() == typeof(MainWindow))
-                {
-                    ((MainWindow) mainWindow).mainImage.Source = bdc.Frames[0];
+            foreach (Window mainWindow in Application.Current.Windows) {
+                if (mainWindow.GetType() == typeof (MainWindow)) {
+                    ((MainWindow)mainWindow).mainImage.Source = bdc.Frames[0];
                 }
             }
         }
