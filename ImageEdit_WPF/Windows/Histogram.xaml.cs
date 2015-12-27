@@ -35,7 +35,7 @@ namespace ImageEdit_WPF.Windows {
         /// <summary>
         /// Input image.
         /// </summary>
-        private readonly Bitmap _bmpForEditing = null;
+        private Bitmap _bmpForEditing = null;
 
         /// <summary>
         /// Points that represent the values of the histogram.
@@ -45,22 +45,22 @@ namespace ImageEdit_WPF.Windows {
         /// <summary>
         /// Histogram of the Red channel.
         /// </summary>
-        private readonly int[] _histogramR = new int[256];
+        private int[] _histogramR = new int[256];
 
         /// <summary>
         /// Histogram of the Green channel.
         /// </summary>
-        private readonly int[] _histogramG = new int[256];
+        private int[] _histogramG = new int[256];
 
         /// <summary>
         /// Histogram of the Blue channel.
         /// </summary>
-        private readonly int[] _histogramB = new int[256];
+        private int[] _histogramB = new int[256];
 
         /// <summary>
         /// Histogram of the Luminance values.
         /// </summary>
-        private readonly int[] _histogramY = new int[256];
+        private int[] _histogramY = new int[256];
 
         /// <summary>
         /// Check if the histogram of the red channel has been already calculated.
@@ -343,7 +343,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void gray_Checked(object sender, RoutedEventArgs e) {
-            groupBox.Header = "Luminosity (Gray)";
+            groupBox.Header = "Luminosity";
             polygon.Fill = new SolidColorBrush(Colors.Black);
             if (_isCalculatedY) {
                 HistogramPoints = ConvertToPointCollection(_histogramY);

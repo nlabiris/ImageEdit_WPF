@@ -34,12 +34,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <TextBlock>Channel:</TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="0" Margin="70,0,0,10">
-            <RadioButton Name="gray" Checked="gray_Checked">Luminosity (Gray)</RadioButton>
+            <RadioButton Name="gray" Checked="gray_Checked">Luminosity</RadioButton>
             <RadioButton Name="red" Checked="red_Checked">Red</RadioButton>
             <RadioButton Name="green" Checked="green_Checked">Green</RadioButton>
             <RadioButton Name="blue" Checked="blue_Checked">Blue</RadioButton>
         </StackPanel>
-        <GroupBox Name="groupBox" Grid.Row="1" Grid.Column="0" Header="Luminosity (Gray)" Width="380" Height="200">
+        <GroupBox Name="groupBox" Grid.Row="1" Grid.Column="0" Header="Luminosity" Width="380" Height="200">
             <Border BorderThickness="1" BorderBrush="Black" Background="White" Margin="10">
                 <Polygon Name="polygon" Points="{Binding HistogramPoints}" Stretch="Fill" Fill="Black"/>
             </Border>

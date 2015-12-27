@@ -138,16 +138,12 @@ namespace ImageEdit_WPF {
             undo.IsEnabled = false;
             redo.IsEnabled = false;
             preferences.IsEnabled = false;
-
-            if (menuBar.Visibility == Visibility.Visible) {
-                menuBarShowHide.IsChecked = true;
-            } else {
-                menuBarShowHide.IsChecked = false;
-            }
-
+            
             if (statusBar.Visibility == Visibility.Visible) {
+                statusBar.Visibility = Visibility.Visible;
                 statusBarShowHide.IsChecked = true;
             } else {
+                statusBar.Visibility = Visibility.Collapsed;
                 statusBarShowHide.IsChecked = false;
             }
         }
@@ -176,13 +172,11 @@ namespace ImageEdit_WPF {
                 if (openFile.ShowDialog() == true) {
                     _inputFilename = openFile.FileName;
                     _bmpInput = new BitmapImage(new Uri(_inputFilename, UriKind.Absolute));
-                    _bmpOutput = new System.Drawing.Bitmap(_inputFilename);
-                    BmpUndoRedo = new System.Drawing.Bitmap(_inputFilename);
+                    _bmpOutput = new Bitmap(_inputFilename);
+                    BmpUndoRedo = new Bitmap(_inputFilename);
                     mainImage.Source = _bmpInput;
 
-                    statusBar.Visibility = Visibility.Visible;
-
-                    int bpp = System.Drawing.Image.GetPixelFormatSize(_bmpOutput.PixelFormat);
+                    int bpp = Image.GetPixelFormatSize(_bmpOutput.PixelFormat);
                     string resolution = _bmpOutput.Width + " x " + _bmpOutput.Height + " x " + bpp + " bpp";
                     string size = string.Empty;
                     FileInfo filesize = new FileInfo(_inputFilename);
@@ -203,7 +197,8 @@ namespace ImageEdit_WPF {
 
                     imageResolution.Text = resolution;
                     imageSize.Text = size;
-                    separator.Visibility = Visibility.Visible;
+                    separatorFirst.Visibility = Visibility.Visible;
+                    separatorSecond.Visibility = Visibility.Visible;
 
                     UndoStack.Clear();
                     UndoStack.Push(BmpUndoRedo);
@@ -600,23 +595,6 @@ namespace ImageEdit_WPF {
 
             if (UndoStack.Count > 1) {
                 undo.IsEnabled = true;
-            }
-        }
-        #endregion
-
-        #region Menu bar
-        /// <summary>
-        /// Get and set the visibility of menu bar.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void menuBarShowHide_Click(object sender, RoutedEventArgs e) {
-            if (menuBar.Visibility == Visibility.Collapsed) {
-                menuBar.Visibility = Visibility.Visible;
-                menuBarShowHide.IsChecked = true;
-            } else {
-                menuBar.Visibility = Visibility.Collapsed;
-                menuBarShowHide.IsChecked = false;
             }
         }
         #endregion

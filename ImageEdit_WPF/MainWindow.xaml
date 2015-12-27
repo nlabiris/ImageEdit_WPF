@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         xmlns:local="clr-namespace:ImageEdit_WPF"
         xmlns:commands="clr-namespace:ImageEdit_WPF.Commands"
         Title="ImageEdit" Height="350" Width="525" Background="Black" Closing="Window_Closing">
+    
+    <!-- KEYBOARD SHORTCUTS -->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="open_Executed" CanExecute="open_CanExecute" />
         <CommandBinding Command="ApplicationCommands.Save" Executed="save_Executed" CanExecute="save_CanExecute" />
@@ -34,12 +36,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <CommandBinding Command="commands:UndoCommand.Undo" Executed="Undo_Executed" CanExecute="Undo_CanExecute"></CommandBinding>
         <CommandBinding Command="commands:RedoCommand.Redo" Executed="Redo_Executed" CanExecute="Redo_CanExecute"></CommandBinding>
     </Window.CommandBindings>
+    
+    <!-- MAIN WINDOW -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
+        
+        <!-- MENU -->
         <Menu Name="menuBar" Grid.Row="0" Grid.Column="0">
             <MenuItem Header="File" StaysOpenOnClick="True">
                 <MenuItem Name="open" Header="Open..." Command="ApplicationCommands.Open"></MenuItem>
@@ -84,7 +90,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <MenuItem Header="Options" StaysOpenOnClick="True">
                 <MenuItem Name="preferences" Header="Preferences"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Name="menuBarShowHide" Header="Show/Hide menu bar" Click="menuBarShowHide_Click"></MenuItem>
                 <MenuItem Name="statusBarShowHide" Header="Show/Hide status bar" Click="statusBarShowHide_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Help" StaysOpenOnClick="True">
@@ -92,13 +97,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="about" Header="About..." Click="about_Click"></MenuItem>
             </MenuItem>
         </Menu>
+        
+        <!-- IMAGE -->
         <local:ZoomBorder x:Name="border" Grid.Row="1" Grid.Column="0" ClipToBounds="True" Background="Black">
             <Image x:Name="mainImage" x:FieldModifier="public"></Image>
         </local:ZoomBorder>
+        
+        <!-- STATUS BAR -->
         <StatusBar Name="statusBar" Grid.Row="2" Grid.Column="0" Visibility="Visible">
-            <TextBlock Name="imageResolution"></TextBlock>
-            <Separator Name="separator" Visibility="Collapsed" Opacity="0.5"></Separator>
-            <TextBlock Name="imageSize"></TextBlock>
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Name="imageResolution"></TextBlock>
+            </StatusBarItem>
+            <Separator Grid.Column="1" Name="separatorFirst" Visibility="Collapsed" Opacity="0.5"/>
+            <StatusBarItem Grid.Column="2">
+                <TextBlock Name="imageSize"></TextBlock>
+            </StatusBarItem>
+            <Separator Grid.Column="3" Name="separatorSecond" Visibility="Collapsed" Opacity="0.5"/>
+            <StatusBarItem Grid.Column="4">
+                <ProgressBar HorizontalAlignment="Right" Name="progressBar" Height="16" Width="100" Value="50"/>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </Window>

@@ -46,4 +46,3 @@ C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Release\Windows\ShiftBits.g.cs
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Release\Windows\Sobel.g.cs
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Release\Windows\Threshold.g.cs
-C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Release\ImageEdit_WPF.XML
