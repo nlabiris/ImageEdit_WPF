@@ -54,23 +54,22 @@ namespace ImageEdit_WPF.Windows {
             string disksize = string.Empty;
             string memorysize = string.Empty;
 
-            switch(bpp)
-            {
+            switch (bpp) {
                 case 8:
-                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 1) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 1 + " Bytes)";
+                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*1)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*1 + " Bytes)";
                     break;
                 case 16:
-                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 2) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 2 + " Bytes)";
+                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*2)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*2 + " Bytes)";
                     break;
                 case 24:
-                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 3) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 3 + " Bytes)";
+                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*3)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*3 + " Bytes)";
                     break;
                 case 32:
-                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 4) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 4 + " Bytes)";
+                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*4)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*4 + " Bytes)";
                     break;
             }
 

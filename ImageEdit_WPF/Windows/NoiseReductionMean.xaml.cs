@@ -99,7 +99,7 @@ namespace ImageEdit_WPF.Windows {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -108,10 +108,8 @@ namespace ImageEdit_WPF.Windows {
             Stopwatch watch = Stopwatch.StartNew();
 
             if (_sizeMask == 3) {
-                for(i = _sizeMask / 2; i < m_data.M_bmpOutput.Width - _sizeMask / 2; i++)
-                {
-                    for(j = _sizeMask / 2; j < m_data.M_bmpOutput.Height - _sizeMask / 2; j++)
-                    {
+                for (i = _sizeMask/2; i < m_data.M_bmpOutput.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < m_data.M_bmpOutput.Height - _sizeMask/2; j++) {
                         int index;
 
                         sumR = 0;
@@ -135,10 +133,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
             } else if (_sizeMask == 5) {
-                for(i = _sizeMask / 2; i < m_data.M_bmpOutput.Width - _sizeMask / 2; i++)
-                {
-                    for(j = _sizeMask / 2; j < m_data.M_bmpOutput.Height - _sizeMask / 2; j++)
-                    {
+                for (i = _sizeMask/2; i < m_data.M_bmpOutput.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < m_data.M_bmpOutput.Height - _sizeMask/2; j++) {
                         int index;
 
                         sumR = 0;
@@ -162,10 +158,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
             } else if (_sizeMask == 7) {
-                for(i = _sizeMask / 2; i < m_data.M_bmpOutput.Width - _sizeMask / 2; i++)
-                {
-                    for(j = _sizeMask / 2; j < m_data.M_bmpOutput.Height - _sizeMask / 2; j++)
-                    {
+                for (i = _sizeMask/2; i < m_data.M_bmpOutput.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < m_data.M_bmpOutput.Height - _sizeMask/2; j++) {
                         int index;
 
                         sumR = 0;

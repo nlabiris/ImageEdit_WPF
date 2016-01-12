@@ -91,7 +91,7 @@ namespace ImageEdit_WPF.Windows {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -99,10 +99,8 @@ namespace ImageEdit_WPF.Windows {
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
-            {
-                for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
-                {
+            for (int i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                for (int j = 0; j < m_data.M_bmpOutput.Height; j++) {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2]*contrast;

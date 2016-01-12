@@ -486,7 +486,7 @@ namespace ImageEdit_WPF.Windows {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
             byte[] bgrValues = new byte[bytes];
 
@@ -508,10 +508,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
 
-                for(i = 1; i < m_data.M_bmpOutput.Width - 1; i++)
-                {
-                    for(j = 1; j < m_data.M_bmpOutput.Height - 1; j++)
-                    {
+                for (i = 1; i < m_data.M_bmpOutput.Width - 1; i++) {
+                    for (j = 1; j < m_data.M_bmpOutput.Height - 1; j++) {
                         int index;
 
                         tR = 0.0;
@@ -566,10 +564,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
 
-                for(i = 2; i < m_data.M_bmpOutput.Width - 2; i++)
-                {
-                    for(j = 2; j < m_data.M_bmpOutput.Height - 2; j++)
-                    {
+                for (i = 2; i < m_data.M_bmpOutput.Width - 2; i++) {
+                    for (j = 2; j < m_data.M_bmpOutput.Height - 2; j++) {
                         int index;
 
                         tR = 0.0;
@@ -626,10 +622,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
 
-                for(i = 3; i < m_data.M_bmpOutput.Width - 3; i++)
-                {
-                    for(j = 3; j < m_data.M_bmpOutput.Height - 3; j++)
-                    {
+                for (i = 3; i < m_data.M_bmpOutput.Width - 3; i++) {
+                    for (j = 3; j < m_data.M_bmpOutput.Height - 3; j++) {
                         int index;
 
                         tR = 0.0;
@@ -671,10 +665,8 @@ namespace ImageEdit_WPF.Windows {
                 }
             }
 
-            for(i = 0; i < m_data.M_bmpOutput.Width; i++)
-            {
-                for(j = 0; j < m_data.M_bmpOutput.Height; j++)
-                {
+            for (i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                for (j = 0; j < m_data.M_bmpOutput.Height; j++) {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];

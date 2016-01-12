@@ -73,7 +73,7 @@ namespace ImageEdit_WPF {
             undo.IsEnabled = false;
             redo.IsEnabled = false;
             preferences.IsEnabled = false;
-            
+
             if (statusBar.Visibility == Visibility.Visible) {
                 statusBar.Visibility = Visibility.Visible;
                 statusBarShowHide.IsChecked = true;
@@ -117,16 +117,16 @@ namespace ImageEdit_WPF {
                     FileInfo filesize = new FileInfo(m_data.M_inputFilename);
                     switch (bpp) {
                         case 8:
-                            size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 1) / 1000000 + " MB";
+                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*1)/1000000 + " MB";
                             break;
                         case 16:
-                            size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 2) / 1000000 + " MB";
+                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*2)/1000000 + " MB";
                             break;
                         case 24:
-                            size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 3) / 1000000 + " MB";
+                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*3)/1000000 + " MB";
                             break;
                         case 32:
-                            size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 4) / 1000000 + " MB";
+                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*4)/1000000 + " MB";
                             break;
                     }
 
@@ -520,8 +520,7 @@ namespace ImageEdit_WPF {
                 return;
             }
 
-            if(m_data.M_redoStack.Count == 1)
-            {
+            if (m_data.M_redoStack.Count == 1) {
                 redo.IsEnabled = false;
             }
 
@@ -689,8 +688,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void autoThreshold_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -720,8 +718,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void negative_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -795,8 +792,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void squareRoot_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -870,8 +866,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void contrastEnhancement_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -901,8 +896,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void brightness_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -932,8 +926,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void contrast_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -963,8 +956,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void histogram_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -994,8 +986,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void histogramEqualizationRGB_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1021,7 +1012,7 @@ namespace ImageEdit_WPF {
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
                 byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
@@ -1035,10 +1026,8 @@ namespace ImageEdit_WPF {
                     histogramB[i] = 0;
                 }
 
-                for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (int i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (int j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (j*bmpData.Stride) + (i*3);
 
 
@@ -1052,9 +1041,9 @@ namespace ImageEdit_WPF {
                 }
 
                 for (int i = 0; i < 256; i++) {
-                    possibilityB[i] = histogramB[i] / (double)(m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height);
-                    possibilityG[i] = histogramG[i] / (double)(m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height);
-                    possibilityR[i] = histogramR[i] / (double)(m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height);
+                    possibilityB[i] = histogramB[i]/(double)(m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height);
+                    possibilityG[i] = histogramG[i]/(double)(m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height);
+                    possibilityR[i] = histogramR[i]/(double)(m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height);
                 }
 
                 histogramEqB[0] = possibilityB[0];
@@ -1066,10 +1055,8 @@ namespace ImageEdit_WPF {
                     histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
                 }
 
-                for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (int i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (int j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (j*bmpData.Stride) + (i*3);
 
                         b = rgbValues[index + 2];
@@ -1152,8 +1139,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void histogramEqualizationHSV_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1179,7 +1165,7 @@ namespace ImageEdit_WPF {
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
                 byte[] rgbValues = new byte[bytes];
                 double[] red = new double[bytes];
                 double[] green = new double[bytes];
@@ -1198,10 +1184,8 @@ namespace ImageEdit_WPF {
                     sumHistogramEqualizationV[i] = 0.0;
                 }
 
-                for(i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (bmpData.Stride*j) + (i*3);
 
                         blue[index] = rgbValues[index];
@@ -1250,7 +1234,7 @@ namespace ImageEdit_WPF {
                 }
 
                 for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationV[i] = histogramV[i] / (double)(m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height);
+                    sumHistogramEqualizationV[i] = histogramV[i]/(double)(m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height);
                 }
 
                 sumHistogramV[0] = sumHistogramEqualizationV[0];
@@ -1258,10 +1242,8 @@ namespace ImageEdit_WPF {
                     sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
                 }
 
-                for(i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (bmpData.Stride*j) + (i*3);
 
                         k = (int)value[index + 2];
@@ -1387,8 +1369,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void histogramEqualizationYUV_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1408,7 +1389,7 @@ namespace ImageEdit_WPF {
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
                 byte[] rgbValues = new byte[bytes];
                 double[] red = new double[bytes];
                 double[] green = new double[bytes];
@@ -1426,10 +1407,8 @@ namespace ImageEdit_WPF {
                     histogramY[i] = 0;
                 }
 
-                for(i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (bmpData.Stride*j) + (i*3);
 
                         blue[index] = rgbValues[index];
@@ -1462,7 +1441,7 @@ namespace ImageEdit_WPF {
                 }
 
                 for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationY[i] = histogramY[i] / (double)(m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height);
+                    sumHistogramEqualizationY[i] = histogramY[i]/(double)(m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height);
                 }
 
                 sumHistogramY[0] = sumHistogramEqualizationY[0];
@@ -1470,10 +1449,8 @@ namespace ImageEdit_WPF {
                     sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
                 }
 
-                for(i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (bmpData.Stride*j) + (i*3);
 
                         k = (int)luminanceY[index];
@@ -1567,8 +1544,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void imageSummarization_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1585,7 +1561,7 @@ namespace ImageEdit_WPF {
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
+                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
                 byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
@@ -1593,10 +1569,8 @@ namespace ImageEdit_WPF {
 
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
-                {
-                    for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
-                    {
+                for (int i = 0; i < m_data.M_bmpOutput.Width; i++) {
+                    for (int j = 0; j < m_data.M_bmpOutput.Height; j++) {
                         int index = (j*bmpData.Stride) + (i*3);
                         r = rgbValues[index + 2] + rgbValues[index + 2]; // R
                         g = rgbValues[index + 1] + rgbValues[index + 1]; // G
@@ -1669,8 +1643,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void imageSubtraction_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1758,8 +1731,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void sobel_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1789,8 +1761,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void gaussianBlur_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1820,8 +1791,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void sharpen_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1851,8 +1821,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void noiseColor_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1882,8 +1851,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void noiseBW_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1913,8 +1881,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void noiseReductionMean_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1944,8 +1911,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void noiseReductionMedian_Click(object sender, RoutedEventArgs e) {
-            if(m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null)
-            {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
