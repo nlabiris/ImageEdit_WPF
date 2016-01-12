@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Window x:Class="ImageEdit_WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:ImageEdit_WPF"
         xmlns:commands="clr-namespace:ImageEdit_WPF.Commands"
+        xmlns:helperClasses="clr-namespace:ImageEdit_WPF.HelperClasses"
         Title="ImageEdit" Height="350" Width="525" Background="Black" Closing="Window_Closing">
     
     <!-- KEYBOARD SHORTCUTS -->
@@ -99,9 +99,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </Menu>
         
         <!-- IMAGE -->
-        <local:ZoomBorder x:Name="border" Grid.Row="1" Grid.Column="0" ClipToBounds="True" Background="Black">
+        <helperClasses:ZoomBorder x:Name="border" Grid.Row="1" Grid.Column="0" ClipToBounds="True" Background="Black">
             <Image x:Name="mainImage" x:FieldModifier="public"></Image>
-        </local:ZoomBorder>
+        </helperClasses:ZoomBorder>
         
         <!-- STATUS BAR -->
         <StatusBar Name="statusBar" Grid.Row="2" Grid.Column="0" Visibility="Visible">
@@ -132,3 +132,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </StatusBar>
     </Grid>
 </Window>
+

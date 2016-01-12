@@ -26,21 +26,14 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for NoiseReductionMean.xaml
     /// </summary>
     public partial class NoiseReductionMean : Window {
-        /// <summary>
-        /// Output image.
-        /// </summary>
-        private readonly Bitmap _bmpOutput = null;
-
-        /// <summary>
-        /// Image used at the Undo/Redo system.
-        /// </summary>
-        private Bitmap _bmpUndoRedo = null;
+        private ImageEditData m_data = null;
 
         /// <summary>
         /// Size of the kernel.
@@ -48,23 +41,13 @@ namespace ImageEdit_WPF.Windows {
         private int _sizeMask = 0;
 
         /// <summary>
-        /// Check if the image has been modified
-        /// </summary>
-        private bool _nochange;
-
-        /// <summary>
         /// Noise Reduction (Mean filter) <c>constructor</c>.
         /// Here we initialiaze the images and also we set the default kernel.
         /// </summary>
-        /// <param name="bmpO">Output image.</param>
-        /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
-        public NoiseReductionMean(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
+        public NoiseReductionMean(ImageEditData data) {
+            m_data = data;
+
             InitializeComponent();
-
-            _bmpOutput = bmpO;
-            _bmpUndoRedo = bmpUR;
-            _nochange = nochange;
-
             three.IsChecked = true;
         }
 
@@ -110,13 +93,13 @@ namespace ImageEdit_WPF.Windows {
             int sumB = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpOutput.LockBits(new Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
+            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -125,8 +108,10 @@ namespace ImageEdit_WPF.Windows {
             Stopwatch watch = Stopwatch.StartNew();
 
             if (_sizeMask == 3) {
-                for (i = _sizeMask/2; i < _bmpOutput.Width - _sizeMask/2; i++) {
-                    for (j = _sizeMask/2; j < _bmpOutput.Height - _sizeMask/2; j++) {
+                for(i = _sizeMask / 2; i < m_data.M_bmpOutput.Width - _sizeMask / 2; i++)
+                {
+                    for(j = _sizeMask / 2; j < m_data.M_bmpOutput.Height - _sizeMask / 2; j++)
+                    {
                         int index;
 
                         sumR = 0;
@@ -150,8 +135,10 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
             } else if (_sizeMask == 5) {
-                for (i = _sizeMask/2; i < _bmpOutput.Width - _sizeMask/2; i++) {
-                    for (j = _sizeMask/2; j < _bmpOutput.Height - _sizeMask/2; j++) {
+                for(i = _sizeMask / 2; i < m_data.M_bmpOutput.Width - _sizeMask / 2; i++)
+                {
+                    for(j = _sizeMask / 2; j < m_data.M_bmpOutput.Height - _sizeMask / 2; j++)
+                    {
                         int index;
 
                         sumR = 0;
@@ -175,8 +162,10 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
             } else if (_sizeMask == 7) {
-                for (i = _sizeMask/2; i < _bmpOutput.Width - _sizeMask/2; i++) {
-                    for (j = _sizeMask/2; j < _bmpOutput.Height - _sizeMask/2; j++) {
+                for(i = _sizeMask / 2; i < m_data.M_bmpOutput.Width - _sizeMask / 2; i++)
+                {
+                    for(j = _sizeMask / 2; j < m_data.M_bmpOutput.Height - _sizeMask / 2; j++)
+                    {
                         int index;
 
                         sumR = 0;
@@ -208,26 +197,26 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            _bmpOutput.UnlockBits(bmpData);
+            m_data.M_bmpOutput.UnlockBits(bmpData);
 
             // Convert Bitmap to BitmapImage
             BitmapToBitmapImage();
 
-            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
-                _nochange = false;
-                MainWindow.Action = ActionType.ImageConvolution;
-                _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
-                MainWindow.UndoStack.Push(_bmpUndoRedo);
-                MainWindow.RedoStack.Clear();
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageConvolution;
+                m_data.M_bmpUndoRedo = m_data.M_bmpOutput.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                m_data.M_redoStack.Clear();
                 foreach (Window mainWindow in Application.Current.Windows) {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
                     }
                 }
-                this.Close();
+                Close();
             }
         }
 
@@ -236,7 +225,7 @@ namespace ImageEdit_WPF.Windows {
         /// </summary>
         public void BitmapToBitmapImage() {
             MemoryStream str = new MemoryStream();
-            _bmpOutput.Save(str, ImageFormat.Bmp);
+            m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 

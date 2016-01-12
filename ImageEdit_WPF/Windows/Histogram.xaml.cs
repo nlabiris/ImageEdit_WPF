@@ -26,16 +26,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
+using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Histogram.xaml
     /// </summary>
     public partial class Histogram : Window, INotifyPropertyChanged {
-        /// <summary>
-        /// Input image.
-        /// </summary>
-        private Bitmap _bmpForEditing = null;
+        private ImageEditData m_data = null;
 
         /// <summary>
         /// Points that represent the values of the histogram.
@@ -91,10 +89,11 @@ namespace ImageEdit_WPF.Windows {
         /// Histogram <c>constructor</c>.
         /// Here we initialiaze the image, the data binding of the histogram diagram and the default hitogram that will be loaded.
         /// </summary>
-        /// <param name="bmp">Input image.</param>
-        public Histogram(Bitmap bmp) {
+        /// <param name="data">Input image.</param>
+        public Histogram(ImageEditData data) {
+            m_data = data;
+
             InitializeComponent();
-            _bmpForEditing = bmp;
             DataContext = this;
             gray.IsChecked = true;
         }
@@ -129,13 +128,13 @@ namespace ImageEdit_WPF.Windows {
             int r;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpForEditing.LockBits(new Rectangle(0, 0, _bmpForEditing.Width, _bmpForEditing.Height), ImageLockMode.ReadWrite, _bmpForEditing.PixelFormat);
+            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -145,8 +144,10 @@ namespace ImageEdit_WPF.Windows {
                 _histogramR[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++) {
-                for (int j = 0; j < _bmpForEditing.Height; j++) {
+            for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
+            {
+                for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
+                {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
@@ -158,7 +159,7 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            _bmpForEditing.UnlockBits(bmpData);
+            m_data.M_bmpOutput.UnlockBits(bmpData);
 
             _isCalculatedR = true;
 
@@ -175,13 +176,13 @@ namespace ImageEdit_WPF.Windows {
             int g;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpForEditing.LockBits(new Rectangle(0, 0, _bmpForEditing.Width, _bmpForEditing.Height), ImageLockMode.ReadWrite, _bmpForEditing.PixelFormat);
+            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -191,8 +192,10 @@ namespace ImageEdit_WPF.Windows {
                 _histogramG[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++) {
-                for (int j = 0; j < _bmpForEditing.Height; j++) {
+            for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
+            {
+                for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
+                {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     g = rgbValues[index + 1];
@@ -204,7 +207,7 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            _bmpForEditing.UnlockBits(bmpData);
+            m_data.M_bmpOutput.UnlockBits(bmpData);
 
             _isCalculatedG = true;
 
@@ -221,13 +224,13 @@ namespace ImageEdit_WPF.Windows {
             int b;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpForEditing.LockBits(new Rectangle(0, 0, _bmpForEditing.Width, _bmpForEditing.Height), ImageLockMode.ReadWrite, _bmpForEditing.PixelFormat);
+            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -237,8 +240,10 @@ namespace ImageEdit_WPF.Windows {
                 _histogramB[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++) {
-                for (int j = 0; j < _bmpForEditing.Height; j++) {
+            for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
+            {
+                for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
+                {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     b = rgbValues[index];
@@ -250,7 +255,7 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            _bmpForEditing.UnlockBits(bmpData);
+            m_data.M_bmpOutput.UnlockBits(bmpData);
 
             _isCalculatedB = true;
 
@@ -270,13 +275,13 @@ namespace ImageEdit_WPF.Windows {
             int y;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpForEditing.LockBits(new Rectangle(0, 0, _bmpForEditing.Width, _bmpForEditing.Height), ImageLockMode.ReadWrite, _bmpForEditing.PixelFormat);
+            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*_bmpForEditing.Height;
+            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -286,8 +291,10 @@ namespace ImageEdit_WPF.Windows {
                 _histogramY[i] = 0;
             }
 
-            for (int i = 0; i < _bmpForEditing.Width; i++) {
-                for (int j = 0; j < _bmpForEditing.Height; j++) {
+            for(int i = 0; i < m_data.M_bmpOutput.Width; i++)
+            {
+                for(int j = 0; j < m_data.M_bmpOutput.Height; j++)
+                {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
@@ -304,7 +311,7 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            _bmpForEditing.UnlockBits(bmpData);
+            m_data.M_bmpOutput.UnlockBits(bmpData);
 
             _isCalculatedY = true;
 

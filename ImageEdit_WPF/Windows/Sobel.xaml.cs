@@ -26,21 +26,14 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Sobel.xaml
     /// </summary>
     public partial class Sobel : Window {
-        /// <summary>
-        /// Output image.
-        /// </summary>
-        private readonly Bitmap _bmpOutput = null;
-
-        /// <summary>
-        /// Image used at the Undo/Redo system.
-        /// </summary>
-        private Bitmap _bmpUndoRedo = null;
+        private ImageEditData m_data = null;
 
         /// <summary>
         /// Size of the kernels.
@@ -48,24 +41,14 @@ namespace ImageEdit_WPF.Windows {
         private int _sizeMask = 0;
 
         /// <summary>
-        /// Check if the image has been modified
-        /// </summary>
-        private bool _nochange;
-
-        /// <summary>
         /// Sobel <c>constructor</c>.
         /// Here we initialiaze the images and also we set the focus
         /// at the 'OK' button and at one of the three radio boxes (kernel size).
         /// </summary>
-        /// <param name="bmpO"></param>
-        /// <param name="bmpUR"></param>
-        public Sobel(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
+        public Sobel(ImageEditData data) {
+            m_data = data;
+
             InitializeComponent();
-
-            _bmpOutput = bmpO;
-            _bmpUndoRedo = bmpUR;
-            _nochange = nochange;
-
             three.IsChecked = true;
         }
 
@@ -129,8 +112,8 @@ namespace ImageEdit_WPF.Windows {
         private void three_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 3;
 
-            this.Height = 250;
-            this.Width = 260;
+            Height = 250;
+            Width = 260;
 
             groupBox.Width = 110;
             groupBox.Height = 90;
@@ -322,8 +305,8 @@ namespace ImageEdit_WPF.Windows {
         private void five_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 5;
 
-            this.Height = 290;
-            this.Width = 380;
+            Height = 290;
+            Width = 380;
 
             groupBox.Width = 170;
             groupBox.Height = 130;
@@ -542,8 +525,8 @@ namespace ImageEdit_WPF.Windows {
         private void seven_Checked(object sender, RoutedEventArgs e) {
             _sizeMask = 7;
 
-            this.Height = 330;
-            this.Width = 500;
+            Height = 330;
+            Width = 500;
 
             groupBox.Width = 230;
             groupBox.Height = 170;
@@ -782,13 +765,13 @@ namespace ImageEdit_WPF.Windows {
             int[,] mask7Y;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpOutput.LockBits(new Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
+            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
             byte[] rgbValues = new byte[bytes];
             byte[] bgrValues = new byte[bytes];
 
@@ -809,8 +792,10 @@ namespace ImageEdit_WPF.Windows {
                     {int.Parse(tby15.Text), int.Parse(tby16.Text), int.Parse(tby17.Text)}
                 };
 
-                for (i = 1; i < _bmpOutput.Width - 1; i++) {
-                    for (j = 1; j < _bmpOutput.Height - 1; j++) {
+                for(i = 1; i < m_data.M_bmpOutput.Width - 1; i++)
+                {
+                    for(j = 1; j < m_data.M_bmpOutput.Height - 1; j++)
+                    {
                         int index;
 
                         txR = 0;
@@ -882,8 +867,10 @@ namespace ImageEdit_WPF.Windows {
                     {int.Parse(tby29.Text), int.Parse(tby30.Text), int.Parse(tby31.Text), int.Parse(tby32.Text), int.Parse(tby33.Text)}
                 };
 
-                for (i = 2; i < _bmpOutput.Width - 2; i++) {
-                    for (j = 2; j < _bmpOutput.Height - 2; j++) {
+                for(i = 2; i < m_data.M_bmpOutput.Width - 2; i++)
+                {
+                    for(j = 2; j < m_data.M_bmpOutput.Height - 2; j++)
+                    {
                         int index;
 
                         txR = 0;
@@ -959,8 +946,10 @@ namespace ImageEdit_WPF.Windows {
                     {int.Parse(tby43.Text), int.Parse(tby44.Text), int.Parse(tby45.Text), int.Parse(tby46.Text), int.Parse(tby47.Text), int.Parse(tby48.Text), int.Parse(tby49.Text)}
                 };
 
-                for (i = 3; i < _bmpOutput.Width - 3; i++) {
-                    for (j = 3; j < _bmpOutput.Height - 3; j++) {
+                for(i = 3; i < m_data.M_bmpOutput.Width - 3; i++)
+                {
+                    for(j = 3; j < m_data.M_bmpOutput.Height - 3; j++)
+                    {
                         int index;
 
                         txR = 0;
@@ -1018,8 +1007,10 @@ namespace ImageEdit_WPF.Windows {
                 }
             }
 
-            for (i = 0; i < _bmpOutput.Width; i++) {
-                for (j = 0; j < _bmpOutput.Height; j++) {
+            for(i = 0; i < m_data.M_bmpOutput.Width; i++)
+            {
+                for(j = 0; j < m_data.M_bmpOutput.Height; j++)
+                {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
@@ -1035,26 +1026,26 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            _bmpOutput.UnlockBits(bmpData);
+            m_data.M_bmpOutput.UnlockBits(bmpData);
 
             // Convert Bitmap to BitmapImage
             BitmapToBitmapImage();
 
-            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
+            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
-                _nochange = false;
-                MainWindow.Action = ActionType.ImageConvolution;
-                _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
-                MainWindow.UndoStack.Push(_bmpUndoRedo);
-                MainWindow.RedoStack.Clear();
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageConvolution;
+                m_data.M_bmpUndoRedo = m_data.M_bmpOutput.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                m_data.M_redoStack.Clear();
                 foreach (Window mainWindow in Application.Current.Windows) {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
                     }
                 }
-                this.Close();
+                Close();
             }
         }
 
@@ -1063,7 +1054,7 @@ namespace ImageEdit_WPF.Windows {
         /// </summary>
         public void BitmapToBitmapImage() {
             MemoryStream str = new MemoryStream();
-            _bmpOutput.Save(str, ImageFormat.Bmp);
+            m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
             str.Seek(0, SeekOrigin.Begin);
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 

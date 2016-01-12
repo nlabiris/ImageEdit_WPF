@@ -23,43 +23,54 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
+using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Information.xaml
     /// </summary>
     public partial class Information : Window {
+        private ImageEditData m_data = null;
+
         /// <summary>
         /// Information <c>constructor</c>.
         /// Here we calculate all the neccesary information about some aspects of the image.
         /// </summary>
-        /// <param name="fname">Input filename.</param>
-        /// <param name="bmpO">Input image.</param>
-        public Information(string fname, Bitmap bmpO) {
-            InitializeComponent();
+        /// <param name="data"></param>
+        public Information(ImageEditData data) {
+            m_data = data;
 
-            FileInfo file = new FileInfo(fname);
-            ImageFormat format = bmpO.RawFormat;
-            int bpp = Image.GetPixelFormatSize(bmpO.PixelFormat);
+            InitializeComponent();
+            CalculateData();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void CalculateData() {
+            FileInfo file = new FileInfo(m_data.M_inputFilename);
+            ImageFormat format = m_data.M_bmpOutput.RawFormat;
+            int bpp = Image.GetPixelFormatSize(m_data.M_bmpOutput.PixelFormat);
             string disksize = string.Empty;
             string memorysize = string.Empty;
 
-            switch (bpp) {
+            switch(bpp)
+            {
                 case 8:
-                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (bmpO.Width*bmpO.Height*1)/1000000 + " MB" + " (" + bmpO.Width*bmpO.Height*1 + " Bytes)";
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 1) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 1 + " Bytes)";
                     break;
                 case 16:
-                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (bmpO.Width*bmpO.Height*2)/1000000 + " MB" + " (" + bmpO.Width*bmpO.Height*2 + " Bytes)";
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 2) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 2 + " Bytes)";
                     break;
                 case 24:
-                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (bmpO.Width*bmpO.Height*3)/1000000 + " MB" + " (" + bmpO.Width*bmpO.Height*3 + " Bytes)";
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 3) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 3 + " Bytes)";
                     break;
                 case 32:
-                    disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (bmpO.Width*bmpO.Height*4)/1000000 + " MB" + " (" + bmpO.Width*bmpO.Height*4 + " Bytes)";
+                    disksize = file.Length / 1000 + " KB" + " (" + file.Length + " Bytes)";
+                    memorysize = (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 4) / 1000000 + " MB" + " (" + m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 4 + " Bytes)";
                     break;
             }
 
@@ -67,7 +78,7 @@ namespace ImageEdit_WPF.Windows {
             directoryTbx.Text = file.DirectoryName;
             pathTbx.Text = file.FullName;
             compressionTbx.Text = GetEncoderInfo(format);
-            resolutionTbx.Text = bmpO.Width + " x " + bmpO.Height + " Pixels";
+            resolutionTbx.Text = m_data.M_bmpOutput.Width + " x " + m_data.M_bmpOutput.Height + " Pixels";
             colorsTbx.Text = Math.Pow(2, bpp).ToString();
             disksizeTbx.Text = disksize;
             memorysizeTbx.Text = memorysize;
