@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+using ImageEdit_WPF.HelperClasses;
 using ImageEdit_WPF.Windows;
 using Microsoft.Win32;
 using System;
@@ -33,7 +34,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using ImageEdit_WPF.HelperClasses;
 
 // BUG: Undo/Redo
 // PENDING: Color to Grayscale algorithm
@@ -111,29 +111,11 @@ namespace ImageEdit_WPF {
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
                     mainImage.Source = m_data.M_bmpInput;
 
-                    int bpp = Image.GetPixelFormatSize(m_data.M_bmpOutput.PixelFormat);
-                    string resolution = m_data.M_bmpOutput.Width + " x " + m_data.M_bmpOutput.Height + " x " + bpp + " bpp";
-                    string size = string.Empty;
-                    FileInfo filesize = new FileInfo(m_data.M_inputFilename);
-                    switch (bpp) {
-                        case 8:
-                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*1)/1000000 + " MB";
-                            break;
-                        case 16:
-                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*2)/1000000 + " MB";
-                            break;
-                        case 24:
-                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*3)/1000000 + " MB";
-                            break;
-                        case 32:
-                            size = filesize.Length/1000 + " KB" + " / " + (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*4)/1000000 + " MB";
-                            break;
-                    }
+                    //m_data.M_inputFilename = openFile.FileName;
+                    //m_data.M_bmpInput = new BitmapImage(new Uri(m_data.M_inputFilename, UriKind.Absolute));
+                    //mainImage.Source = m_data.M_bmpInput;
 
-                    imageResolution.Text = resolution;
-                    imageSize.Text = size;
-                    separatorFirst.Visibility = Visibility.Visible;
-                    separatorSecond.Visibility = Visibility.Visible;
+                    CalculateData_StatusBar();
 
                     m_data.M_undoStack.Clear();
                     m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
@@ -160,8 +142,7 @@ namespace ImageEdit_WPF {
         private void reopen_Click(object sender, RoutedEventArgs e) {
             try {
                 if (m_data.M_inputFilename != string.Empty) {
-                    Uri uri = new Uri(m_data.M_inputFilename, UriKind.Absolute);
-                    m_data.M_bmpInput = new BitmapImage(uri);
+                    m_data.M_bmpInput = new BitmapImage(new Uri(m_data.M_inputFilename, UriKind.Absolute));
                     m_data.M_bmpOutput = new Bitmap(m_data.M_inputFilename);
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
                     mainImage.Source = m_data.M_bmpInput;
@@ -718,7 +699,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void negative_Click(object sender, RoutedEventArgs e) {
-            if (m_data.M_inputFilename == string.Empty || m_data.M_bmpOutput == null) {
+            if (m_data.M_inputFilename == string.Empty) {
                 MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -731,7 +712,7 @@ namespace ImageEdit_WPF {
                 IntPtr ptr = bmpData.Scan0;
 
                 // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
+                int bytes = Math.Abs(bmpData.Stride) * m_data.M_bmpOutput.Height;
                 byte[] rgbValues = new byte[bytes];
 
                 // Copy the RGB values into the array.
@@ -1931,6 +1912,70 @@ namespace ImageEdit_WPF {
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        #endregion
+
+        #region Calculate Data for status bar
+        public void CalculateData_StatusBar() {
+            int bpp = Image.GetPixelFormatSize(m_data.M_bmpOutput.PixelFormat);
+            string resolution = m_data.M_bmpOutput.Width + " x " + m_data.M_bmpOutput.Height + " x " + bpp + " bpp";
+            string size = string.Empty;
+            FileInfo filesize = new FileInfo(m_data.M_inputFilename);
+            switch(bpp)
+            {
+                case 8:
+                    size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 1) / 1000000 + " MB";
+                    break;
+                case 16:
+                    size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 2) / 1000000 + " MB";
+                    break;
+                case 24:
+                    size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 3) / 1000000 + " MB";
+                    break;
+                case 32:
+                    size = filesize.Length / 1000 + " KB" + " / " + (m_data.M_bmpOutput.Width * m_data.M_bmpOutput.Height * 4) / 1000000 + " MB";
+                    break;
+            }
+
+            imageResolution.Text = resolution;
+            imageSize.Text = size;
+            separatorFirst.Visibility = Visibility.Visible;
+            separatorSecond.Visibility = Visibility.Visible;
+        }
+        #endregion
+
+        #region BitmapSource To BitmapImage
+        public BitmapImage BitmapSourceToBitmapImage(BitmapSource bmpSource) {
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmpSource));
+            MemoryStream stream = new MemoryStream();
+            encoder.Save(stream);
+
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = stream;
+            bi.EndInit();
+
+            return bi;
+        }
+        #endregion
+
+        #region BitmapSource To Bitmap
+        public Bitmap BitmapSourceToBitmap(BitmapSource bitmapsource) {
+            //convert image format
+            FormatConvertedBitmap src = new FormatConvertedBitmap();
+            src.BeginInit();
+            src.Source = bitmapsource;
+            src.DestinationFormat = System.Windows.Media.PixelFormats.Bgra32;
+            src.EndInit();
+
+            //copy to bitmap
+            Bitmap bitmap = new Bitmap(src.PixelWidth, src.PixelHeight, PixelFormat.Format32bppArgb);
+            BitmapData data = bitmap.LockBits(new Rectangle(System.Drawing.Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            src.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height*data.Stride, data.Stride);
+            bitmap.UnlockBits(data);
+
+            return bitmap;
         }
         #endregion
 
