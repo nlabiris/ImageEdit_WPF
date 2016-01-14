@@ -18,15 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using ImageEdit_WPF.HelperClasses;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media.Imaging;
-using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
@@ -53,13 +51,13 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
             int distance = 0;
-            int i;
-            int j;
-            int k;
-            int l;
-            int b;
-            int g;
-            int r;
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            int l = 0;
+            int b = 0;
+            int g = 0;
+            int r = 0;
             double z = 0.0;
             int z1R = 0;
             int z1G = 0;

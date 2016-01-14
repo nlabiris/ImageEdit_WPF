@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using ImageEdit_WPF.HelperClasses;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -26,7 +27,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
-using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
@@ -125,7 +125,7 @@ namespace ImageEdit_WPF.Windows {
         /// Histogram of the red channel.
         /// </returns>
         public int[] HistogramRed() {
-            int r;
+            int r = 0;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
@@ -171,7 +171,7 @@ namespace ImageEdit_WPF.Windows {
         /// Histogram of the green channel.
         /// </returns>
         public int[] HistogramGreen() {
-            int g;
+            int g = 0;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
@@ -217,7 +217,7 @@ namespace ImageEdit_WPF.Windows {
         /// Histogram of the blue channel.
         /// </returns>
         public int[] HistogramBlue() {
-            int b;
+            int b = 0;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
@@ -263,10 +263,10 @@ namespace ImageEdit_WPF.Windows {
         /// Histogram of the luminance values.
         /// </returns>
         public int[] HistogramLuminance() {
-            int r;
-            int g;
-            int b;
-            int y;
+            int r = 0;
+            int g = 0;
+            int b = 0;
+            int y = 0;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);

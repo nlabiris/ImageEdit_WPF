@@ -18,15 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using ImageEdit_WPF.HelperClasses;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media.Imaging;
-using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
@@ -54,10 +52,10 @@ namespace ImageEdit_WPF.Windows {
         private void ok_Click(object sender, RoutedEventArgs e) {
             int i = 0;
             int j = 0;
-            double probability;
-            int data;
-            int data1;
-            int data2;
+            double probability = 0.0;
+            int data = 0;
+            int data1 = 0;
+            int data2 = 0;
             Random rand = new Random();
 
             try {

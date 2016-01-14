@@ -18,15 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using ImageEdit_WPF.HelperClasses;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media.Imaging;
-using ImageEdit_WPF.HelperClasses;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
@@ -474,9 +472,9 @@ namespace ImageEdit_WPF.Windows {
             double tR = 0.0;
             double tG = 0.0;
             double tB = 0.0;
-            int[,] mask3X;
-            int[,] mask5X;
-            int[,] mask7X;
+            int[,] mask3X = null;
+            int[,] mask5X = null;
+            int[,] mask7X = null;
             int sumMask = 0;
 
             // Lock the bitmap's bits.  
