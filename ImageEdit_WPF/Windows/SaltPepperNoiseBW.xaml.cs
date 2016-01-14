@@ -124,10 +124,7 @@ namespace ImageEdit_WPF.Windows {
 
             // Unlock the bits.
             m_data.M_bmpOutput.UnlockBits(bmpData);
-
-            // Convert Bitmap to BitmapImage
-            BitmapToBitmapImage();
-
+            
             string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
@@ -140,25 +137,10 @@ namespace ImageEdit_WPF.Windows {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
+                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
                     }
                 }
                 Close();
-            }
-        }
-
-        /// <summary>
-        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
-        /// </summary>
-        public void BitmapToBitmapImage() {
-            MemoryStream str = new MemoryStream();
-            m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-            str.Seek(0, SeekOrigin.Begin);
-            BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-            foreach (Window mainWindow in Application.Current.Windows) {
-                if (mainWindow.GetType() == typeof (MainWindow)) {
-                    ((MainWindow)mainWindow).mainImage.Source = bdc.Frames[0];
-                }
             }
         }
     }

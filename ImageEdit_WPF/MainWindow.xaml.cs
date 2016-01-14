@@ -198,7 +198,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Jpeg);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Jpeg);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -213,7 +213,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Jpeg);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Jpeg);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -228,7 +228,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Png);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Png);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -243,7 +243,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Bmp);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Bmp);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -275,7 +275,7 @@ namespace ImageEdit_WPF {
                                 //image.Format = MagickFormat.Jpeg;
                                 //image.CompressionMethod = CompressionMethod.JPEG;
                                 //image.Write(OutputFilename);
-                                codec = GetEncoder(ImageFormat.Jpeg);
+                                codec = ConvertionMethods.GetEncoder(ImageFormat.Jpeg);
                                 quality = System.Drawing.Imaging.Encoder.Quality;
                                 encoderArray = new EncoderParameters(1);
                                 encoder = new EncoderParameter(quality, 85L);
@@ -290,7 +290,7 @@ namespace ImageEdit_WPF {
                                 //image.Format = MagickFormat.Jpeg;
                                 //image.CompressionMethod = CompressionMethod.JPEG;
                                 //image.Write(OutputFilename);
-                                codec = GetEncoder(ImageFormat.Jpeg);
+                                codec = ConvertionMethods.GetEncoder(ImageFormat.Jpeg);
                                 quality = System.Drawing.Imaging.Encoder.Quality;
                                 encoderArray = new EncoderParameters(1);
                                 encoder = new EncoderParameter(quality, 85L);
@@ -305,7 +305,7 @@ namespace ImageEdit_WPF {
                                 //image.Format = MagickFormat.Jpeg;
                                 //image.CompressionMethod = CompressionMethod.JPEG;
                                 //image.Write(OutputFilename);
-                                codec = GetEncoder(ImageFormat.Png);
+                                codec = ConvertionMethods.GetEncoder(ImageFormat.Png);
                                 quality = System.Drawing.Imaging.Encoder.Quality;
                                 encoderArray = new EncoderParameters(1);
                                 encoder = new EncoderParameter(quality, 85L);
@@ -320,7 +320,7 @@ namespace ImageEdit_WPF {
                                 //image.Format = MagickFormat.Jpeg;
                                 //image.CompressionMethod = CompressionMethod.JPEG;
                                 //image.Write(OutputFilename);
-                                codec = GetEncoder(ImageFormat.Bmp);
+                                codec = ConvertionMethods.GetEncoder(ImageFormat.Bmp);
                                 quality = System.Drawing.Imaging.Encoder.Quality;
                                 encoderArray = new EncoderParameters(1);
                                 encoder = new EncoderParameter(quality, 85L);
@@ -375,7 +375,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Jpeg);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Jpeg);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -390,7 +390,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Jpeg);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Jpeg);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -405,7 +405,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Png);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Png);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -420,7 +420,7 @@ namespace ImageEdit_WPF {
                             //image.Format = MagickFormat.Jpeg;
                             //image.CompressionMethod = CompressionMethod.JPEG;
                             //image.Write(OutputFilename);
-                            codec = GetEncoder(ImageFormat.Bmp);
+                            codec = ConvertionMethods.GetEncoder(ImageFormat.Bmp);
                             quality = System.Drawing.Imaging.Encoder.Quality;
                             encoderArray = new EncoderParameters(1);
                             encoder = new EncoderParameter(quality, 85L);
@@ -476,7 +476,7 @@ namespace ImageEdit_WPF {
             m_data.M_redoStack.Push(m_data.M_bmpUndoRedo);
             redo.IsEnabled = true;
             m_data.M_bmpOutput = m_data.M_undoStack.Peek();
-            BitmapToBitmapImage();
+            //BitmapToBitmapImage();
         }
         #endregion
 
@@ -507,7 +507,7 @@ namespace ImageEdit_WPF {
 
             m_data.M_bmpOutput = m_data.M_bmpUndoRedo = m_data.M_redoStack.Pop();
             m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-            BitmapToBitmapImage();
+            //BitmapToBitmapImage();
 
             if (m_data.M_undoStack.Count > 1) {
                 undo.IsEnabled = true;
@@ -738,8 +738,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                BitmapToBitmapImage();
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -812,8 +811,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                BitmapToBitmapImage();
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1080,13 +1078,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1310,13 +1302,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1485,13 +1471,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1584,13 +1564,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1672,13 +1646,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bmpOutput.UnlockBits(bmpData);
 
-                // Convert Bitmap to BitmapImage
-                MemoryStream str = new MemoryStream();
-                m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-                str.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-                mainImage.Source = bdc.Frames[0];
+                mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
 
                 string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1941,74 +1909,6 @@ namespace ImageEdit_WPF {
             imageSize.Text = size;
             separatorFirst.Visibility = Visibility.Visible;
             separatorSecond.Visibility = Visibility.Visible;
-        }
-        #endregion
-
-        #region BitmapSource To BitmapImage
-        public BitmapImage BitmapSourceToBitmapImage(BitmapSource bmpSource) {
-            PngBitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bmpSource));
-            MemoryStream stream = new MemoryStream();
-            encoder.Save(stream);
-
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.StreamSource = stream;
-            bi.EndInit();
-
-            return bi;
-        }
-        #endregion
-
-        #region BitmapSource To Bitmap
-        public Bitmap BitmapSourceToBitmap(BitmapSource bitmapsource) {
-            //convert image format
-            FormatConvertedBitmap src = new FormatConvertedBitmap();
-            src.BeginInit();
-            src.Source = bitmapsource;
-            src.DestinationFormat = System.Windows.Media.PixelFormats.Bgra32;
-            src.EndInit();
-
-            //copy to bitmap
-            Bitmap bitmap = new Bitmap(src.PixelWidth, src.PixelHeight, PixelFormat.Format32bppArgb);
-            BitmapData data = bitmap.LockBits(new Rectangle(System.Drawing.Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            src.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height*data.Stride, data.Stride);
-            bitmap.UnlockBits(data);
-
-            return bitmap;
-        }
-        #endregion
-
-        #region Bitmap To BitmapImage
-        /// <summary>
-        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
-        /// </summary>
-        public void BitmapToBitmapImage() {
-            // Convert Bitmap to BitmapImage
-            MemoryStream str = new MemoryStream();
-            m_data.M_bmpOutput.Save(str, ImageFormat.Bmp);
-            str.Seek(0, SeekOrigin.Begin);
-            BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
-            mainImage.Source = bdc.Frames[0];
-        }
-        #endregion
-
-        #region GetEncoder
-        /// <summary>
-        /// Get the encoder info in order to use it at <c>Save</c> or <c>Save as...</c> method.
-        /// </summary>
-        /// <param name="format">Format of the image</param>
-        /// <returns></returns>
-        private static ImageCodecInfo GetEncoder(ImageFormat format) {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-
-            foreach (ImageCodecInfo codec in codecs) {
-                if (codec.FormatID == format.Guid) {
-                    return codec;
-                }
-            }
-            return null;
         }
         #endregion
 
