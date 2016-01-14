@@ -49,27 +49,27 @@ namespace ImageEdit_WPF.Windows {
         /// </summary>
         private void CalculateData() {
             FileInfo file = new FileInfo(m_data.M_inputFilename);
-            ImageFormat format = m_data.M_bmpOutput.RawFormat;
-            int bpp = Image.GetPixelFormatSize(m_data.M_bmpOutput.PixelFormat);
+            ImageFormat format = m_data.M_bitmap.RawFormat;
+            int bpp = Image.GetPixelFormatSize(m_data.M_bitmap.PixelFormat);
             string disksize = string.Empty;
             string memorysize = string.Empty;
 
             switch (bpp) {
                 case 8:
                     disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*1)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*1 + " Bytes)";
+                    memorysize = (m_data.M_bitmap.Width*m_data.M_bitmap.Height*1)/1000000 + " MB" + " (" + m_data.M_bitmap.Width*m_data.M_bitmap.Height*1 + " Bytes)";
                     break;
                 case 16:
                     disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*2)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*2 + " Bytes)";
+                    memorysize = (m_data.M_bitmap.Width*m_data.M_bitmap.Height*2)/1000000 + " MB" + " (" + m_data.M_bitmap.Width*m_data.M_bitmap.Height*2 + " Bytes)";
                     break;
                 case 24:
                     disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*3)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*3 + " Bytes)";
+                    memorysize = (m_data.M_bitmap.Width*m_data.M_bitmap.Height*3)/1000000 + " MB" + " (" + m_data.M_bitmap.Width*m_data.M_bitmap.Height*3 + " Bytes)";
                     break;
                 case 32:
                     disksize = file.Length/1000 + " KB" + " (" + file.Length + " Bytes)";
-                    memorysize = (m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*4)/1000000 + " MB" + " (" + m_data.M_bmpOutput.Width*m_data.M_bmpOutput.Height*4 + " Bytes)";
+                    memorysize = (m_data.M_bitmap.Width*m_data.M_bitmap.Height*4)/1000000 + " MB" + " (" + m_data.M_bitmap.Width*m_data.M_bitmap.Height*4 + " Bytes)";
                     break;
             }
 
@@ -77,7 +77,7 @@ namespace ImageEdit_WPF.Windows {
             directoryTbx.Text = file.DirectoryName;
             pathTbx.Text = file.FullName;
             compressionTbx.Text = GetEncoderInfo(format);
-            resolutionTbx.Text = m_data.M_bmpOutput.Width + " x " + m_data.M_bmpOutput.Height + " Pixels";
+            resolutionTbx.Text = m_data.M_bitmap.Width + " x " + m_data.M_bitmap.Height + " Pixels";
             colorsTbx.Text = Math.Pow(2, bpp).ToString();
             disksizeTbx.Text = disksize;
             memorysizeTbx.Text = memorysize;

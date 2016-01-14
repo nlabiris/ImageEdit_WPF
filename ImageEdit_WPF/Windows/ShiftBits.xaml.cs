@@ -55,7 +55,7 @@ namespace ImageEdit_WPF.Windows {
             try {
                 bits = int.Parse(textboxBits.Text);
                 if (bits > 7 || bits < 0) {
-                    string message = "Wrong range" + Environment.NewLine + Environment.NewLine + "Give a number between 0 and 7";
+                    string message = "Wrong range\r\n\r\nGive a number between 0 and 7";
                     MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
@@ -78,13 +78,13 @@ namespace ImageEdit_WPF.Windows {
             }
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
+            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -92,8 +92,8 @@ namespace ImageEdit_WPF.Windows {
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (int i = 0; i < m_data.M_bmpOutput.Width; i++) {
-                for (int j = 0; j < m_data.M_bmpOutput.Height; j++) {
+            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
+                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
                     int index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = (byte)(rgbValues[index + 2] << bits); // R
@@ -109,21 +109,21 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            m_data.M_bmpOutput.UnlockBits(bmpData);
+            m_data.M_bitmap.UnlockBits(bmpData);
             
-            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
+            string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
                 m_data.M_noChange = false;
                 m_data.M_action = ActionType.ShiftBits;
-                m_data.M_bmpUndoRedo = m_data.M_bmpOutput.Clone() as Bitmap;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
                 m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
                 m_data.M_redoStack.Clear();
                 foreach (Window mainWindow in Application.Current.Windows) {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
-                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
+                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
                     }
                 }
                 Close();

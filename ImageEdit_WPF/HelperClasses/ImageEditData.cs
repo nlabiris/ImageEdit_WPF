@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Media.Imaging;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using System.Windows.Controls;
 
 namespace ImageEdit_WPF.HelperClasses {
     /// <summary>
@@ -43,14 +45,9 @@ namespace ImageEdit_WPF.HelperClasses {
         private bool m_noChange = true;
 
         /// <summary>
-        /// Input image used only for displaying purposes.
-        /// </summary>
-        private BitmapImage m_bmpInput = null;
-
-        /// <summary>
         /// Output image that carries all changes until saved.
         /// </summary>
-        private Bitmap m_bmpOutput = null;
+        private Bitmap m_bitmap = null;
 
         /// <summary>
         /// Stack that contains all undone actions.
@@ -90,14 +87,9 @@ namespace ImageEdit_WPF.HelperClasses {
             set { m_noChange = value; }
         }
 
-        public BitmapImage M_bmpInput {
-            get { return m_bmpInput; }
-            set { m_bmpInput = value; }
-        }
-
-        public Bitmap M_bmpOutput {
-            get { return m_bmpOutput; }
-            set { m_bmpOutput = value; }
+        public Bitmap M_bitmap {
+            get { return m_bitmap; }
+            set { m_bitmap = value; }
         }
 
         public Stack<Bitmap> M_undoStack {
@@ -121,5 +113,11 @@ namespace ImageEdit_WPF.HelperClasses {
             set { m_bmpUndoRedo = value; }
         }
         #endregion
+
+        public static void PreEdit(ImageEditData data) {
+        }
+
+        public static void PostEdit(ImageEditData data) {
+        }
     }
 }

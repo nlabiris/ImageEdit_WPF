@@ -84,7 +84,7 @@ namespace ImageEdit_WPF.HelperClasses {
             get { return base.Child; }
             set {
                 if (value != null && value != this.Child) {
-                    this.Initialize(value);
+                    Initialize(value);
                 }
                 base.Child = value;
             }
@@ -105,11 +105,11 @@ namespace ImageEdit_WPF.HelperClasses {
                 group.Children.Add(tt);
                 _child.RenderTransform = group;
                 _child.RenderTransformOrigin = new Point(0.0, 0.0);
-                this.MouseDown += child_MouseDown;
-                this.MouseUp += child_MouseUp;
-                this.MouseWheel += child_MouseWheel;
-                this.MouseMove += child_MouseMove;
-                this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(child_PreviewMouseRightButtonDown);
+                MouseDown += child_MouseDown;
+                MouseUp += child_MouseUp;
+                MouseWheel += child_MouseWheel;
+                MouseMove += child_MouseMove;
+                PreviewMouseRightButtonDown += new MouseButtonEventHandler(child_PreviewMouseRightButtonDown);
             }
         }
 
@@ -126,10 +126,10 @@ namespace ImageEdit_WPF.HelperClasses {
             if (_child != null) {
                 if (e.ChangedButton == MouseButton.Middle) {
                     _child.ReleaseMouseCapture();
-                    this.Cursor = Cursors.Cross;
+                    Cursor = Cursors.Cross;
                 }
                 if (e.ChangedButton == MouseButton.Left) {
-                    this.Cursor = Cursors.Cross;
+                    Cursor = Cursors.Cross;
                 }
             }
         }
@@ -147,14 +147,14 @@ namespace ImageEdit_WPF.HelperClasses {
                     TranslateTransform tt = GetTranslateTransform(_child);
                     _start = e.GetPosition(this);
                     _origin = new Point(tt.X, tt.Y);
-                    this.Cursor = Cursors.SizeAll;
+                    Cursor = Cursors.SizeAll;
                     _child.CaptureMouse();
                     _isStillDownMiddle = true;
                 } else if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed) {
                     //TranslateTransform tt = GetTranslateTransform(child);
                     _start = e.GetPosition(this);
                     //origin = new Point(tt.X, tt.Y);
-                    this.Cursor = Cursors.Cross;
+                    Cursor = Cursors.Cross;
 
                     _isStillDownLeft = true;
                 }
@@ -213,7 +213,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e) {
-            this.Reset();
+            Reset();
         }
 
         /// <summary>

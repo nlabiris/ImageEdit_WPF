@@ -5,6 +5,9 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace ImageEdit_WPF.HelperClasses {
+    /// <summary>
+    /// Static class with extension methods for convertions between different type of classes that handle images.
+    /// </summary>
     public static class ConvertionMethods {
         #region BitmapSource To BitmapImage
         /// <summary>
@@ -64,24 +67,6 @@ namespace ImageEdit_WPF.HelperClasses {
             BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
 
             return bdc.Frames[0];
-        }
-        #endregion
-
-        #region GetEncoder
-        /// <summary>
-        /// Get the encoder info in order to use it at <c>Save</c> or <c>Save as...</c> method.
-        /// </summary>
-        /// <param name="format">Format of the image</param>
-        /// <returns></returns>
-        public static ImageCodecInfo GetEncoder(ImageFormat format) {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-
-            foreach (ImageCodecInfo codec in codecs) {
-                if (codec.FormatID == format.Guid) {
-                    return codec;
-                }
-            }
-            return null;
         }
         #endregion
     }

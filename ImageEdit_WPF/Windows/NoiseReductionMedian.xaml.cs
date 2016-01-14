@@ -95,13 +95,13 @@ namespace ImageEdit_WPF.Windows {
             int[] arB = new int[121];
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bmpOutput.LockBits(new Rectangle(0, 0, m_data.M_bmpOutput.Width, m_data.M_bmpOutput.Height), ImageLockMode.ReadWrite, m_data.M_bmpOutput.PixelFormat);
+            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bmpOutput.Height;
+            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -110,8 +110,8 @@ namespace ImageEdit_WPF.Windows {
             Stopwatch watch = Stopwatch.StartNew();
 
             if (_sizeMask == 3) {
-                for (i = _sizeMask/2; i < m_data.M_bmpOutput.Width - _sizeMask/2; i++) {
-                    for (j = _sizeMask/2; j < m_data.M_bmpOutput.Height - _sizeMask/2; j++) {
+                for (i = _sizeMask/2; i < m_data.M_bitmap.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < m_data.M_bitmap.Height - _sizeMask/2; j++) {
                         int index;
                         z = 0;
 
@@ -157,8 +157,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
             } else if (_sizeMask == 5) {
-                for (i = _sizeMask/2; i < m_data.M_bmpOutput.Width - _sizeMask/2; i++) {
-                    for (j = _sizeMask/2; j < m_data.M_bmpOutput.Height - _sizeMask/2; j++) {
+                for (i = _sizeMask/2; i < m_data.M_bitmap.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < m_data.M_bitmap.Height - _sizeMask/2; j++) {
                         int index;
                         z = 0;
 
@@ -204,8 +204,8 @@ namespace ImageEdit_WPF.Windows {
                     }
                 }
             } else if (_sizeMask == 7) {
-                for (i = _sizeMask/2; i < m_data.M_bmpOutput.Width - _sizeMask/2; i++) {
-                    for (j = _sizeMask/2; j < m_data.M_bmpOutput.Height - _sizeMask/2; j++) {
+                for (i = _sizeMask/2; i < m_data.M_bitmap.Width - _sizeMask/2; i++) {
+                    for (j = _sizeMask/2; j < m_data.M_bitmap.Height - _sizeMask/2; j++) {
                         int index;
                         z = 0;
 
@@ -259,21 +259,21 @@ namespace ImageEdit_WPF.Windows {
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            m_data.M_bmpOutput.UnlockBits(bmpData);
+            m_data.M_bitmap.UnlockBits(bmpData);
 
-            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
+            string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
                 m_data.M_noChange = false;
                 m_data.M_action = ActionType.ImageConvolution;
-                m_data.M_bmpUndoRedo = m_data.M_bmpOutput.Clone() as Bitmap;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
                 m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
                 m_data.M_redoStack.Clear();
                 foreach (Window mainWindow in Application.Current.Windows) {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
-                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bmpOutput.BitmapToBitmapImage();
+                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
                     }
                 }
                 Close();
