@@ -542,7 +542,7 @@ namespace ImageEdit_WPF {
                 // Get the address of the first line.
                 IntPtr ptr = bmpData.Scan0;
 
-                // Declare an array to hold the bytes of the bitmap. 
+                // Declare an array to hold the bytes of the bitmap.
                 int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
                 byte[] rgbValues = new byte[bytes];
 
