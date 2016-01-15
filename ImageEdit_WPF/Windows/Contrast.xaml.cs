@@ -137,7 +137,9 @@ namespace ImageEdit_WPF.Windows {
 
             // Unlock the bits.
             m_data.M_bitmap.UnlockBits(bmpData);
-            
+
+            m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
+
             string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
@@ -150,7 +152,6 @@ namespace ImageEdit_WPF.Windows {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
-                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
                     }
                 }
                 Close();

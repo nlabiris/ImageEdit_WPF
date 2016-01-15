@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ImageEdit_WPF.HelperClasses {
     /// <summary>
@@ -27,7 +26,7 @@ namespace ImageEdit_WPF.HelperClasses {
         ImageEqualizationYUV = 13
     }
 
-    public class ImageEditData {
+    public class ImageEditData : INotifyPropertyChanged {
         #region Private fields
         /// <summary>
         /// Input filename of the image.
@@ -43,6 +42,11 @@ namespace ImageEdit_WPF.HelperClasses {
         /// Check if the image has been modified
         /// </summary>
         private bool m_noChange = true;
+
+        /// <summary>
+        /// Image that binds to the GUI.
+        /// </summary>
+        private ImageSource m_bitmapBind = null;
 
         /// <summary>
         /// Output image that carries all changes until saved.
@@ -87,6 +91,14 @@ namespace ImageEdit_WPF.HelperClasses {
             set { m_noChange = value; }
         }
 
+        public ImageSource M_bitmapBind {
+            get { return m_bitmapBind; }
+            set {
+                m_bitmapBind = value;
+                OnPropertyChanged("M_bitmapBind");
+            }
+        }
+
         public Bitmap M_bitmap {
             get { return m_bitmap; }
             set { m_bitmap = value; }
@@ -119,5 +131,17 @@ namespace ImageEdit_WPF.HelperClasses {
 
         public static void PostEdit(ImageEditData data) {
         }
+
+
+        #region OnPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName) {
+            var handler = PropertyChanged;
+            if (handler != null) {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 }

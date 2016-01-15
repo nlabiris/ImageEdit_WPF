@@ -192,18 +192,18 @@ namespace ImageEdit_WPF.Windows {
             positionz1B = positionB[0];
 
             for (i = 1; i < 256; i++) {
-                if ((Math.Abs(positionR[i] - positionz1R)) > distance) {
+                if (Math.Abs(positionR[i] - positionz1R) > distance) {
                     z2R = histogramSortR[i];
                     positionz2R = positionR[i];
                     break;
                 }
-                if ((Math.Abs(positionG[i] - positionz1G)) > distance) {
+                if (Math.Abs(positionG[i] - positionz1G) > distance) {
                     z2G = histogramSortG[i];
                     positionz2G = positionG[i];
                     break;
                 }
 
-                if ((Math.Abs(positionB[i] - positionz1B)) > distance) {
+                if (Math.Abs(positionB[i] - positionz1B) > distance) {
                     z2B = histogramSortB[i];
                     positionz2B = positionB[i];
                     break;
@@ -273,23 +273,9 @@ namespace ImageEdit_WPF.Windows {
                     g = rgbValues[index + 1];
                     b = rgbValues[index];
 
-                    if (r < thresholdR) {
-                        r = 0;
-                    } else {
-                        r = 255;
-                    }
-
-                    if (g < thresholdG) {
-                        g = 0;
-                    } else {
-                        g = 255;
-                    }
-
-                    if (b < thresholdB) {
-                        b = 0;
-                    } else {
-                        b = 255;
-                    }
+                    r = r < thresholdR ? 0 : 255;
+                    g = g < thresholdG ? 0 : 255;
+                    b = b < thresholdB ? 0 : 255;
 
                     rgbValues[index + 2] = (byte)r;
                     rgbValues[index + 1] = (byte)g;
@@ -306,6 +292,8 @@ namespace ImageEdit_WPF.Windows {
             // Unlock the bits.
             m_data.M_bitmap.UnlockBits(bmpData);
 
+            m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
+
             string messageOperation = "Done!\r\n\r\nThreshold (RED) set at: " + thresholdR + "\r\n" + "Threshold (GREEN) set at: " + thresholdG + "\r\n" + "Threshold (BLUE) set at: " + thresholdB + "\r\n\r\n" + "Elapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
@@ -318,7 +306,6 @@ namespace ImageEdit_WPF.Windows {
                     if (mainWindow.GetType() == typeof (MainWindow)) {
                         ((MainWindow)mainWindow).undo.IsEnabled = true;
                         ((MainWindow)mainWindow).redo.IsEnabled = false;
-                        ((MainWindow)mainWindow).mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
                     }
                 }
                 Close();

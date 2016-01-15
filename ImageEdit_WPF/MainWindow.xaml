@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         xmlns:commands="clr-namespace:ImageEdit_WPF.Commands"
         xmlns:helperClasses="clr-namespace:ImageEdit_WPF.HelperClasses"
         Title="ImageEdit" Height="350" Width="525" Background="Black" Closing="Window_Closing">
-    
+
     <!-- KEYBOARD SHORTCUTS -->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="open_Executed" CanExecute="open_CanExecute" />
@@ -100,7 +100,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         
         <!-- IMAGE -->
         <helperClasses:ZoomBorder x:Name="border" Grid.Row="1" Grid.Column="0" ClipToBounds="True" Background="Black">
-            <Image x:Name="mainImage" x:FieldModifier="public"></Image>
+            <Image x:Name="mainImage" x:FieldModifier="public" Source="{Binding Path=M_bitmapBind, UpdateSourceTrigger=PropertyChanged}"></Image>
         </helperClasses:ZoomBorder>
         
         <!-- STATUS BAR -->

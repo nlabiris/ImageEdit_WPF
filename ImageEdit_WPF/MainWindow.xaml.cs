@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 // BUG: Undo/Redo
@@ -67,7 +68,7 @@ namespace ImageEdit_WPF {
         /// </summary>
         public MainWindow() {
             m_data = new ImageEditData();
-
+            DataContext = m_data;
             InitializeComponent();
 
             undo.IsEnabled = false;
@@ -108,7 +109,7 @@ namespace ImageEdit_WPF {
                     m_data.M_inputFilename = openFile.FileName;
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
-                    mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                    m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                     CalculateData_StatusBar();
 
@@ -139,7 +140,7 @@ namespace ImageEdit_WPF {
                 if (m_data.M_inputFilename != string.Empty) {
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
-                    mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                    mainImage.Source = m_data.M_bitmap.BitmapToBitmapSource();
 
                     m_data.M_undoStack.Clear();
                     m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
@@ -306,7 +307,7 @@ namespace ImageEdit_WPF {
             m_data.M_redoStack.Push(m_data.M_bmpUndoRedo);
             redo.IsEnabled = true;
             m_data.M_bitmap = m_data.M_undoStack.Peek();
-            mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+            mainImage.Source = m_data.M_bitmap.BitmapToBitmapSource();
         }
         #endregion
 
@@ -337,7 +338,7 @@ namespace ImageEdit_WPF {
 
             m_data.M_bitmap = m_data.M_bmpUndoRedo = m_data.M_redoStack.Pop();
             m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-            mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+            mainImage.Source = m_data.M_bitmap.BitmapToBitmapSource();
 
             if (m_data.M_undoStack.Count > 1) {
                 undo.IsEnabled = true;
@@ -568,7 +569,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -641,7 +642,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -908,7 +909,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1132,7 +1133,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1301,7 +1302,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1394,7 +1395,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1476,7 +1477,7 @@ namespace ImageEdit_WPF {
                 // Unlock the bits.
                 m_data.M_bitmap.UnlockBits(bmpData);
 
-                mainImage.Source = m_data.M_bitmap.BitmapToBitmapImage();
+                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
                 MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);

@@ -54,12 +54,12 @@ namespace ImageEdit_WPF.HelperClasses {
         }
         #endregion
 
-        #region Bitmap To BitmapImage
+        #region Bitmap To BitmapSource
         /// <summary>
-        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
+        /// <c>Bitmap</c> to <c>BitmapSource</c> conversion method in order to show the edited image at the main window.
         /// </summary>
         /// <remarks>Extension method.</remarks>
-        public static BitmapFrame BitmapToBitmapImage(this Bitmap bitmap) {
+        public static BitmapFrame BitmapToBitmapSource(this Bitmap bitmap) {
             // Convert Bitmap to BitmapImage
             MemoryStream str = new MemoryStream();
             bitmap.Save(str, ImageFormat.Bmp);
