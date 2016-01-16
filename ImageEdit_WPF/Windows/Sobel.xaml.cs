@@ -795,12 +795,7 @@ namespace ImageEdit_WPF.Windows {
                     break;
             }
 
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Algorithms.EdgeDetection_Sobel(m_data, m_sizeMask, maskX, maskY);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
+            TimeSpan elapsedTime = Algorithms.EdgeDetection_Sobel(m_data, m_sizeMask, maskX, maskY);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 

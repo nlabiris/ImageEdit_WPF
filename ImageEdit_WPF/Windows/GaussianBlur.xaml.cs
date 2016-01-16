@@ -495,12 +495,7 @@ namespace ImageEdit_WPF.Windows {
                     break;
             }
 
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Algorithms.GaussianBlur(m_data, m_sizeMask, maskX);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
+            TimeSpan elapsedTime = Algorithms.GaussianBlur(m_data, m_sizeMask, maskX);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 

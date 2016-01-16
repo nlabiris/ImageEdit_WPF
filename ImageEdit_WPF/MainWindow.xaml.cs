@@ -534,12 +534,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.Negative(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.Negative(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -581,12 +576,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.SquareRoot(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.SquareRoot(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -748,12 +738,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.HistogramEqualization_RGB(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.HistogramEqualization_RGB(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -795,12 +780,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.HistogramEqualization_HSV(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.HistogramEqualization_HSV(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -842,12 +822,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.HistogramEqualization_YUV(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.HistogramEqualization_YUV(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -889,12 +864,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.ImageSummarization(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.ImageSummarization(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -936,12 +906,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                Algorithms.ImageSubtraction(m_data);
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+                TimeSpan elapsedTime = Algorithms.ImageSubtraction(m_data);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 

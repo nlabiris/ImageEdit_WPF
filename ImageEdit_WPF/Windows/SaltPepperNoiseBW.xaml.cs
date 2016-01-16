@@ -70,12 +70,7 @@ namespace ImageEdit_WPF.Windows {
                 return;
             }
 
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Algorithms.SaltPepperNoise_BW(m_data, probability);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
+            TimeSpan elapsedTime = Algorithms.SaltPepperNoise_BW(m_data, probability);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
             

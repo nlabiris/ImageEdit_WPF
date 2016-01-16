@@ -75,13 +75,8 @@ namespace ImageEdit_WPF.Windows {
                 return;
             }
 
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Algorithms.AutoThreshold(m_data, distance);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
-
+            TimeSpan elapsedTime = Algorithms.AutoThreshold(m_data, distance);
+            
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
             string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;

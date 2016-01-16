@@ -19,13 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
-        public static void ShiftBits(ImageData data, int bits) {
+        public static TimeSpan ShiftBits(ImageData data, int bits)
+        {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -39,6 +41,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
                 for (int j = 0; j < data.M_bitmap.Height; j++) {
@@ -51,14 +55,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void Threshold(ImageData data, int threshold) {
+        public static TimeSpan Threshold(ImageData data, int threshold)
+        {
             int r = 0;
             int g = 0;
             int b = 0;
@@ -75,6 +85,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
@@ -96,14 +108,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void AutoThreshold(ImageData data, int distance) {
+        public static TimeSpan AutoThreshold(ImageData data, int distance)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -150,6 +168,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (i = 0; i < 256; i++) {
@@ -311,14 +331,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void Negative(ImageData data) {
+        public static TimeSpan Negative(ImageData data)
+        {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -332,6 +358,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
                 for (int j = 0; j < data.M_bitmap.Height; j++) {
@@ -343,14 +371,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void SquareRoot(ImageData data) {
+        public static TimeSpan SquareRoot(ImageData data)
+        {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -364,6 +398,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
                 for (int j = 0; j < data.M_bitmap.Height; j++) {
@@ -375,14 +411,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void ContrastEnhancement(ImageData data, int brightness, double contrast) {
+        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast)
+        {
             double r = 0;
             double g = 0;
             double b = 0;
@@ -399,6 +441,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
@@ -434,14 +478,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void Brightness(ImageData data, int brightness) {
+        public static TimeSpan Brightness(ImageData data, int brightness)
+        {
             int r = 0;
             int g = 0;
             int b = 0;
@@ -458,6 +508,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
@@ -493,14 +545,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void Contrast(ImageData data, double contrast) {
+        public static TimeSpan Contrast(ImageData data, double contrast)
+        {
             double r = 0;
             double g = 0;
             double b = 0;
@@ -517,6 +575,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithms
             for (int i = 0; i < data.M_bitmap.Width; i++) {
@@ -552,18 +612,24 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
         public static void Histogram() {
 
         }
 
-        public static void HistogramEqualization_RGB(ImageData data) {
+        public static TimeSpan HistogramEqualization_RGB(ImageData data)
+        {
             int b = 0;
             int g = 0;
             int r = 0;
@@ -589,6 +655,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (int i = 0; i < 256; i++) {
@@ -662,14 +730,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void HistogramEqualization_HSV(ImageData data) {
+        public static TimeSpan HistogramEqualization_HSV(ImageData data)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -701,6 +775,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (i = 0; i < 256; i++) {
@@ -845,14 +921,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void HistogramEqualization_YUV(ImageData data) {
+        public static TimeSpan HistogramEqualization_YUV(ImageData data)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -878,6 +960,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (i = 0; i < 256; i++) {
@@ -973,14 +1057,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void ImageSummarization(ImageData data) {
+        public static TimeSpan ImageSummarization(ImageData data)
+        {
             int b = 0;
             int g = 0;
             int r = 0;
@@ -997,6 +1087,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
@@ -1025,14 +1117,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void ImageSubtraction(ImageData data) {
+        public static TimeSpan ImageSubtraction(ImageData data)
+        {
             int b = 0;
             int g = 0;
             int r = 0;
@@ -1050,6 +1148,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             for (int i = 0; i < data.M_bitmap.Width; i++) {
                 for (int j = 0; j < data.M_bitmap.Height; j++) {
@@ -1066,14 +1166,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
+        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1102,6 +1208,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             switch (sizeMask) {
                 case 3:
@@ -1284,6 +1392,9 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             for (i = 0; i < data.M_bitmap.Width; i++) {
                 for (j = 0; j < data.M_bitmap.Height; j++) {
                     int index = (j*bmpData.Stride) + (i*3);
@@ -1299,9 +1410,12 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
+        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1325,6 +1439,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             switch (sizeMask) {
                 case 3:
@@ -1477,6 +1593,9 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             for (i = 0; i < data.M_bitmap.Width; i++) {
                 for (j = 0; j < data.M_bitmap.Height; j++) {
                     int index = (j*bmpData.Stride) + (i*3);
@@ -1492,9 +1611,12 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void Sharpen(ImageData data, int sizeMask, int[,] maskX) {
+        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1518,6 +1640,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             switch (sizeMask) {
                 case 3:
@@ -1670,6 +1794,9 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             for (i = 0; i < data.M_bitmap.Width; i++) {
                 for (j = 0; j < data.M_bitmap.Height; j++) {
                     int index = (j*bmpData.Stride) + (i*3);
@@ -1685,9 +1812,12 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void SaltPepperNoise_Color(ImageData data, double probability) {
+        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability)
+        {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1711,6 +1841,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (i = 0; i < data.M_bitmap.Width; i++) {
@@ -1744,14 +1876,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void SaltPepperNoise_BW(ImageData data, double probability) {
+        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability)
+        {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1776,6 +1914,8 @@ namespace ImageEdit_WPF.HelperClasses {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
+            Stopwatch watch = Stopwatch.StartNew();
+
             #region Algorithm
             for (i = 0; i < data.M_bitmap.Width; i++) {
                 for (j = 0; j < data.M_bitmap.Height; j++) {
@@ -1796,14 +1936,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void NoiseReduction_Mean(ImageData data, int sizeMask) {
+        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1824,6 +1970,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (i = sizeMask/2; i < data.M_bitmap.Width - sizeMask/2; i++) {
@@ -1852,14 +2000,20 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
 
-        public static void NoiseReduction_Median(ImageData data, int sizeMask) {
+        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask)
+        {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1884,6 +2038,8 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             for (i = sizeMask/2; i < data.M_bitmap.Width - sizeMask/2; i++) {
@@ -1934,11 +2090,16 @@ namespace ImageEdit_WPF.HelperClasses {
             }
             #endregion
 
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
     }
 }

@@ -494,13 +494,8 @@ namespace ImageEdit_WPF.Windows {
                     break;
             }
 
-            Stopwatch watch = Stopwatch.StartNew();
+            TimeSpan elapsedTime = Algorithms.Sharpen(m_data, m_sizeMask, maskX);
 
-            Algorithms.Sharpen(m_data, m_sizeMask, maskX);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
-            
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
             
             string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;

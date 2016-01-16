@@ -75,12 +75,7 @@ namespace ImageEdit_WPF.Windows {
                 return;
             }
 
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Algorithms.Threshold(m_data, threshold);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
+            TimeSpan elapsedTime = Algorithms.Threshold(m_data, threshold);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
             

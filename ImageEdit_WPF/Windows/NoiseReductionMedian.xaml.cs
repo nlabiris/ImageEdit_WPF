@@ -80,12 +80,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Algorithms.NoiseReduction_Median(m_data, m_sizeMask);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
+            TimeSpan elapsedTime = Algorithms.NoiseReduction_Median(m_data, m_sizeMask);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
