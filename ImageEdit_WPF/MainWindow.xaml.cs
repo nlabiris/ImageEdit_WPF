@@ -137,7 +137,7 @@ namespace ImageEdit_WPF {
                 if (m_data.M_inputFilename != string.Empty) {
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
-                    mainImage.Source = m_data.M_bitmap.BitmapToBitmapSource();
+                    m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                     m_data.M_undoStack.Clear();
                     m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
