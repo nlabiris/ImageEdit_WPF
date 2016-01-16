@@ -22,9 +22,7 @@ using ImageEdit_WPF.HelperClasses;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace ImageEdit_WPF.Windows {
@@ -32,13 +30,13 @@ namespace ImageEdit_WPF.Windows {
     /// Interaction logic for ContrastEnhancement.xaml
     /// </summary>
     public partial class ContrastEnhancement : Window {
-        private ImageEditData m_data = null;
+        private ImageData m_data = null;
 
         /// <summary>
         /// Contrast Enhancement <c>constructor</c>.
         /// Here we initialiaze the images and also we set the focus at the textBox being used.
         /// </summary>
-        public ContrastEnhancement(ImageEditData data) {
+        public ContrastEnhancement(ImageData data) {
             m_data = data;
 
             InitializeComponent();
@@ -53,9 +51,7 @@ namespace ImageEdit_WPF.Windows {
         private void ok_Click(object sender, RoutedEventArgs e) {
             int brightness = 0;
             double contrast = 0;
-            double r = 0;
-            double g = 0;
-            double b = 0;
+            
 
             try {
                 contrast = double.Parse(textboxContrast.Text, new CultureInfo("el-GR"));
@@ -84,61 +80,12 @@ namespace ImageEdit_WPF.Windows {
                 return;
             }
 
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    r = (rgbValues[index + 2] + brightness)*contrast;
-                    g = (rgbValues[index + 1] + brightness)*contrast;
-                    b = (rgbValues[index] + brightness)*contrast;
-
-                    if (r > 255.0) {
-                        r = 255.0;
-                    } else if (r < 0.0) {
-                        r = 0.0;
-                    }
-
-                    if (g > 255.0) {
-                        g = 255.0;
-                    } else if (g < 0.0) {
-                        g = 0.0;
-                    }
-
-                    if (b > 255.0) {
-                        b = 255.0;
-                    } else if (b < 0.0) {
-                        b = 0.0;
-                    }
-
-                    rgbValues[index + 2] = (byte)r;
-                    rgbValues[index + 1] = (byte)g;
-                    rgbValues[index] = (byte)b;
-                }
-            }
+            Algorithms.ContrastEnhancement(m_data, brightness, contrast);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 

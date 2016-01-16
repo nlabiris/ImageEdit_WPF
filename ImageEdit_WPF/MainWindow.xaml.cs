@@ -33,8 +33,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 // BUG: Undo/Redo
 // PENDING: Color to Grayscale algorithm
@@ -56,10 +54,10 @@ using System.Windows.Media.Imaging;
 namespace ImageEdit_WPF {
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
-    /// Here we have all the main components that appear on the main window.
+    /// Here we have all the components that appear on the main window.
     /// </summary>
     public partial class MainWindow : Window {
-        private ImageEditData m_data = null;
+        private ImageData m_data = null;
 
         #region MainWindow constructor
         /// <summary>
@@ -67,7 +65,7 @@ namespace ImageEdit_WPF {
         /// as well as checking the visibility of the status bar.
         /// </summary>
         public MainWindow() {
-            m_data = new ImageEditData();
+            m_data = new ImageData();
             DataContext = m_data;
             InitializeComponent();
 
@@ -536,38 +534,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap.
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (j*bmpData.Stride) + (i*3);
-                        rgbValues[index + 2] = (byte)(255 - rgbValues[index + 2]); // R
-                        rgbValues[index + 1] = (byte)(255 - rgbValues[index + 1]); // G
-                        rgbValues[index] = (byte)(255 - rgbValues[index]); // B
-                    }
-                }
+                Algorithms.Negative(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -609,38 +581,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (j*bmpData.Stride) + (i*3);
-                        rgbValues[index + 2] = (byte)Math.Sqrt(rgbValues[index + 2]*255); // R
-                        rgbValues[index + 1] = (byte)Math.Sqrt(rgbValues[index + 1]*255); // G
-                        rgbValues[index] = (byte)Math.Sqrt(rgbValues[index]*255); // B
-                    }
-                }
+                Algorithms.SquareRoot(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -802,112 +748,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                int b;
-                int g;
-                int r;
-                double[] possibilityR = new double[256];
-                double[] possibilityG = new double[256];
-                double[] possibilityB = new double[256];
-                int[] histogramR = new int[256];
-                int[] histogramG = new int[256];
-                int[] histogramB = new int[256];
-                double[] histogramEqR = new double[256];
-                double[] histogramEqG = new double[256];
-                double[] histogramEqB = new double[256];
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < 256; i++) {
-                    histogramR[i] = 0;
-                    histogramG[i] = 0;
-                    histogramB[i] = 0;
-                }
-
-                for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (j*bmpData.Stride) + (i*3);
-
-
-                        b = rgbValues[index + 2];
-                        histogramB[b]++;
-                        g = rgbValues[index + 1];
-                        histogramG[g]++;
-                        r = rgbValues[index];
-                        histogramR[r]++;
-                    }
-                }
-
-                for (int i = 0; i < 256; i++) {
-                    possibilityB[i] = histogramB[i]/(double)(m_data.M_bitmap.Width*m_data.M_bitmap.Height);
-                    possibilityG[i] = histogramG[i]/(double)(m_data.M_bitmap.Width*m_data.M_bitmap.Height);
-                    possibilityR[i] = histogramR[i]/(double)(m_data.M_bitmap.Width*m_data.M_bitmap.Height);
-                }
-
-                histogramEqB[0] = possibilityB[0];
-                histogramEqG[0] = possibilityG[0];
-                histogramEqR[0] = possibilityR[0];
-                for (int i = 1; i < 256; i++) {
-                    histogramEqB[i] = histogramEqB[i - 1] + possibilityB[i];
-                    histogramEqG[i] = histogramEqG[i - 1] + possibilityG[i];
-                    histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
-                }
-
-                for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (j*bmpData.Stride) + (i*3);
-
-                        b = rgbValues[index + 2];
-                        b = (int)Math.Round(histogramEqB[b]*255);
-                        g = rgbValues[index + 1];
-                        g = (int)Math.Round(histogramEqG[g]*255);
-                        r = rgbValues[index];
-                        r = (int)Math.Round(histogramEqR[r]*255);
-
-                        if (b > 255) {
-                            b = 255;
-                        } else if (b < 0) {
-                            b = 0;
-                        }
-
-                        if (g > 255) {
-                            g = 255;
-                        } else if (g < 0) {
-                            g = 0;
-                        }
-
-                        if (r > 255) {
-                            r = 255;
-                        } else if (r < 0) {
-                            r = 0;
-                        }
-
-                        rgbValues[index + 2] = (byte)b;
-                        rgbValues[index + 1] = (byte)g;
-                        rgbValues[index] = (byte)r;
-                    }
-                }
+                Algorithms.HistogramEqualization_RGB(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -949,189 +795,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                int i;
-                int j;
-                int k = 0;
-                double max = 0.0;
-                double min = 0.0;
-                double chroma = 0.0;
-                double c = 0.0;
-                double x = 0.0;
-                double m = 0.0;
-                int[] histogramV = new int[256];
-                double[] sumHistogramEqualizationV = new double[256];
-                double[] sumHistogramV = new double[256];
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-                double[] red = new double[bytes];
-                double[] green = new double[bytes];
-                double[] blue = new double[bytes];
-                double[] hue = new double[bytes];
-                double[] value = new double[bytes];
-                double[] saturation = new double[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (i = 0; i < 256; i++) {
-                    histogramV[i] = 0;
-                    sumHistogramEqualizationV[i] = 0.0;
-                }
-
-                for (i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (bmpData.Stride*j) + (i*3);
-
-                        blue[index] = rgbValues[index];
-                        blue[index] = blue[index]/255.0;
-                        green[index + 1] = rgbValues[index + 1];
-                        green[index + 1] = green[index + 1]/255.0;
-                        red[index + 2] = rgbValues[index + 2];
-                        red[index + 2] = red[index + 2]/255.0;
-
-
-                        min = Math.Min(red[index + 2], Math.Min(green[index + 1], blue[index]));
-                        max = Math.Max(red[index + 2], Math.Max(green[index + 1], blue[index]));
-                        chroma = max - min;
-                        hue[index] = 0.0;
-                        saturation[index + 1] = 0.0;
-                        if (chroma != 0.0) {
-                            if (Math.Abs(red[index + 2] - max) < 0.00001) {
-                                hue[index] = ((green[index + 1] - blue[index])/chroma);
-                                hue[index] = hue[index]%6.0;
-                            } else if (Math.Abs(green[index + 1] - max) < 0.00001) {
-                                hue[index] = ((blue[index] - red[index + 2])/chroma) + 2;
-                            } else {
-                                hue[index] = ((red[index + 2] - green[index + 1])/chroma) + 4;
-                            }
-
-                            hue[index] = hue[index]*60.0;
-                            if (hue[index] < 0.0) {
-                                hue[index] = hue[index] + 360.0;
-                            }
-                            saturation[index + 1] = chroma/max;
-                        }
-                        value[index + 2] = max;
-
-                        value[index + 2] = value[index + 2]*255.0;
-
-                        if (value[index + 2] > 255.0) {
-                            value[index + 2] = 255.0;
-                        }
-                        if (value[index + 2] < 0.0) {
-                            value[index + 2] = 0.0;
-                        }
-
-                        k = (int)value[index + 2];
-                        histogramV[k]++;
-                    }
-                }
-
-                for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationV[i] = histogramV[i]/(double)(m_data.M_bitmap.Width*m_data.M_bitmap.Height);
-                }
-
-                sumHistogramV[0] = sumHistogramEqualizationV[0];
-                for (i = 1; i < 256; i++) {
-                    sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
-                }
-
-                for (i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (bmpData.Stride*j) + (i*3);
-
-                        k = (int)value[index + 2];
-                        value[index + 2] = (byte)Math.Round(sumHistogramV[k]*255.0);
-                        value[index + 2] = value[index + 2]/255;
-
-                        c = value[index + 2]*saturation[index + 1];
-                        hue[index] = hue[index]/60.0;
-                        hue[index] = hue[index]%2;
-                        x = c*(1.0 - Math.Abs(hue[index] - 1.0));
-                        m = value[index + 2] - c;
-
-                        if (hue[index] >= 0.0 && hue[index] < 60.0) {
-                            red[index + 2] = c;
-                            green[index + 1] = x;
-                            blue[index] = 0;
-                        } else if (hue[index] >= 60.0 && hue[index] < 120.0) {
-                            red[index + 2] = x;
-                            green[index + 1] = c;
-                            blue[index] = 0;
-                        } else if (hue[index] >= 120.0 && hue[index] < 180.0) {
-                            red[index + 2] = 0;
-                            green[index + 1] = c;
-                            blue[index] = x;
-                        } else if (hue[index] >= 180.0 && hue[index] < 240.0) {
-                            red[index + 2] = 0;
-                            green[index + 1] = x;
-                            blue[index] = c;
-                        } else if (hue[index] >= 240.0 && hue[index] < 300.0) {
-                            red[index + 2] = x;
-                            green[index + 1] = 0;
-                            blue[index] = c;
-                        } else if (hue[index] >= 300.0 && hue[index] < 360.0) {
-                            red[index + 2] = c;
-                            green[index + 1] = 0;
-                            blue[index] = x;
-                        }
-
-                        red[index + 2] = red[index + 2] + m;
-                        green[index + 1] = green[index + 1] + m;
-                        blue[index] = blue[index] + m;
-
-                        red[index + 2] = red[index + 2]*255.0;
-                        green[index + 1] = green[index + 1]*255.0;
-                        blue[index] = blue[index]*255.0;
-
-                        if (red[index + 2] > 255.0) {
-                            red[index + 2] = 255.0;
-                        }
-
-                        if (red[index + 2] < 0.0) {
-                            red[index + 2] = 0.0;
-                        }
-
-                        if (green[index + 1] > 255.0) {
-                            green[index + 1] = 255.0;
-                        }
-
-                        if (green[index + 1] < 0.0) {
-                            green[index + 1] = 0.0;
-                        }
-
-                        if (blue[index] > 255.0) {
-                            blue[index] = 255.0;
-                        }
-
-                        if (blue[index] < 0.0) {
-                            blue[index] = 0.0;
-                        }
-
-                        rgbValues[index + 2] = (byte)red[index + 2];
-                        rgbValues[index + 1] = (byte)green[index + 1];
-                        rgbValues[index] = (byte)blue[index];
-                    }
-                }
+                Algorithms.HistogramEqualization_HSV(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -1173,134 +842,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                int i;
-                int j;
-                int k = 0;
-                int[] histogramY = new int[256];
-                double[] sumHistogramEqualizationY = new double[256];
-                double[] sumHistogramY = new double[256];
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-                double[] red = new double[bytes];
-                double[] green = new double[bytes];
-                double[] blue = new double[bytes];
-                double[] luminanceY = new double[bytes];
-                double[] chrominanceU = new double[bytes];
-                double[] chrominanceV = new double[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (i = 0; i < 256; i++) {
-                    histogramY[i] = 0;
-                }
-
-                for (i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (bmpData.Stride*j) + (i*3);
-
-                        blue[index] = rgbValues[index];
-                        blue[index] = blue[index]/255.0;
-                        green[index + 1] = rgbValues[index + 1];
-                        green[index + 1] = green[index + 1]/255.0;
-                        red[index + 2] = rgbValues[index + 2];
-                        red[index + 2] = red[index + 2]/255.0;
-
-                        luminanceY[index] = (0.299*red[index + 2]) + (0.587*green[index + 1]) + (0.114*blue[index]);
-                        chrominanceU[index + 1] = (-0.14713*red[index + 2]) - (0.28886*green[index + 1]) + (0.436*blue[index]);
-                        chrominanceV[index + 2] = (0.615*red[index + 2]) - (0.51499*green[index + 1]) - (0.10001*blue[index]);
-
-                        luminanceY[index] = luminanceY[index]*255.0;
-                        if (luminanceY[index] > 255.0) {
-                            luminanceY[index] = 255.0;
-                        }
-
-                        if (luminanceY[index] < 0.0) {
-                            luminanceY[index] = 0.0;
-                        }
-
-                        k = (int)luminanceY[index];
-                        histogramY[k]++;
-                    }
-                }
-
-                for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationY[i] = 0.0;
-                }
-
-                for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationY[i] = histogramY[i]/(double)(m_data.M_bitmap.Width*m_data.M_bitmap.Height);
-                }
-
-                sumHistogramY[0] = sumHistogramEqualizationY[0];
-                for (i = 1; i < 256; i++) {
-                    sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
-                }
-
-                for (i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (bmpData.Stride*j) + (i*3);
-
-                        k = (int)luminanceY[index];
-                        luminanceY[index] = (byte)Math.Round(sumHistogramY[k]*255.0);
-                        luminanceY[index] = luminanceY[index]/255;
-
-                        red[index + 2] = luminanceY[index] + (0.0*chrominanceU[index + 1]) + (1.13983*chrominanceV[index + 2]);
-                        green[index + 1] = luminanceY[index] + (-0.39465*chrominanceU[index + 1]) + (-0.58060*chrominanceV[index + 2]);
-                        blue[index] = luminanceY[index] + (2.03211*chrominanceU[index + 1]) + (0.0*chrominanceV[index + 2]);
-
-                        red[index + 2] = red[index + 2]*255.0;
-                        green[index + 1] = green[index + 1]*255.0;
-                        blue[index] = blue[index]*255.0;
-
-                        if (red[index + 2] > 255.0) {
-                            red[index + 2] = 255.0;
-                        }
-
-                        if (red[index + 2] < 0.0) {
-                            red[index + 2] = 0.0;
-                        }
-
-                        if (green[index + 1] > 255.0) {
-                            green[index + 1] = 255.0;
-                        }
-
-                        if (green[index + 1] < 0.0) {
-                            green[index + 1] = 0.0;
-                        }
-
-                        if (blue[index] > 255.0) {
-                            blue[index] = 255.0;
-                        }
-
-                        if (blue[index] < 0.0) {
-                            blue[index] = 0.0;
-                        }
-
-                        rgbValues[index + 2] = (byte)red[index + 2];
-                        rgbValues[index + 1] = (byte)green[index + 1];
-                        rgbValues[index] = (byte)blue[index];
-                    }
-                }
+                Algorithms.HistogramEqualization_YUV(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -1342,58 +889,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                int b;
-                int g;
-                int r;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (j*bmpData.Stride) + (i*3);
-                        r = rgbValues[index + 2] + rgbValues[index + 2]; // R
-                        g = rgbValues[index + 1] + rgbValues[index + 1]; // G
-                        b = rgbValues[index] + rgbValues[index]; // B
-
-                        if (r > 255) {
-                            r = 255;
-                        }
-
-                        if (g > 255) {
-                            g = 255;
-                        }
-
-                        if (b > 255) {
-                            b = 255;
-                        }
-
-                        rgbValues[index + 2] = (byte)r; // R
-                        rgbValues[index + 1] = (byte)g; // G
-                        rgbValues[index] = (byte)b; // B
-                    }
-                }
+                Algorithms.ImageSummarization(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
@@ -1435,47 +936,12 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                int b;
-                int g;
-                int r;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-                byte[] rgbValues = new byte[bytes];
-
-                // Copy the RGB values into the array.
-                Marshal.Copy(ptr, rgbValues, 0, bytes);
-
                 Stopwatch watch = Stopwatch.StartNew();
 
-                for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                    for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                        int index = (j*bmpData.Stride) + (i*3);
-
-                        r = rgbValues[index + 2] - rgbValues[index + 2]; // R
-                        g = rgbValues[index + 1] - rgbValues[index + 1]; // G
-                        b = rgbValues[index] - rgbValues[index]; // B
-
-                        rgbValues[index + 2] = (byte)r; // R
-                        rgbValues[index + 1] = (byte)g; // G
-                        rgbValues[index] = (byte)b; // B
-                    }
-                }
+                Algorithms.ImageSubtraction(m_data);
 
                 watch.Stop();
                 TimeSpan elapsedTime = watch.Elapsed;
-
-                // Copy the RGB values back to the bitmap
-                Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-                // Unlock the bits.
-                m_data.M_bitmap.UnlockBits(bmpData);
 
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 

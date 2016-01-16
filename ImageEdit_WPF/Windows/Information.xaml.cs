@@ -30,14 +30,14 @@ namespace ImageEdit_WPF.Windows {
     /// Interaction logic for Information.xaml
     /// </summary>
     public partial class Information : Window {
-        private ImageEditData m_data = null;
+        private ImageData m_data = null;
 
         /// <summary>
         /// Information <c>constructor</c>.
         /// Here we calculate all the neccesary information about some aspects of the image.
         /// </summary>
         /// <param name="data"></param>
-        public Information(ImageEditData data) {
+        public Information(ImageData data) {
             m_data = data;
 
             InitializeComponent();

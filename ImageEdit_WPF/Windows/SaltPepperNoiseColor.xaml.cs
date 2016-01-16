@@ -22,8 +22,6 @@ using ImageEdit_WPF.HelperClasses;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace ImageEdit_WPF.Windows {
@@ -31,13 +29,13 @@ namespace ImageEdit_WPF.Windows {
     /// Interaction logic for SaltPepperNoiseColor.xaml
     /// </summary>
     public partial class SaltPepperNoiseColor : Window {
-        private ImageEditData m_data = null;
+        private ImageData m_data = null;
 
         /// <summary>
         /// Salt-and-Pepper Noise generator (Color) <c>constructor</c>.
         /// Here we initialiaze the images and also we set the focus at the textBox being used.
         /// </summary>
-        public SaltPepperNoiseColor(ImageEditData data) {
+        public SaltPepperNoiseColor(ImageData data) {
             m_data = data;
 
             InitializeComponent();
@@ -50,19 +48,10 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            int i = 0;
-            int j = 0;
             double probability = 0.0;
-            int data = 0;
-            int data1 = 0;
-            int data2 = 0;
-            Random rand = new Random();
 
             try {
                 probability = double.Parse(textboxNoiseColor.Text);
-                data = (int)(probability*32768/2);
-                data1 = data + 16384;
-                data2 = 16384 - data;
             } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
@@ -81,59 +70,12 @@ namespace ImageEdit_WPF.Windows {
                 return;
             }
 
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    data = rand.Next(32768);
-                    if (data >= 16384 && data < data1) {
-                        rgbValues[index + 2] = 0;
-                    }
-                    if (data >= data2 && data <= 16384) {
-                        rgbValues[index + 2] = 255;
-                    }
-
-                    data = rand.Next(32768);
-                    if (data >= 16384 && data < data1) {
-                        rgbValues[index + 1] = 0;
-                    }
-                    if (data >= data2 && data <= 16384) {
-                        rgbValues[index + 1] = 255;
-                    }
-
-                    data = rand.Next(32768);
-                    if (data >= 16384 && data < data1) {
-                        rgbValues[index] = 0;
-                    }
-                    if (data >= data2 && data <= 16384) {
-                        rgbValues[index] = 255;
-                    }
-                }
-            }
+            Algorithms.SaltPepperNoise_Color(m_data, probability);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
             

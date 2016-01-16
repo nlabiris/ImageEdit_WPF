@@ -22,8 +22,6 @@ using ImageEdit_WPF.HelperClasses;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace ImageEdit_WPF.Windows {
@@ -31,13 +29,13 @@ namespace ImageEdit_WPF.Windows {
     /// Interaction logic for Brightness.xaml
     /// </summary>
     public partial class Brightness : Window {
-        private ImageEditData m_data = null;
+        private ImageData m_data = null;
 
         /// <summary>
         /// Brightness <c>constructor</c>.
         /// Here we initialiaze the images and also we set the focus at the textBox being used.
         /// </summary>
-        public Brightness(ImageEditData data) {
+        public Brightness(ImageData data) {
             m_data = data;
 
             InitializeComponent();
@@ -51,9 +49,6 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
             int brightness = 0;
-            int r = 0;
-            int g = 0;
-            int b = 0;
 
             try {
                 brightness = int.Parse(textboxBrightness.Text);
@@ -81,61 +76,12 @@ namespace ImageEdit_WPF.Windows {
                 return;
             }
 
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
             Stopwatch watch = Stopwatch.StartNew();
 
-            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    r = rgbValues[index + 2] + brightness;
-                    g = rgbValues[index + 1] + brightness;
-                    b = rgbValues[index] + brightness;
-
-                    if (r > 255) {
-                        r = 255;
-                    } else if (r < 0) {
-                        r = 0;
-                    }
-
-                    if (g > 255) {
-                        g = 255;
-                    } else if (g < 0) {
-                        g = 0;
-                    }
-
-                    if (b > 255) {
-                        b = 255;
-                    } else if (b < 0) {
-                        b = 0;
-                    }
-
-                    rgbValues[index + 2] = (byte)r;
-                    rgbValues[index + 1] = (byte)g;
-                    rgbValues[index] = (byte)b;
-                }
-            }
+            Algorithms.Brightness(m_data, brightness);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
 
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 

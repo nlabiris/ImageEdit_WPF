@@ -33,7 +33,7 @@ namespace ImageEdit_WPF.Windows {
     /// Interaction logic for Histogram.xaml
     /// </summary>
     public partial class Histogram : Window, INotifyPropertyChanged {
-        private ImageEditData m_data = null;
+        private ImageData m_data = null;
 
         /// <summary>
         /// Points that represent the values of the histogram.
@@ -90,7 +90,7 @@ namespace ImageEdit_WPF.Windows {
         /// Here we initialiaze the image, the data binding of the histogram diagram and the default hitogram that will be loaded.
         /// </summary>
         /// <param name="data">Input image.</param>
-        public Histogram(ImageEditData data) {
+        public Histogram(ImageData data) {
             m_data = data;
 
             InitializeComponent();
