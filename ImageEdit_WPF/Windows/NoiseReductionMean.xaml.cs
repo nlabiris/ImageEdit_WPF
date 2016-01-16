@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using ImageEdit_WPF.HelperClasses;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows;
 
@@ -80,26 +79,27 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
+            // Apply algorithm and return execution time
             TimeSpan elapsedTime = Algorithms.NoiseReduction_Mean(m_data, m_sizeMask);
 
+            // Set main image
             m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
             string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-            MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK) {
-                m_data.M_noChange = false;
-                m_data.M_action = ActionType.ImageConvolution;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                m_data.M_redoStack.Clear();
-                foreach (Window mainWindow in Application.Current.Windows) {
-                    if (mainWindow.GetType() == typeof (MainWindow)) {
-                        ((MainWindow)mainWindow).undo.IsEnabled = true;
-                        ((MainWindow)mainWindow).redo.IsEnabled = false;
-                    }
+            MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            m_data.M_noChange = false;
+            m_data.M_action = ActionType.ImageConvolution;
+            m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+            m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+            m_data.M_redoStack.Clear();
+            foreach (Window mainWindow in Application.Current.Windows) {
+                if (mainWindow.GetType() == typeof (MainWindow)) {
+                    ((MainWindow)mainWindow).undo.IsEnabled = true;
+                    ((MainWindow)mainWindow).redo.IsEnabled = false;
                 }
-                Close();
             }
+            Close();
         }
     }
 }

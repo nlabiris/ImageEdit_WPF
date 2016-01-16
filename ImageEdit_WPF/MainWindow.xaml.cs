@@ -25,7 +25,6 @@ using ImageEdit_WPF.Windows;
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -534,21 +533,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.Negative(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.Negative;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.Negative;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -576,21 +576,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.SquareRoot(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.SquareRoot;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.SquareRoot;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -738,21 +739,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.HistogramEqualization_RGB(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.ImageEqualizationRGB;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageEqualizationRGB;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -780,21 +782,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.HistogramEqualization_HSV(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.ImageEqualizationHSV;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageEqualizationHSV;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -822,21 +825,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.HistogramEqualization_YUV(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.ImageEqualizationYUV;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageEqualizationYUV;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -864,21 +868,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.ImageSummarization(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.ImageSummarization;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageSummarization;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -906,21 +911,22 @@ namespace ImageEdit_WPF {
             }
 
             try {
+                // Apply algorithm and return execution time
                 TimeSpan elapsedTime = Algorithms.ImageSubtraction(m_data);
 
+                // Set main image
                 m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                 string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK) {
-                    m_data.M_noChange = false;
-                    m_data.M_action = ActionType.ImageSubtraction;
-                    m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    undo.IsEnabled = true;
-                    redo.IsEnabled = false;
-                    m_data.M_redoStack.Clear();
-                }
+                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                m_data.M_noChange = false;
+                m_data.M_action = ActionType.ImageSubtraction;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {

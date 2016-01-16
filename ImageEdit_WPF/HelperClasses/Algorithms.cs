@@ -26,8 +26,7 @@ using System.Runtime.InteropServices;
 
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
-        public static TimeSpan ShiftBits(ImageData data, int bits)
-        {
+        public static TimeSpan ShiftBits(ImageData data, int bits) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -67,8 +66,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan Threshold(ImageData data, int threshold)
-        {
+        public static TimeSpan Threshold(ImageData data, int threshold) {
             int r = 0;
             int g = 0;
             int b = 0;
@@ -120,8 +118,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan AutoThreshold(ImageData data, int distance)
-        {
+        public static TimeSpan AutoThreshold(ImageData data, int distance) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -343,8 +340,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan Negative(ImageData data)
-        {
+        public static TimeSpan Negative(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -383,8 +379,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan SquareRoot(ImageData data)
-        {
+        public static TimeSpan SquareRoot(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -423,8 +418,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast)
-        {
+        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast) {
             double r = 0;
             double g = 0;
             double b = 0;
@@ -490,8 +484,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan Brightness(ImageData data, int brightness)
-        {
+        public static TimeSpan Brightness(ImageData data, int brightness) {
             int r = 0;
             int g = 0;
             int b = 0;
@@ -557,8 +550,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan Contrast(ImageData data, double contrast)
-        {
+        public static TimeSpan Contrast(ImageData data, double contrast) {
             double r = 0;
             double g = 0;
             double b = 0;
@@ -628,8 +620,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
         }
 
-        public static TimeSpan HistogramEqualization_RGB(ImageData data)
-        {
+        public static TimeSpan HistogramEqualization_RGB(ImageData data) {
             int b = 0;
             int g = 0;
             int r = 0;
@@ -742,8 +733,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan HistogramEqualization_HSV(ImageData data)
-        {
+        public static TimeSpan HistogramEqualization_HSV(ImageData data) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -933,8 +923,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan HistogramEqualization_YUV(ImageData data)
-        {
+        public static TimeSpan HistogramEqualization_YUV(ImageData data) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1069,8 +1058,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan ImageSummarization(ImageData data)
-        {
+        public static TimeSpan ImageSummarization(ImageData data) {
             int b = 0;
             int g = 0;
             int r = 0;
@@ -1129,8 +1117,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan ImageSubtraction(ImageData data)
-        {
+        public static TimeSpan ImageSubtraction(ImageData data) {
             int b = 0;
             int g = 0;
             int r = 0;
@@ -1178,8 +1165,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY)
-        {
+        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1414,8 +1400,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX)
-        {
+        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1615,8 +1600,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX)
-        {
+        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1816,8 +1800,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability)
-        {
+        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability) {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1888,8 +1871,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability)
-        {
+        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability) {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1948,8 +1930,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask)
-        {
+        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -2012,8 +1993,7 @@ namespace ImageEdit_WPF.HelperClasses {
             return elapsedTime;
         }
 
-        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask)
-        {
+        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask) {
             int i = 0;
             int j = 0;
             int k = 0;
