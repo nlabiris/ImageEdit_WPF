@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
         <WrapPanel Grid.Row="0">
             <TextBlock Margin="10">Contrast:</TextBlock>
             <TextBox Name="textboxContrast" Width="40" Height="25"></TextBox>

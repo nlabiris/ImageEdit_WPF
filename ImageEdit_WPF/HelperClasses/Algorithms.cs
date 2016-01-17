@@ -1179,6 +1179,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int tyR = 0;
             int tyG = 0;
             int tyB = 0;
+            int index;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1201,8 +1202,6 @@ namespace ImageEdit_WPF.HelperClasses {
                 case 3:
                     for (i = 1; i < data.M_bitmap.Width - 1; i++) {
                         for (j = 1; j < data.M_bitmap.Height - 1; j++) {
-                            int index;
-
                             txR = 0;
                             txG = 0;
                             txB = 0;
@@ -1260,8 +1259,6 @@ namespace ImageEdit_WPF.HelperClasses {
                 case 5:
                     for (i = 2; i < data.M_bitmap.Width - 2; i++) {
                         for (j = 2; j < data.M_bitmap.Height - 2; j++) {
-                            int index;
-
                             txR = 0;
                             txG = 0;
                             txB = 0;
@@ -1319,8 +1316,6 @@ namespace ImageEdit_WPF.HelperClasses {
                 case 7:
                     for (i = 3; i < data.M_bitmap.Width - 3; i++) {
                         for (j = 3; j < data.M_bitmap.Height - 3; j++) {
-                            int index;
-
                             txR = 0;
                             txG = 0;
                             txB = 0;
@@ -1383,7 +1378,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             for (i = 0; i < data.M_bitmap.Width; i++) {
                 for (j = 0; j < data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
+                    index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
                     rgbValues[index + 1] = bgrValues[index + 1];
@@ -1409,6 +1404,7 @@ namespace ImageEdit_WPF.HelperClasses {
             double tG = 0.0;
             double tB = 0.0;
             int sumMask = 0;
+            int index;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1437,8 +1433,6 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     for (i = 1; i < data.M_bitmap.Width - 1; i++) {
                         for (j = 1; j < data.M_bitmap.Height - 1; j++) {
-                            int index;
-
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1486,8 +1480,6 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     for (i = 2; i < data.M_bitmap.Width - 2; i++) {
                         for (j = 2; j < data.M_bitmap.Height - 2; j++) {
-                            int index;
-
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1535,8 +1527,6 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     for (i = 3; i < data.M_bitmap.Width - 3; i++) {
                         for (j = 3; j < data.M_bitmap.Height - 3; j++) {
-                            int index;
-
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1583,7 +1573,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             for (i = 0; i < data.M_bitmap.Width; i++) {
                 for (j = 0; j < data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
+                    index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
                     rgbValues[index + 1] = bgrValues[index + 1];

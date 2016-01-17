@@ -23,14 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Window x:Class="ImageEdit_WPF.Windows.SaltPepperNoiseBW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SaltPepperNoiseBW" Height="120" Width="220" Background="WhiteSmoke" ResizeMode="NoResize">
+        Title="SaltPepperNoiseBW" Height="120" Width="230" Background="WhiteSmoke" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
         <WrapPanel Grid.Row="0">
             <TextBlock Margin="10">Noise possibility (0.0 - 1.0):</TextBlock>
             <TextBox Name="textboxNoiseBW" Width="40" Height="25"></TextBox>

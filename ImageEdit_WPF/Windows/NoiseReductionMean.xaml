@@ -23,23 +23,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Window x:Class="ImageEdit_WPF.Windows.NoiseReductionMean"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Noise reduction (Mean filter)" Height="130" Width="200" Background="WhiteSmoke" ResizeMode="NoResize">
+        Title="Noise reduction (Mean filter)" Height="150" Width="250" Background="WhiteSmoke" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Margin="10,5,0,0">
+        <StackPanel Grid.Row="0" Margin="10,5,0,0">
             <TextBlock>Size of mask:</TextBlock>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="0" Margin="90,5,0,10">
+        <StackPanel Grid.Row="0" Margin="90,5,100,10">
             <RadioButton Name="three" Checked="three_Checked">3x3</RadioButton>
             <RadioButton Name="five" Checked="five_Checked">5x5</RadioButton>
             <RadioButton Name="seven" Checked="seven_Checked">7x7</RadioButton>
         </StackPanel>
-        <Button Name="ok" Grid.Row="1" Grid.Column="0" Margin="50,10,50,10" Click="ok_Click">OK</Button>
+        <Button Name="ok" Grid.Row="1" Grid.Column="0" Margin="80,10,80,10" Click="ok_Click">OK</Button>
     </Grid>
 </Window>

@@ -98,11 +98,11 @@ namespace ImageEdit_WPF.Windows {
         private void three_Checked(object sender, RoutedEventArgs e) {
             m_sizeMask = 3;
 
-            Height = 250;
-            Width = 180;
+            Height = 270;
+            Width = 190;
 
-            groupBox.Width = 110;
-            groupBox.Height = 90;
+            groupBox.Width = 120;
+            groupBox.Height = 100;
 
             ok.Margin = new Thickness(50, 10, 50, 10);
 
@@ -217,11 +217,11 @@ namespace ImageEdit_WPF.Windows {
         private void five_Checked(object sender, RoutedEventArgs e) {
             m_sizeMask = 5;
 
-            Height = 290;
-            Width = 220;
+            Height = 310;
+            Width = 230;
 
-            groupBox.Width = 170;
-            groupBox.Height = 130;
+            groupBox.Width = 180;
+            groupBox.Height = 140;
 
             ok.Margin = new Thickness(70, 10, 70, 10);
 
@@ -347,11 +347,11 @@ namespace ImageEdit_WPF.Windows {
         private void seven_Checked(object sender, RoutedEventArgs e) {
             m_sizeMask = 7;
 
-            Height = 330;
-            Width = 270;
+            Height = 350;
+            Width = 280;
 
-            groupBox.Width = 230;
-            groupBox.Height = 170;
+            groupBox.Width = 240;
+            groupBox.Height = 180;
 
             ok.Margin = new Thickness(90, 10, 90, 10);
 
