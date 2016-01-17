@@ -59,7 +59,7 @@ namespace ImageEdit_WPF.HelperClasses {
         private string m_outputFilename = string.Empty;
 
         /// <summary>
-        /// Check if the image has been modified
+        /// Check if the image has been modified.
         /// </summary>
         private bool m_noChange = true;
 
@@ -122,6 +122,14 @@ namespace ImageEdit_WPF.HelperClasses {
         public Bitmap M_bitmap {
             get { return m_bitmap; }
             set { m_bitmap = value; }
+        }
+
+        public int M_height {
+            get { return m_bitmap.Height; }
+        }
+
+        public int M_width {
+            get { return m_bitmap.Width; }
         }
 
         public Stack<Bitmap> M_undoStack {

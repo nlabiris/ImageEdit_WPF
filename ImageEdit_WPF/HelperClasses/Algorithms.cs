@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
@@ -47,8 +48,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = (byte)(rgbValues[index + 2] << bits); // R
@@ -94,8 +95,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
@@ -189,8 +190,8 @@ namespace ImageEdit_WPF.HelperClasses {
                 positionB[i] = i;
             }
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     b = rgbValues[index];
@@ -317,8 +318,8 @@ namespace ImageEdit_WPF.HelperClasses {
                 }
             }
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2];
@@ -369,8 +370,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
                     rgbValues[index + 2] = (byte)(255 - rgbValues[index + 2]); // R
                     rgbValues[index + 1] = (byte)(255 - rgbValues[index + 1]); // G
@@ -412,8 +413,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
                     rgbValues[index + 2] = (byte)Math.Sqrt(rgbValues[index + 2]*255); // R
                     rgbValues[index + 1] = (byte)Math.Sqrt(rgbValues[index + 1]*255); // G
@@ -454,12 +455,12 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
-
+            
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     r = (rgbValues[index + 2] + brightness)*contrast;
@@ -527,8 +528,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2] + brightness;
@@ -594,10 +595,10 @@ namespace ImageEdit_WPF.HelperClasses {
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             Stopwatch watch = Stopwatch.StartNew();
-
+            
             #region Algorithms
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2]*contrast;
@@ -684,8 +685,8 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramB[i] = 0;
             }
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     b = rgbValues[index + 2];
@@ -712,8 +713,8 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
             }
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     b = rgbValues[index + 2];
@@ -801,9 +802,9 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramV[i] = 0;
                 sumHistogramEqualizationV[i] = 0.0;
             }
-
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (bmpData.Stride*j) + (i*3);
 
                     blue[index] = rgbValues[index];
@@ -859,8 +860,8 @@ namespace ImageEdit_WPF.HelperClasses {
                 sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
             }
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (bmpData.Stride*j) + (i*3);
 
                     k = (int)value[index + 2];
@@ -985,8 +986,8 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramY[i] = 0;
             }
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (bmpData.Stride*j) + (i*3);
 
                     blue[index] = rgbValues[index];
@@ -1026,9 +1027,9 @@ namespace ImageEdit_WPF.HelperClasses {
             for (i = 1; i < 256; i++) {
                 sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
             }
-
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (bmpData.Stride*j) + (i*3);
 
                     k = (int)luminanceY[index];
@@ -1110,8 +1111,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
                     r = rgbValues[index + 2] + rgbValues[index + 2]; // R
                     g = rgbValues[index + 1] + rgbValues[index + 1]; // G
@@ -1172,8 +1173,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     r = rgbValues[index + 2] - rgbValues[index + 2]; // R
@@ -1234,8 +1235,8 @@ namespace ImageEdit_WPF.HelperClasses {
             #region Algorithm
             switch (sizeMask) {
                 case 3:
-                    for (i = 1; i < data.M_bitmap.Width - 1; i++) {
-                        for (j = 1; j < data.M_bitmap.Height - 1; j++) {
+                    for (i = 1; i < data.M_width - 1; i++) {
+                        for (j = 1; j < data.M_height - 1; j++) {
                             txR = 0;
                             txG = 0;
                             txB = 0;
@@ -1291,8 +1292,8 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
                     break;
                 case 5:
-                    for (i = 2; i < data.M_bitmap.Width - 2; i++) {
-                        for (j = 2; j < data.M_bitmap.Height - 2; j++) {
+                    for (i = 2; i < data.M_width - 2; i++) {
+                        for (j = 2; j < data.M_height - 2; j++) {
                             txR = 0;
                             txG = 0;
                             txB = 0;
@@ -1348,8 +1349,8 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
                     break;
                 case 7:
-                    for (i = 3; i < data.M_bitmap.Width - 3; i++) {
-                        for (j = 3; j < data.M_bitmap.Height - 3; j++) {
+                    for (i = 3; i < data.M_width - 3; i++) {
+                        for (j = 3; j < data.M_height - 3; j++) {
                             txR = 0;
                             txG = 0;
                             txB = 0;
@@ -1410,8 +1411,8 @@ namespace ImageEdit_WPF.HelperClasses {
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
@@ -1465,8 +1466,8 @@ namespace ImageEdit_WPF.HelperClasses {
                         }
                     }
 
-                    for (i = 1; i < data.M_bitmap.Width - 1; i++) {
-                        for (j = 1; j < data.M_bitmap.Height - 1; j++) {
+                    for (i = 1; i < data.M_width - 1; i++) {
+                        for (j = 1; j < data.M_height - 1; j++) {
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1512,8 +1513,8 @@ namespace ImageEdit_WPF.HelperClasses {
                         }
                     }
 
-                    for (i = 2; i < data.M_bitmap.Width - 2; i++) {
-                        for (j = 2; j < data.M_bitmap.Height - 2; j++) {
+                    for (i = 2; i < data.M_width - 2; i++) {
+                        for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1559,8 +1560,8 @@ namespace ImageEdit_WPF.HelperClasses {
                         }
                     }
 
-                    for (i = 3; i < data.M_bitmap.Width - 3; i++) {
-                        for (j = 3; j < data.M_bitmap.Height - 3; j++) {
+                    for (i = 3; i < data.M_width - 3; i++) {
+                        for (j = 3; j < data.M_height - 3; j++) {
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1604,9 +1605,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
@@ -1660,8 +1661,8 @@ namespace ImageEdit_WPF.HelperClasses {
                         }
                     }
 
-                    for (i = 1; i < data.M_bitmap.Width - 1; i++) {
-                        for (j = 1; j < data.M_bitmap.Height - 1; j++) {
+                    for (i = 1; i < data.M_width - 1; i++) {
+                        for (j = 1; j < data.M_height - 1; j++) {
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1706,9 +1707,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             sumMask += maskX[i, j];
                         }
                     }
-
-                    for (i = 2; i < data.M_bitmap.Width - 2; i++) {
-                        for (j = 2; j < data.M_bitmap.Height - 2; j++) {
+                    
+                    for (i = 2; i < data.M_width - 2; i++) {
+                        for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1754,8 +1755,8 @@ namespace ImageEdit_WPF.HelperClasses {
                         }
                     }
 
-                    for (i = 3; i < data.M_bitmap.Width - 3; i++) {
-                        for (j = 3; j < data.M_bitmap.Height - 3; j++) {
+                    for (i = 3; i < data.M_width - 3; i++) {
+                        for (j = 3; j < data.M_height - 3; j++) {
                             tR = 0.0;
                             tG = 0.0;
                             tB = 0.0;
@@ -1800,8 +1801,8 @@ namespace ImageEdit_WPF.HelperClasses {
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
 
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     rgbValues[index + 2] = bgrValues[index + 2];
@@ -1848,8 +1849,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     d = rand.Next(32768);
@@ -1920,8 +1921,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_bitmap.Width; i++) {
-                for (j = 0; j < data.M_bitmap.Height; j++) {
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
                     d = rand.Next(32768);
@@ -1973,12 +1974,12 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
-
+            
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = sizeMask/2; i < data.M_bitmap.Width - sizeMask/2; i++) {
-                for (j = sizeMask/2; j < data.M_bitmap.Height - sizeMask/2; j++) {
+            for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
+                for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
                     sumR = 0;
                     sumG = 0;
                     sumB = 0;
@@ -2042,8 +2043,8 @@ namespace ImageEdit_WPF.HelperClasses {
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = sizeMask/2; i < data.M_bitmap.Width - sizeMask/2; i++) {
-                for (j = sizeMask/2; j < data.M_bitmap.Height - sizeMask/2; j++) {
+            for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
+                for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
                     z = 0;
                     for (k = 0; k < sizeMask; k++) {
                         for (l = 0; l < sizeMask; l++) {
