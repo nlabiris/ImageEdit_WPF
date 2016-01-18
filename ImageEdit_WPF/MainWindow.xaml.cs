@@ -387,7 +387,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("ImageEdit v0.27.53 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.4.1 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
