@@ -1188,7 +1188,7 @@ namespace ImageEdit_WPF {
         /// <param name="e"></param>
         private void Window_Closing(object sender, CancelEventArgs e) {
             if (m_data.M_noChange == false) {
-                MessageBoxResult result = MessageBox.Show("Quit without saving?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Quit without saving?", "Quit", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.No) {
                     e.Cancel = true;
                 }

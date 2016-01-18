@@ -455,7 +455,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
-            
+
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
@@ -595,7 +595,7 @@ namespace ImageEdit_WPF.HelperClasses {
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             Stopwatch watch = Stopwatch.StartNew();
-            
+
             #region Algorithms
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -802,7 +802,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramV[i] = 0;
                 sumHistogramEqualizationV[i] = 0.0;
             }
-            
+
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
                     index = (bmpData.Stride*j) + (i*3);
@@ -1027,7 +1027,7 @@ namespace ImageEdit_WPF.HelperClasses {
             for (i = 1; i < 256; i++) {
                 sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
             }
-            
+
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
                     index = (bmpData.Stride*j) + (i*3);
@@ -1605,7 +1605,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-            
+
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
@@ -1707,7 +1707,7 @@ namespace ImageEdit_WPF.HelperClasses {
                             sumMask += maskX[i, j];
                         }
                     }
-                    
+
                     for (i = 2; i < data.M_width - 2; i++) {
                         for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
@@ -1974,7 +1974,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
-            
+
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
@@ -1983,9 +1983,9 @@ namespace ImageEdit_WPF.HelperClasses {
                     sumR = 0;
                     sumG = 0;
                     sumB = 0;
-                    for (k = 0; k < sizeMask; k++) {
-                        for (l = 0; l < sizeMask; l++) {
-                            index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                    for (k = -sizeMask/2; k <= sizeMask/2; k++) {
+                        for (l = -sizeMask/2; l <= sizeMask/2; l++) {
+                            index = ((j + l)*bmpData.Stride) + ((i + k)*3);
                             sumR = sumR + rgbValues[index + 2];
                             sumG = sumG + rgbValues[index + 1];
                             sumB = sumB + rgbValues[index];
@@ -2046,9 +2046,9 @@ namespace ImageEdit_WPF.HelperClasses {
             for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
                 for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
                     z = 0;
-                    for (k = 0; k < sizeMask; k++) {
-                        for (l = 0; l < sizeMask; l++) {
-                            index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                    for (k = -sizeMask/2; k <= sizeMask/2; k++) {
+                        for (l = -sizeMask/2; l <= sizeMask/2; l++) {
+                            index = ((j + l)*bmpData.Stride) + ((i + k)*3);
                             arR[z] = rgbValues[index + 2];
                             arG[z] = rgbValues[index + 1];
                             arB[z] = rgbValues[index];
