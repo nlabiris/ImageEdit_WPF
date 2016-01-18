@@ -2058,25 +2058,37 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
                         aR = arR[k];
-                        aG = arG[k];
-                        aB = arB[k];
                         l = k - 1;
 
                         while (l >= 0 && arR[l] > aR) {
                             arR[l + 1] = arR[l];
                             l--;
                         }
+
+                        arR[l + 1] = aR;
+                    }
+
+                    for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
+                        aG = arG[k];
+                        l = k - 1;
+
                         while (l >= 0 && arG[l] > aG) {
                             arG[l + 1] = arG[l];
                             l--;
                         }
+
+                        arG[l + 1] = aG;
+                    }
+
+                    for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
+                        aB = arB[k];
+                        l = k - 1;
+
                         while (l >= 0 && arB[l] > aB) {
                             arB[l + 1] = arB[l];
                             l--;
                         }
 
-                        arR[l + 1] = aR;
-                        arG[l + 1] = aG;
                         arB[l + 1] = aB;
                     }
 
