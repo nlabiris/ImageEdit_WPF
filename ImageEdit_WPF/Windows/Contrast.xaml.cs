@@ -18,49 +18,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using ImageEdit_WPF.HelperClasses;
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Contrast.xaml
     /// </summary>
     public partial class Contrast : Window {
-        /// <summary>
-        /// Output image.
-        /// </summary>
-        private readonly Bitmap _bmpOutput = null;
-
-        /// <summary>
-        /// Image used at the Undo/Redo system.
-        /// </summary>
-        private Bitmap _bmpUndoRedo = null;
-
-        /// <summary>
-        /// Check if the image has been modified
-        /// </summary>
-        private bool _nochange;
+        private ImageData m_data = null;
 
         /// <summary>
         /// Contrast <c>constructor</c>
         /// Here we initialiaze the images and also we set the focus at the textBox being used.
         /// </summary>
-        /// <param name="bmpO">Output image.</param>
-        /// <param name="bmpUR">Image used at the Undo/Redo system.</param>
-        public Contrast(Bitmap bmpO, Bitmap bmpUR, ref bool nochange) {
+        public Contrast(ImageData data) {
+            m_data = data;
+
             InitializeComponent();
-
-            _bmpOutput = bmpO;
-            _bmpUndoRedo = bmpUR;
-            _nochange = nochange;
-
             textboxContrast.Focus();
         }
 
@@ -71,9 +49,6 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
             double contrast = 0;
-            double r = 0;
-            double g = 0;
-            double b = 0;
 
             try {
                 contrast = double.Parse(textboxContrast.Text, new CultureInfo("el-GR"));
@@ -85,113 +60,43 @@ namespace ImageEdit_WPF.Windows {
                 //}
             } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                Close();
                 return;
             } catch (FormatException ex) {
                 MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                Close();
                 return;
             } catch (OverflowException ex) {
                 MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                Close();
                 return;
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                Close();
                 return;
             }
 
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = _bmpOutput.LockBits(new Rectangle(0, 0, _bmpOutput.Width, _bmpOutput.Height), ImageLockMode.ReadWrite, _bmpOutput.PixelFormat);
+            // Apply algorithm and return execution time
+            TimeSpan elapsedTime = Algorithms.Contrast(m_data, contrast);
 
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
+            // Set main image
+            m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*_bmpOutput.Height;
-            byte[] rgbValues = new byte[bytes];
+            string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
+            MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            Stopwatch watch = Stopwatch.StartNew();
-
-            for (int i = 0; i < _bmpOutput.Width; i++) {
-                for (int j = 0; j < _bmpOutput.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    r = rgbValues[index + 2]*contrast;
-                    g = rgbValues[index + 1]*contrast;
-                    b = rgbValues[index]*contrast;
-
-                    if (r > 255.0) {
-                        r = 255.0;
-                    } else if (r < 0.0) {
-                        r = 0.0;
-                    }
-
-                    if (g > 255.0) {
-                        g = 255.0;
-                    } else if (g < 0.0) {
-                        g = 0.0;
-                    }
-
-                    if (b > 255.0) {
-                        b = 255.0;
-                    } else if (b < 0.0) {
-                        b = 0.0;
-                    }
-
-                    rgbValues[index + 2] = (byte)r;
-                    rgbValues[index + 1] = (byte)g;
-                    rgbValues[index] = (byte)b;
-                }
-            }
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            _bmpOutput.UnlockBits(bmpData);
-
-            // Convert Bitmap to BitmapImage
-            BitmapToBitmapImage();
-
-            string messageOperation = "Done!" + Environment.NewLine + Environment.NewLine + "Elapsed time (HH:MM:SS.MS): " + elapsedTime.ToString();
-            MessageBoxResult result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK) {
-                _nochange = false;
-                MainWindow.Action = ActionType.Contrast;
-                _bmpUndoRedo = _bmpOutput.Clone() as Bitmap;
-                MainWindow.UndoStack.Push(_bmpUndoRedo);
-                MainWindow.RedoStack.Clear();
-                foreach (Window mainWindow in Application.Current.Windows) {
-                    if (mainWindow.GetType() == typeof (MainWindow)) {
-                        ((MainWindow)mainWindow).undo.IsEnabled = true;
-                        ((MainWindow)mainWindow).redo.IsEnabled = false;
-                    }
-                }
-                this.Close();
-            }
-        }
-
-        /// <summary>
-        /// <c>Bitmap</c> to <c>BitmpaImage</c> conversion method in order to show the edited image at the main window.
-        /// </summary>
-        public void BitmapToBitmapImage() {
-            MemoryStream str = new MemoryStream();
-            _bmpOutput.Save(str, ImageFormat.Bmp);
-            str.Seek(0, SeekOrigin.Begin);
-            BmpBitmapDecoder bdc = new BmpBitmapDecoder(str, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-
+            m_data.M_noChange = false;
+            m_data.M_action = ActionType.Contrast;
+            m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+            m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+            m_data.M_redoStack.Clear();
             foreach (Window mainWindow in Application.Current.Windows) {
                 if (mainWindow.GetType() == typeof (MainWindow)) {
-                    ((MainWindow)mainWindow).mainImage.Source = bdc.Frames[0];
+                    ((MainWindow)mainWindow).undo.IsEnabled = true;
+                    ((MainWindow)mainWindow).redo.IsEnabled = false;
                 }
             }
+            Close();
         }
     }
 }

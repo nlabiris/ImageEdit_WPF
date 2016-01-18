@@ -75,6 +75,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HelperClasses\Algorithms.cs" />
+    <Compile Include="HelperClasses\ConvertionMethods.cs" />
+    <Compile Include="HelperClasses\ImageData.cs" />
+    <Compile Include="HelperClasses\SaveImage.cs" />
     <Compile Include="Windows\AutoThreshold.xaml.cs">
       <DependentUpon>AutoThreshold.xaml</DependentUpon>
     </Compile>
@@ -121,7 +125,7 @@
       <DependentUpon>Threshold.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\UndoCommand.cs" />
-    <Compile Include="ZoomBorder.cs" />
+    <Compile Include="HelperClasses\ZoomBorder.cs" />
     <Page Include="Windows\AutoThreshold.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -30,18 +30,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Margin="10,5,0,0">
             <TextBlock>Size of mask:</TextBlock>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="0" Margin="90,5,50,10">
+        <StackPanel Grid.Row="0" Margin="90,5,0,10">
             <RadioButton Name="three" Checked="three_Checked">3x3</RadioButton>
             <RadioButton Name="five" Checked="five_Checked">5x5</RadioButton>
             <RadioButton Name="seven" Checked="seven_Checked">7x7</RadioButton>
         </StackPanel>
-        <GroupBox Name="groupBox" Grid.Row="1" Grid.Column="0" Header="Filter" Width="230" Height="170" HorizontalAlignment="Center" Margin="10">
+        <GroupBox Name="groupBox" Grid.Row="1" Header="Filter" Width="230" Height="170" HorizontalAlignment="Center" Margin="10">
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBox Name="tbx1" Width="30">-1</TextBox>
                 <TextBox Name="tbx2" Width="30">-2</TextBox>
@@ -94,6 +91,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <TextBox Name="tbx49" Width="30">-1</TextBox>
             </WrapPanel>
         </GroupBox>
-        <Button Name="ok" Grid.Row="2" Grid.Column="0" Margin="90,10,90,10" Click="ok_Click">OK</Button>
+        <Button Name="ok" Grid.Row="2" Margin="90,10,90,10" Click="ok_Click">OK</Button>
     </Grid>
 </Window>
