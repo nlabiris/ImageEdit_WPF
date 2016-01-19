@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using ImageEdit_WPF.HelperClasses;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
 
@@ -29,6 +30,9 @@ namespace ImageEdit_WPF.Windows {
     /// </summary>
     public partial class Sobel : Window {
         private ImageData m_data = null;
+        private ViewModel m_vm = null;
+        private BackgroundWorker m_backgroundWorker = null;
+        private TimeSpan elapsedTime = TimeSpan.Zero;
 
         /// <summary>
         /// Size of the kernels.
@@ -36,15 +40,33 @@ namespace ImageEdit_WPF.Windows {
         private int m_sizeMask = 0;
 
         /// <summary>
+        /// Kernel (X axis).
+        /// </summary>
+        int[,] maskX = null;
+
+        /// <summary>
+        /// Kernel (Y axis).
+        /// </summary>
+        int[,] maskY = null;
+
+        /// <summary>
         /// Sobel <c>constructor</c>.
         /// Here we initialiaze the images and also we set the focus
         /// at the 'OK' button and at one of the three radio boxes (kernel size).
         /// </summary>
-        public Sobel(ImageData data) {
+        public Sobel(ImageData data, ViewModel vm) {
             m_data = data;
+            m_vm = vm;
 
             InitializeComponent();
             three.IsChecked = true;
+
+            m_backgroundWorker = new BackgroundWorker();
+            m_backgroundWorker.WorkerReportsProgress = true;
+            m_backgroundWorker.WorkerSupportsCancellation = false;
+            m_backgroundWorker.DoWork += backgroundWorker_DoWork;
+            m_backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
+            m_backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
         }
 
         /// <summary>
@@ -739,9 +761,6 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            int[,] maskX = null;
-            int[,] maskY = null;
-
             switch (m_sizeMask) {
                 case 3:
                     maskX = new int[3, 3] {
@@ -792,28 +811,42 @@ namespace ImageEdit_WPF.Windows {
                     };
                     break;
             }
-
-            // Apply algorithm and return execution time
-            TimeSpan elapsedTime = Algorithms.EdgeDetection_Sobel(m_data, m_sizeMask, maskX, maskY);
-
-            // Set main image
-            m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-            string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-            MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            m_data.M_noChange = false;
-            m_data.M_action = ActionType.ImageConvolution;
-            m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-            m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-            m_data.M_redoStack.Clear();
-            foreach (Window mainWindow in Application.Current.Windows) {
-                if (mainWindow.GetType() == typeof (MainWindow)) {
-                    ((MainWindow)mainWindow).undo.IsEnabled = true;
-                    ((MainWindow)mainWindow).redo.IsEnabled = false;
-                }
-            }
+            m_backgroundWorker.RunWorkerAsync();
             Close();
+        }
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
+            // Apply algorithm and return execution time
+            elapsedTime = Algorithms.EdgeDetection_Sobel(m_data, m_sizeMask, maskX, maskY, m_backgroundWorker);
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e) {
+            m_vm.M_progress.Value = e.ProgressPercentage;
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
+            MessageBoxResult result = MessageBoxResult.None;
+
+            if (e.Error != null) {
+                MessageBox.Show(e.Error.Message, "Error");
+            }
+
+            result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (result == MessageBoxResult.OK) {
+                m_vm.M_progress.Value = 0;
+                m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource(); // Set main image
+                m_data.M_noChange = false;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                foreach (Window mainWindow in Application.Current.Windows) {
+                    if (mainWindow.GetType() == typeof (MainWindow)) {
+                        ((MainWindow)mainWindow).undo.IsEnabled = true;
+                        ((MainWindow)mainWindow).redo.IsEnabled = false;
+                    }
+                }
+                m_data.M_redoStack.Clear();
+            }
         }
     }
 }

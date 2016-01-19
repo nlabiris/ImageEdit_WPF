@@ -18,18 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Windows.Media;
 
 namespace ImageEdit_WPF.HelperClasses {
     /// <summary>
     /// <c>ActionType</c> enumeration is used at the Undo/Redo sytem (not now).
     /// </summary>
-    [Obsolete]
     public enum ActionType {
+        Unknown = -1,
         ShiftBits = 0,
         Threshold = 1,
         AutoThreshold = 2,
@@ -40,13 +37,19 @@ namespace ImageEdit_WPF.HelperClasses {
         Contrast = 7,
         ImageSummarization = 8,
         ImageSubtraction = 9,
-        ImageConvolution = 10,
-        ImageEqualizationRGB = 11,
-        ImageEqualizationHSV = 12,
-        ImageEqualizationYUV = 13
+        ImageEqualizationRGB = 10,
+        ImageEqualizationHSV = 11,
+        ImageEqualizationYUV = 12,
+        GaussianBlur = 13,
+        Sharpen = 14,
+        SobelEdgeDetection = 15,
+        SaltPepperNoiseBW = 16,
+        SaltPepperNoiseColor = 17,
+        NoiseReductionMean = 18,
+        NoiseReductionMedian = 19
     }
 
-    public class ImageData : INotifyPropertyChanged {
+    public class ImageData {
         #region Private fields
         /// <summary>
         /// Input filename of the image.
@@ -62,11 +65,6 @@ namespace ImageEdit_WPF.HelperClasses {
         /// Check if the image has been modified.
         /// </summary>
         private bool m_noChange = true;
-
-        /// <summary>
-        /// Image that binds to the GUI.
-        /// </summary>
-        private ImageSource m_bitmapBind = null;
 
         /// <summary>
         /// Output image that carries all changes until saved.
@@ -86,8 +84,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <summary>
         /// Type of action (which algorithm used).
         /// </summary>
-        /// <remarks>This field is not used.</remarks>
-        [Obsolete] private ActionType m_action;
+        private ActionType m_action;
 
         /// <summary>
         /// Image used at the Undo/Redo system.
@@ -109,14 +106,6 @@ namespace ImageEdit_WPF.HelperClasses {
         public bool M_noChange {
             get { return m_noChange; }
             set { m_noChange = value; }
-        }
-
-        public ImageSource M_bitmapBind {
-            get { return m_bitmapBind; }
-            set {
-                m_bitmapBind = value;
-                OnPropertyChanged("M_bitmapBind");
-            }
         }
 
         public Bitmap M_bitmap {
@@ -142,7 +131,6 @@ namespace ImageEdit_WPF.HelperClasses {
             set { m_redoStack = value; }
         }
 
-        [Obsolete]
         public ActionType M_action {
             get { return m_action; }
             set { m_action = value; }
@@ -151,17 +139,6 @@ namespace ImageEdit_WPF.HelperClasses {
         public Bitmap M_bmpUndoRedo {
             get { return m_bmpUndoRedo; }
             set { m_bmpUndoRedo = value; }
-        }
-        #endregion
-
-        #region OnPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName) {
-            var handler = PropertyChanged;
-            if (handler != null) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
         #endregion
     }

@@ -19,21 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
-        public static TimeSpan ShiftBits(ImageData data, int bits) {
+        #region Shift bits
+        public static TimeSpan ShiftBits(ImageData data, int bits, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -49,9 +50,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
-
                     rgbValues[index + 2] = (byte)(rgbValues[index + 2] << bits); // R
                     rgbValues[index + 1] = (byte)(rgbValues[index + 1] << bits); // G
                     rgbValues[index] = (byte)(rgbValues[index] << bits); // B
@@ -70,8 +71,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan Threshold(ImageData data, int threshold) {
+        #region Threshold
+        public static TimeSpan Threshold(ImageData data, int threshold, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int r = 0;
@@ -80,7 +83,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -96,6 +99,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -125,8 +129,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan AutoThreshold(ImageData data, int distance) {
+        #region Auto threshold
+        public static TimeSpan AutoThreshold(ImageData data, int distance, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -163,7 +169,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -189,6 +195,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 positionG[i] = i;
                 positionB[i] = i;
             }
+            backgroundWorker.ReportProgress(20);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -205,6 +212,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     histogramSortR[r]++;
                 }
             }
+            backgroundWorker.ReportProgress(40);
 
             for (k = 1; k < 256; k++) {
                 for (l = 255; l >= k; l--) {
@@ -236,6 +244,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
                 }
             }
+            backgroundWorker.ReportProgress(60);
 
             z1R = histogramSortR[0];
             positionz1R = positionR[0];
@@ -317,6 +326,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
                 }
             }
+            backgroundWorker.ReportProgress(70);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -335,6 +345,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     rgbValues[index] = (byte)b;
                 }
             }
+            backgroundWorker.ReportProgress(100);
             #endregion
 
             watch.Stop();
@@ -348,14 +359,16 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan Negative(ImageData data) {
+        #region Negative
+        public static TimeSpan Negative(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -371,6 +384,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
                     rgbValues[index + 2] = (byte)(255 - rgbValues[index + 2]); // R
@@ -391,14 +405,16 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan SquareRoot(ImageData data) {
+        #region Square root
+        public static TimeSpan SquareRoot(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -414,6 +430,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
                     rgbValues[index + 2] = (byte)Math.Sqrt(rgbValues[index + 2]*255); // R
@@ -434,8 +451,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast) {
+        #region Contrast enhancement
+        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             double r = 0;
@@ -444,7 +463,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -460,9 +479,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
-
                     r = (rgbValues[index + 2] + brightness)*contrast;
                     g = (rgbValues[index + 1] + brightness)*contrast;
                     b = (rgbValues[index] + brightness)*contrast;
@@ -503,8 +522,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan Brightness(ImageData data, int brightness) {
+        #region Brightness
+        public static TimeSpan Brightness(ImageData data, int brightness, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int r = 0;
@@ -513,7 +534,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -529,6 +550,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -572,8 +594,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan Contrast(ImageData data, double contrast) {
+        #region Contrast
+        public static TimeSpan Contrast(ImageData data, double contrast, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             double r = 0;
@@ -582,7 +606,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -598,6 +622,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithms
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -641,12 +666,16 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
+        #region Histogram
         public static void Histogram() {
 
         }
+        #endregion
 
-        public static TimeSpan HistogramEqualization_RGB(ImageData data) {
+        #region Histogram equalization [RGB]
+        public static TimeSpan HistogramEqualization_RGB(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int b = 0;
@@ -664,7 +693,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -684,6 +713,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramG[i] = 0;
                 histogramB[i] = 0;
             }
+            backgroundWorker.ReportProgress(10);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -697,12 +727,14 @@ namespace ImageEdit_WPF.HelperClasses {
                     histogramR[r]++;
                 }
             }
+            backgroundWorker.ReportProgress(40);
 
             for (i = 0; i < 256; i++) {
                 possibilityB[i] = histogramB[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
                 possibilityG[i] = histogramG[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
                 possibilityR[i] = histogramR[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
             }
+            backgroundWorker.ReportProgress(60);
 
             histogramEqB[0] = possibilityB[0];
             histogramEqG[0] = possibilityG[0];
@@ -712,6 +744,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramEqG[i] = histogramEqG[i - 1] + possibilityG[i];
                 histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
             }
+            backgroundWorker.ReportProgress(70);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -747,6 +780,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     rgbValues[index] = (byte)r;
                 }
             }
+            backgroundWorker.ReportProgress(100);
             #endregion
 
             watch.Stop();
@@ -760,8 +794,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan HistogramEqualization_HSV(ImageData data) {
+        #region Histogram equalization [HSV]
+        public static TimeSpan HistogramEqualization_HSV(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -777,7 +813,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -802,6 +838,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 histogramV[i] = 0;
                 sumHistogramEqualizationV[i] = 0.0;
             }
+            backgroundWorker.ReportProgress(10);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -850,15 +887,18 @@ namespace ImageEdit_WPF.HelperClasses {
                     histogramV[k]++;
                 }
             }
+            backgroundWorker.ReportProgress(40);
 
             for (i = 0; i < 256; i++) {
                 sumHistogramEqualizationV[i] = histogramV[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
             }
+            backgroundWorker.ReportProgress(60);
 
             sumHistogramV[0] = sumHistogramEqualizationV[0];
             for (i = 1; i < 256; i++) {
                 sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
             }
+            backgroundWorker.ReportProgress(70);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -937,6 +977,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     rgbValues[index] = (byte)blue[index];
                 }
             }
+            backgroundWorker.ReportProgress(100);
             #endregion
 
             watch.Stop();
@@ -950,8 +991,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan HistogramEqualization_YUV(ImageData data) {
+        #region Histogram equalization [YUV]
+        public static TimeSpan HistogramEqualization_YUV(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -961,7 +1004,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -985,6 +1028,7 @@ namespace ImageEdit_WPF.HelperClasses {
             for (i = 0; i < 256; i++) {
                 histogramY[i] = 0;
             }
+            backgroundWorker.ReportProgress(10);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -1014,19 +1058,23 @@ namespace ImageEdit_WPF.HelperClasses {
                     histogramY[k]++;
                 }
             }
+            backgroundWorker.ReportProgress(40);
 
             for (i = 0; i < 256; i++) {
                 sumHistogramEqualizationY[i] = 0.0;
             }
+            backgroundWorker.ReportProgress(50);
 
             for (i = 0; i < 256; i++) {
                 sumHistogramEqualizationY[i] = histogramY[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
             }
+            backgroundWorker.ReportProgress(60);
 
             sumHistogramY[0] = sumHistogramEqualizationY[0];
             for (i = 1; i < 256; i++) {
                 sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
             }
+            backgroundWorker.ReportProgress(70);
 
             for (i = 0; i < data.M_width; i++) {
                 for (j = 0; j < data.M_height; j++) {
@@ -1073,6 +1121,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     rgbValues[index] = (byte)blue[index];
                 }
             }
+            backgroundWorker.ReportProgress(100);
             #endregion
 
             watch.Stop();
@@ -1086,8 +1135,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan ImageSummarization(ImageData data) {
+        #region Image summarization
+        public static TimeSpan ImageSummarization(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int b = 0;
@@ -1096,7 +1147,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1112,6 +1163,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
                     r = rgbValues[index + 2] + rgbValues[index + 2]; // R
@@ -1148,8 +1200,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan ImageSubtraction(ImageData data) {
+        #region Image subtraction
+        public static TimeSpan ImageSubtraction(ImageData data, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int b = 0;
@@ -1158,7 +1212,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1174,6 +1228,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -1199,8 +1254,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
+        #region Edge detection [Sobel]
+        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1217,7 +1274,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1236,6 +1293,7 @@ namespace ImageEdit_WPF.HelperClasses {
             switch (sizeMask) {
                 case 3:
                     for (i = 1; i < data.M_width - 1; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 1; j < data.M_height - 1; j++) {
                             txR = 0;
                             txG = 0;
@@ -1293,6 +1351,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     break;
                 case 5:
                     for (i = 2; i < data.M_width - 2; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 2; j < data.M_height - 2; j++) {
                             txR = 0;
                             txG = 0;
@@ -1350,6 +1409,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     break;
                 case 7:
                     for (i = 3; i < data.M_width - 3; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 3; j < data.M_height - 3; j++) {
                             txR = 0;
                             txG = 0;
@@ -1429,8 +1489,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
+        #region Gaussian blur
+        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1442,7 +1504,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1467,6 +1529,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 1; i < data.M_width - 1; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 1; j < data.M_height - 1; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1514,6 +1577,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 2; i < data.M_width - 2; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1561,6 +1625,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 3; i < data.M_width - 3; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 3; j < data.M_height - 3; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1624,8 +1689,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
+        #region Sharpen
+        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1637,7 +1704,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1662,6 +1729,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 1; i < data.M_width - 1; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 1; j < data.M_height - 1; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1709,6 +1777,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 2; i < data.M_width - 2; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1756,6 +1825,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 3; i < data.M_width - 3; i++) {
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
                         for (j = 3; j < data.M_height - 3; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1819,8 +1889,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability) {
+        #region Salt and Pepper Noise generator [Color]
+        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1834,7 +1906,7 @@ namespace ImageEdit_WPF.HelperClasses {
             d2 = 16384 - d;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1850,6 +1922,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -1891,8 +1964,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability) {
+        #region Salt and Pepper Noise generator [BW]
+        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1906,7 +1981,7 @@ namespace ImageEdit_WPF.HelperClasses {
             d2 = 16384 - d;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1922,6 +1997,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -1951,8 +2027,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask) {
+        #region Noise reduction filter [Mean]
+        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1963,7 +2041,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -1979,6 +2057,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
                     sumR = 0;
                     sumG = 0;
@@ -2012,8 +2091,10 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
 
-        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask) {
+        #region Noise reduction filter [Median]
+        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask, BackgroundWorker backgroundWorker) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -2028,7 +2109,7 @@ namespace ImageEdit_WPF.HelperClasses {
             int index = 0;
 
             // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_bitmap.Width, data.M_bitmap.Height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
@@ -2044,6 +2125,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
                     z = 0;
                     for (k = -sizeMask/2; k <= sizeMask/2; k++) {
@@ -2112,5 +2194,6 @@ namespace ImageEdit_WPF.HelperClasses {
 
             return elapsedTime;
         }
+        #endregion
     }
 }

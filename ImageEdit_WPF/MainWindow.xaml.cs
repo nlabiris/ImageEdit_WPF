@@ -57,6 +57,9 @@ namespace ImageEdit_WPF {
     /// </summary>
     public partial class MainWindow : Window {
         private ImageData m_data = null;
+        private ViewModel m_vm = null;
+        private BackgroundWorker m_backgroundWorker = null;
+        private TimeSpan elapsedTime = TimeSpan.Zero;
 
         #region MainWindow constructor
         /// <summary>
@@ -65,8 +68,19 @@ namespace ImageEdit_WPF {
         /// </summary>
         public MainWindow() {
             m_data = new ImageData();
-            DataContext = m_data;
+            m_vm = new ViewModel();
+
             InitializeComponent();
+            DataContext = m_vm;
+
+            m_vm.M_progress = progressBar;
+
+            m_backgroundWorker = new BackgroundWorker();
+            m_backgroundWorker.WorkerReportsProgress = true;
+            m_backgroundWorker.WorkerSupportsCancellation = false;
+            m_backgroundWorker.DoWork += backgroundWorker_DoWork;
+            m_backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
+            m_backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
 
             undo.IsEnabled = false;
             redo.IsEnabled = false;
@@ -106,7 +120,7 @@ namespace ImageEdit_WPF {
                     m_data.M_inputFilename = openFile.FileName;
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
-                    m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
+                    m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                     CalculateData_StatusBar();
 
@@ -137,7 +151,7 @@ namespace ImageEdit_WPF {
                 if (m_data.M_inputFilename != string.Empty) {
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
                     m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
-                    m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
+                    m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                     m_data.M_undoStack.Clear();
                     m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
@@ -387,7 +401,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("ImageEdit v0.5 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.6 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -443,7 +457,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                ShiftBits shiftBitsWindow = new ShiftBits(m_data);
+                ShiftBits shiftBitsWindow = new ShiftBits(m_data, m_vm);
                 shiftBitsWindow.Owner = this;
                 shiftBitsWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -473,7 +487,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Threshold thresholdWindow = new Threshold(m_data);
+                Threshold thresholdWindow = new Threshold(m_data, m_vm);
                 thresholdWindow.Owner = this;
                 thresholdWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -503,7 +517,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                AutoThreshold autoThresholdWindow = new AutoThreshold(m_data);
+                AutoThreshold autoThresholdWindow = new AutoThreshold(m_data, m_vm);
                 autoThresholdWindow.Owner = this;
                 autoThresholdWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -533,22 +547,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.Negative(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.Negative;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -576,22 +576,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.SquareRoot(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.SquareRoot;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -619,7 +605,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                ContrastEnhancement enhancement = new ContrastEnhancement(m_data);
+                ContrastEnhancement enhancement = new ContrastEnhancement(m_data, m_vm);
                 enhancement.Owner = this;
                 enhancement.Show();
             } catch (FileNotFoundException ex) {
@@ -649,7 +635,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Brightness brightness1 = new Brightness(m_data);
+                Brightness brightness1 = new Brightness(m_data, m_vm);
                 brightness1.Owner = this;
                 brightness1.Show();
             } catch (FileNotFoundException ex) {
@@ -679,7 +665,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Contrast contrastWindow = new Contrast(m_data);
+                Contrast contrastWindow = new Contrast(m_data, m_vm);
                 contrastWindow.Owner = this;
                 contrastWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -739,22 +725,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.HistogramEqualization_RGB(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.ImageEqualizationRGB;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -782,22 +754,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.HistogramEqualization_HSV(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.ImageEqualizationHSV;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -825,22 +783,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.HistogramEqualization_YUV(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.ImageEqualizationYUV;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -868,22 +812,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.ImageSummarization(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.ImageSummarization;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -911,22 +841,8 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                // Apply algorithm and return execution time
-                TimeSpan elapsedTime = Algorithms.ImageSubtraction(m_data);
-
-                // Set main image
-                m_data.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
-                MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                m_data.M_noChange = false;
                 m_data.M_action = ActionType.ImageSubtraction;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                undo.IsEnabled = true;
-                redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -954,7 +870,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Sobel sobelWindow = new Sobel(m_data);
+                Sobel sobelWindow = new Sobel(m_data, m_vm);
                 sobelWindow.Owner = this;
                 sobelWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -984,7 +900,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                GaussianBlur gaussianBlurWindow = new GaussianBlur(m_data);
+                GaussianBlur gaussianBlurWindow = new GaussianBlur(m_data, m_vm);
                 gaussianBlurWindow.Owner = this;
                 gaussianBlurWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -1014,7 +930,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Sharpen sharpenWindow = new Sharpen(m_data);
+                Sharpen sharpenWindow = new Sharpen(m_data, m_vm);
                 sharpenWindow.Owner = this;
                 sharpenWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -1044,7 +960,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                SaltPepperNoiseColor saltPepperNoiseColorWindow = new SaltPepperNoiseColor(m_data);
+                SaltPepperNoiseColor saltPepperNoiseColorWindow = new SaltPepperNoiseColor(m_data, m_vm);
                 saltPepperNoiseColorWindow.Owner = this;
                 saltPepperNoiseColorWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -1074,7 +990,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                SaltPepperNoiseBW saltPepperNoiseBwWindow = new SaltPepperNoiseBW(m_data);
+                SaltPepperNoiseBW saltPepperNoiseBwWindow = new SaltPepperNoiseBW(m_data, m_vm);
                 saltPepperNoiseBwWindow.Owner = this;
                 saltPepperNoiseBwWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -1104,7 +1020,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                NoiseReductionMean noiseReductionMeanWindow = new NoiseReductionMean(m_data);
+                NoiseReductionMean noiseReductionMeanWindow = new NoiseReductionMean(m_data, m_vm);
                 noiseReductionMeanWindow.Owner = this;
                 noiseReductionMeanWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -1134,7 +1050,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                NoiseReductionMedian noiseReductionMedianWindow = new NoiseReductionMedian(m_data);
+                NoiseReductionMedian noiseReductionMedianWindow = new NoiseReductionMedian(m_data, m_vm);
                 noiseReductionMedianWindow.Owner = this;
                 noiseReductionMedianWindow.Show();
             } catch (FileNotFoundException ex) {
@@ -1192,6 +1108,68 @@ namespace ImageEdit_WPF {
                 if (result == MessageBoxResult.No) {
                     e.Cancel = true;
                 }
+            }
+        }
+        #endregion
+
+        #region BackgroundWorker
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
+            switch (m_data.M_action) {
+                case ActionType.Negative:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.Negative(m_data, m_backgroundWorker);
+                    break;
+                case ActionType.SquareRoot:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.SquareRoot(m_data, m_backgroundWorker);
+                    break;
+                case ActionType.ImageSummarization:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.ImageSummarization(m_data, m_backgroundWorker);
+                    break;
+                case ActionType.ImageSubtraction:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.ImageSubtraction(m_data, m_backgroundWorker);
+                    break;
+                case ActionType.ImageEqualizationRGB:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.HistogramEqualization_RGB(m_data, m_backgroundWorker);
+                    break;
+                case ActionType.ImageEqualizationHSV:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.HistogramEqualization_HSV(m_data, m_backgroundWorker);
+                    break;
+                case ActionType.ImageEqualizationYUV:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.HistogramEqualization_YUV(m_data, m_backgroundWorker);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e) {
+            m_vm.M_progress.Value = e.ProgressPercentage;
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
+            MessageBoxResult result = MessageBoxResult.None;
+
+            if (e.Error != null) {
+                MessageBox.Show(e.Error.Message, "Error");
+            }
+
+            result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (result == MessageBoxResult.OK) {
+                m_vm.M_progress.Value = 0;
+                m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource(); // Set main image
+                m_data.M_noChange = false;
+                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
+                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
+                undo.IsEnabled = true;
+                redo.IsEnabled = false;
+                m_data.M_redoStack.Clear();
             }
         }
         #endregion

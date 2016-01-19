@@ -79,6 +79,7 @@
     <Compile Include="HelperClasses\ConvertionMethods.cs" />
     <Compile Include="HelperClasses\ImageData.cs" />
     <Compile Include="HelperClasses\SaveImage.cs" />
+    <Compile Include="HelperClasses\ViewModel.cs" />
     <Compile Include="Windows\AutoThreshold.xaml.cs">
       <DependentUpon>AutoThreshold.xaml</DependentUpon>
     </Compile>
