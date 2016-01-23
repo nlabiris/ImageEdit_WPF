@@ -14,6 +14,11 @@ namespace ImageEdit_WPF.HelperClasses {
         /// </summary>
         private ProgressBar m_progress = null;
 
+        /// <summary>
+        /// Points that represent the values of the histogram.
+        /// </summary>
+        private PointCollection m_histogramPoints = null;
+
         public ImageSource M_bitmapBind {
             get { return m_bitmapBind; }
             set {
@@ -27,6 +32,17 @@ namespace ImageEdit_WPF.HelperClasses {
             set {
                 m_progress = value;
                 OnPropertyChanged("M_progress");
+            }
+        }
+
+        /// <summary>
+        /// Get or set histogram's points. Checking if we have a different set of points to show.
+        /// </summary>
+        public PointCollection M_histogramPoints {
+            get { return m_histogramPoints; }
+            set {
+                m_histogramPoints = value;
+                OnPropertyChanged("M_histogramPoints");
             }
         }
 

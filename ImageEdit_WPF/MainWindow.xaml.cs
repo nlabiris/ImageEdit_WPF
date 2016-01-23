@@ -401,7 +401,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("ImageEdit v0.6 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.6.1 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -695,7 +695,7 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                Histogram histogramWindow = new Histogram(m_data);
+                Histogram histogramWindow = new Histogram(m_data, m_vm);
                 histogramWindow.Owner = this;
                 histogramWindow.Show();
             } catch (FileNotFoundException ex) {

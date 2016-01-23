@@ -99,7 +99,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
-                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                 for (j = 0; j < data.M_height; j++) {
                     index = (j*bmpData.Stride) + (i*3);
 
@@ -668,9 +668,224 @@ namespace ImageEdit_WPF.HelperClasses {
         }
         #endregion
 
-        #region Histogram
-        public static void Histogram() {
+        #region Histogram for RGBY channels
+        /// <summary>
+        /// Calculate the average value of histogram.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="values">Histogram values.</param>
+        /// <returns>Returns the average value.</returns>
+        public static float HistogramMeanValue(ImageData data, int[] values) {
+            int i = 0;
+            float mean = 0;
+            float histogramSum = 0;
 
+            for (i = 0; i < 256; i++) {
+                histogramSum = histogramSum + (i*values[i]);
+            }
+            mean = histogramSum/(float)(data.M_width*data.M_height);
+
+            return mean;
+        }
+
+        /// <summary>
+        /// Calculating the histogram of the red channel.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the red channel.
+        /// </returns>
+        public static int[] HistogramRed(ImageData data) {
+            int[] histogramR = new int[256];
+            int r = 0;
+            int i = 0;
+            int j = 0;
+            int index = 0;
+
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride)*data.M_height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            for (i = 0; i < 256; i++) {
+                histogramR[i] = 0;
+            }
+
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
+                    index = (j*bmpData.Stride) + (i*3);
+
+                    r = rgbValues[index + 2];
+                    histogramR[r]++;
+                }
+            }
+
+            // Copy the RGB values back to the bitmap
+            Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return histogramR;
+        }
+
+        /// <summary>
+        /// Calculating the histogram of the green channel.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the green channel.
+        /// </returns>
+        public static int[] HistogramGreen(ImageData data) {
+            int[] histogramG = new int[256];
+            int g = 0;
+            int i = 0;
+            int j = 0;
+            int index = 0;
+
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride)*data.M_height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            for (i = 0; i < 256; i++) {
+                histogramG[i] = 0;
+            }
+
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
+                    index = (j*bmpData.Stride) + (i*3);
+
+                    g = rgbValues[index + 1];
+                    histogramG[g]++;
+                }
+            }
+
+            // Copy the RGB values back to the bitmap
+            Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return histogramG;
+        }
+
+        /// <summary>
+        /// Calculating the histogram of the blue channel.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the blue channel.
+        /// </returns>
+        public static int[] HistogramBlue(ImageData data) {
+            int[] histogramB = new int[256];
+            int b = 0;
+            int i = 0;
+            int j = 0;
+            int index = 0;
+
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride)*data.M_height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            for (i = 0; i < 256; i++) {
+                histogramB[i] = 0;
+            }
+
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
+                    index = (j*bmpData.Stride) + (i*3);
+
+                    b = rgbValues[index];
+                    histogramB[b]++;
+                }
+            }
+
+            // Copy the RGB values back to the bitmap
+            Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return histogramB;
+        }
+
+        /// <summary>
+        /// Calculating the histogram for the luminance values.
+        /// </summary>
+        /// <returns>
+        /// Histogram of the luminance values.
+        /// </returns>
+        public static int[] HistogramLuminance(ImageData data) {
+            int[] histogramY = new int[256];
+            int r = 0;
+            int g = 0;
+            int b = 0;
+            int y = 0;
+            int i = 0;
+            int j = 0;
+            int index = 0;
+
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride)*data.M_height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            for (i = 0; i < 256; i++) {
+                histogramY[i] = 0;
+            }
+
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
+                    index = (j*bmpData.Stride) + (i*3);
+
+                    r = rgbValues[index + 2];
+                    g = rgbValues[index + 1];
+                    b = rgbValues[index];
+
+                    y = (int)(0.2126*r + 0.7152*g + 0.0722*b); // source = https://en.wikipedia.org/wiki/Grayscale#cite_note-5
+
+                    histogramY[y]++;
+                }
+            }
+
+            // Copy the RGB values back to the bitmap
+            Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return histogramY;
         }
         #endregion
 
@@ -1293,7 +1508,7 @@ namespace ImageEdit_WPF.HelperClasses {
             switch (sizeMask) {
                 case 3:
                     for (i = 1; i < data.M_width - 1; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 1; j < data.M_height - 1; j++) {
                             txR = 0;
                             txG = 0;
@@ -1351,7 +1566,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     break;
                 case 5:
                     for (i = 2; i < data.M_width - 2; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 2; j < data.M_height - 2; j++) {
                             txR = 0;
                             txG = 0;
@@ -1409,7 +1624,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     break;
                 case 7:
                     for (i = 3; i < data.M_width - 3; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 3; j < data.M_height - 3; j++) {
                             txR = 0;
                             txG = 0;
@@ -1529,7 +1744,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 1; i < data.M_width - 1; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 1; j < data.M_height - 1; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1577,7 +1792,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 2; i < data.M_width - 2; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1625,7 +1840,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 3; i < data.M_width - 3; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 3; j < data.M_height - 3; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1729,7 +1944,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 1; i < data.M_width - 1; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 1; j < data.M_height - 1; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1777,7 +1992,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 2; i < data.M_width - 2; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 2; j < data.M_height - 2; j++) {
                             tR = 0.0;
                             tG = 0.0;
@@ -1825,7 +2040,7 @@ namespace ImageEdit_WPF.HelperClasses {
                     }
 
                     for (i = 3; i < data.M_width - 3; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i / data.M_width) * 100));
+                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
                         for (j = 3; j < data.M_height - 3; j++) {
                             tR = 0.0;
                             tG = 0.0;

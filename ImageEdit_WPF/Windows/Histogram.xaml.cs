@@ -19,12 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using ImageEdit_WPF.HelperClasses;
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 
@@ -32,284 +28,90 @@ namespace ImageEdit_WPF.Windows {
     /// <summary>
     /// Interaction logic for Histogram.xaml
     /// </summary>
-    public partial class Histogram : Window, INotifyPropertyChanged {
+    public partial class Histogram : Window {
+        /// <summary>
+        /// Image data.
+        /// </summary>
         private ImageData m_data = null;
 
         /// <summary>
-        /// Points that represent the values of the histogram.
+        /// Object used for binding with the UI.
         /// </summary>
-        private PointCollection _histogramPoints = null;
+        private ViewModel m_vm = null;
 
         /// <summary>
         /// Histogram of the Red channel.
         /// </summary>
-        private int[] _histogramR = new int[256];
+        private int[] m_histogramR = null;
 
         /// <summary>
         /// Histogram of the Green channel.
         /// </summary>
-        private int[] _histogramG = new int[256];
+        private int[] m_histogramG = null;
 
         /// <summary>
         /// Histogram of the Blue channel.
         /// </summary>
-        private int[] _histogramB = new int[256];
+        private int[] m_histogramB = null;
 
         /// <summary>
         /// Histogram of the Luminance values.
         /// </summary>
-        private int[] _histogramY = new int[256];
+        private int[] m_histogramY = null;
 
         /// <summary>
-        /// Check if the histogram of the red channel has been already calculated.
+        /// Mean value of the histogram for the Red channel.
         /// </summary>
-        private bool _isCalculatedR = false;
+        private float m_histogramMeanR = 0;
 
         /// <summary>
-        /// Check if the histogram of the green channel has been already calculated.
+        /// Mean value of the histogram for the Green channel.
         /// </summary>
-        private bool _isCalculatedG = false;
+        private float m_histogramMeanG = 0;
 
         /// <summary>
-        /// Check if the histogram of the blue channel has been already calculated.
+        /// Mean value of the histogram for the Blue channel.
         /// </summary>
-        private bool _isCalculatedB = false;
+        private float m_histogramMeanB = 0;
 
         /// <summary>
-        /// Check if the histogram of the luminance values has been already calculated.
+        /// Mean value of the histogram for the Luminance values.
         /// </summary>
-        private bool _isCalculatedY = false;
+        private float m_histogramMeanY = 0;
 
         /// <summary>
-        /// Event for detecting changes in properties.
+        /// Check if we have already calculated histogram for the Red channel.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool m_isCalculatedR = false;
+
+        /// <summary>
+        /// Check if we have already calculated histogram for the Green channel.
+        /// </summary>
+        private bool m_isCalculatedG = false;
+
+        /// <summary>
+        /// Check if we have already calculated histogram for the Blue channel.
+        /// </summary>
+        private bool m_isCalculatedB = false;
+
+        /// <summary>
+        /// Check if we have already calculated histogram for the Luminance.
+        /// </summary>
+        private bool m_isCalculatedY = false;
 
         /// <summary>
         /// Histogram <c>constructor</c>.
         /// Here we initialiaze the image, the data binding of the histogram diagram and the default hitogram that will be loaded.
         /// </summary>
         /// <param name="data">Input image.</param>
-        public Histogram(ImageData data) {
+        public Histogram(ImageData data, ViewModel vm) {
             m_data = data;
+            m_vm = vm;
 
             InitializeComponent();
-            DataContext = this;
+            DataContext = m_vm;
             gray.IsChecked = true;
         }
-
-        /// <summary>
-        /// Get or set histogram's points. Checking if we have a different set of points to show.
-        /// </summary>
-        public PointCollection HistogramPoints {
-            get { return _histogramPoints; }
-            set {
-                if (_histogramPoints != value) {
-                    _histogramPoints = value;
-                    OnPropertytChanged("HistogramPoints");
-                }
-            }
-        }
-
-        private void OnPropertytChanged(string propertyName) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        #region Histogram calculations
-        /// <summary>
-        /// Calculating the histogram of the red channel.
-        /// </summary>
-        /// <returns>
-        /// Histogram of the red channel.
-        /// </returns>
-        public int[] HistogramRed() {
-            int r = 0;
-
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            for (int i = 0; i < 256; i++) {
-                _histogramR[i] = 0;
-            }
-
-            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    r = rgbValues[index + 2];
-                    _histogramR[r]++;
-                }
-            }
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
-
-            _isCalculatedR = true;
-
-            return _histogramR;
-        }
-
-        /// <summary>
-        /// Calculating the histogram of the green channel.
-        /// </summary>
-        /// <returns>
-        /// Histogram of the green channel.
-        /// </returns>
-        public int[] HistogramGreen() {
-            int g = 0;
-
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            for (int i = 0; i < 256; i++) {
-                _histogramG[i] = 0;
-            }
-
-            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    g = rgbValues[index + 1];
-                    _histogramG[g]++;
-                }
-            }
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
-
-            _isCalculatedG = true;
-
-            return _histogramG;
-        }
-
-        /// <summary>
-        /// Calculating the histogram of the blue channel.
-        /// </summary>
-        /// <returns>
-        /// Histogram of the blue channel.
-        /// </returns>
-        public int[] HistogramBlue() {
-            int b = 0;
-
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            for (int i = 0; i < 256; i++) {
-                _histogramB[i] = 0;
-            }
-
-            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    b = rgbValues[index];
-                    _histogramB[b]++;
-                }
-            }
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
-
-            _isCalculatedB = true;
-
-            return _histogramB;
-        }
-
-        /// <summary>
-        /// Calculating the histogram for the luminance values.
-        /// </summary>
-        /// <returns>
-        /// Histogram of the luminance values.
-        /// </returns>
-        public int[] HistogramLuminance() {
-            int r = 0;
-            int g = 0;
-            int b = 0;
-            int y = 0;
-
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = m_data.M_bitmap.LockBits(new Rectangle(0, 0, m_data.M_bitmap.Width, m_data.M_bitmap.Height), ImageLockMode.ReadWrite, m_data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*m_data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            for (int i = 0; i < 256; i++) {
-                _histogramY[i] = 0;
-            }
-
-            for (int i = 0; i < m_data.M_bitmap.Width; i++) {
-                for (int j = 0; j < m_data.M_bitmap.Height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    r = rgbValues[index + 2];
-                    g = rgbValues[index + 1];
-                    b = rgbValues[index];
-
-                    y = (int)(0.2126*r + 0.7152*g + 0.0722*b); // source = ????
-
-                    _histogramY[y]++;
-                }
-            }
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            m_data.M_bitmap.UnlockBits(bmpData);
-
-            _isCalculatedY = true;
-
-            return _histogramY;
-        }
-        #endregion
 
         #region Channels
         /// <summary>
@@ -319,18 +121,18 @@ namespace ImageEdit_WPF.Windows {
         /// <returns>
         /// A set of <c>PointCollection</c> for the prefered histogram.
         /// </returns>
-        private PointCollection ConvertToPointCollection(int[] values) {
+        private static PointCollection ConvertToPointCollection(int[] values) {
             int max = values.Max();
 
             PointCollection points = new PointCollection();
             // first point (lower-left corner)
-            points.Add(new System.Windows.Point(0, max));
+            points.Add(new Point(0, max));
             // middle points
             for (int i = 0; i < values.Length; i++) {
-                points.Add(new System.Windows.Point(i, max - values[i]));
+                points.Add(new Point(i, max - values[i]));
             }
             // last point (lower-right corner)
-            points.Add(new System.Windows.Point(values.Length - 1, max));
+            points.Add(new Point(values.Length - 1, max));
 
             return points;
         }
@@ -344,10 +146,15 @@ namespace ImageEdit_WPF.Windows {
         private void gray_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Luminosity";
             polygon.Fill = new SolidColorBrush(Colors.Black);
-            if (_isCalculatedY) {
-                HistogramPoints = ConvertToPointCollection(_histogramY);
+            if (m_isCalculatedY) {
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramY);
+                meanValue.Text = m_histogramMeanY.ToString("F");
             } else {
-                HistogramPoints = ConvertToPointCollection(HistogramLuminance());
+                m_histogramY = Algorithms.HistogramLuminance(m_data);
+                m_histogramMeanY = Algorithms.HistogramMeanValue(m_data, m_histogramY);
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramY);
+                meanValue.Text = m_histogramMeanY.ToString("F");
+                m_isCalculatedY = true;
             }
         }
 
@@ -360,10 +167,15 @@ namespace ImageEdit_WPF.Windows {
         private void red_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Red";
             polygon.Fill = new SolidColorBrush(Colors.Red);
-            if (_isCalculatedR) {
-                HistogramPoints = ConvertToPointCollection(_histogramR);
+            if (m_isCalculatedR) {
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramR);
+                meanValue.Text = m_histogramMeanR.ToString("F");
             } else {
-                HistogramPoints = ConvertToPointCollection(HistogramRed());
+                m_histogramR = Algorithms.HistogramRed(m_data);
+                m_histogramMeanR = Algorithms.HistogramMeanValue(m_data, m_histogramR);
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramR);
+                meanValue.Text = m_histogramMeanR.ToString("F");
+                m_isCalculatedR = true;
             }
         }
 
@@ -376,10 +188,15 @@ namespace ImageEdit_WPF.Windows {
         private void green_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Green";
             polygon.Fill = new SolidColorBrush(Colors.Green);
-            if (_isCalculatedG) {
-                HistogramPoints = ConvertToPointCollection(_histogramG);
+            if (m_isCalculatedG) {
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramG);
+                meanValue.Text = m_histogramMeanG.ToString("F");
             } else {
-                HistogramPoints = ConvertToPointCollection(HistogramGreen());
+                m_histogramG = Algorithms.HistogramGreen(m_data);
+                m_histogramMeanG = Algorithms.HistogramMeanValue(m_data, m_histogramG);
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramG);
+                meanValue.Text = m_histogramMeanG.ToString("F");
+                m_isCalculatedG = true;
             }
         }
 
@@ -392,10 +209,15 @@ namespace ImageEdit_WPF.Windows {
         private void blue_Checked(object sender, RoutedEventArgs e) {
             groupBox.Header = "Blue";
             polygon.Fill = new SolidColorBrush(Colors.Blue);
-            if (_isCalculatedB) {
-                HistogramPoints = ConvertToPointCollection(_histogramB);
+            if (m_isCalculatedB) {
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramB);
+                meanValue.Text = m_histogramMeanB.ToString("F");
             } else {
-                HistogramPoints = ConvertToPointCollection(HistogramBlue());
+                m_histogramB = Algorithms.HistogramBlue(m_data);
+                m_histogramMeanB = Algorithms.HistogramMeanValue(m_data, m_histogramB);
+                m_vm.M_histogramPoints = ConvertToPointCollection(m_histogramB);
+                meanValue.Text = m_histogramMeanB.ToString("F");
+                m_isCalculatedB = true;
             }
         }
         #endregion
