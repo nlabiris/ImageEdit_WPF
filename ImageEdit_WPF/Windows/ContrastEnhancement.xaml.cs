@@ -52,7 +52,6 @@ namespace ImageEdit_WPF.Windows {
             m_backgroundWorker.WorkerReportsProgress = true;
             m_backgroundWorker.WorkerSupportsCancellation = false;
             m_backgroundWorker.DoWork += backgroundWorker_DoWork;
-            m_backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
             m_backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
         }
 
@@ -96,11 +95,7 @@ namespace ImageEdit_WPF.Windows {
             // Apply algorithm and return execution time
             elapsedTime = Algorithms.ContrastEnhancement(m_data, brightness, contrast, m_backgroundWorker);
         }
-
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e) {
-            m_vm.M_progress.Value = e.ProgressPercentage;
-        }
-
+        
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBoxResult.None;
@@ -111,7 +106,6 @@ namespace ImageEdit_WPF.Windows {
 
             result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
-                m_vm.M_progress.Value = 0;
                 m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource(); // Set main image
                 m_data.M_noChange = false;
                 m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
