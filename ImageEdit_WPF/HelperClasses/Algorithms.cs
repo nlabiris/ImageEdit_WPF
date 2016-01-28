@@ -1165,39 +1165,43 @@ namespace ImageEdit_WPF.HelperClasses {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
-            int heightInPixels = bmpData.Height;
-            int widthInBytes = bmpData.Width*bytesPerPixel;
-            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * bmpData.Height;
+            byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
 
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, rgb.Length);
+
             #region Algorithm
-            Parallel.For(0, heightInPixels, i => {
-                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
-                    int b = currentLine[j] + currentLine[j]; // B
-                    int g = currentLine[j + 1] + currentLine[j + 1]; // G
-                    int r = currentLine[j + 2] + currentLine[j + 2]; // R
+            Parallel.ForEach(BetterEnumerable.SteppedRange(0, rgb.Length, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), p => {
+                int b = rgb[p] + rgb[p]; // B
+                int g = rgb[p + 1] + rgb[p + 1]; // G
+                int r = rgb[p + 2] + rgb[p + 2]; // R
 
-                    if (r > 255) {
-                        r = 255;
-                    }
-
-                    if (g > 255) {
-                        g = 255;
-                    }
-
-                    if (b > 255) {
-                        b = 255;
-                    }
-
-                    currentLine[j] = (byte)b; // B
-                    currentLine[j + 1] = (byte)g; // G
-                    currentLine[j + 2] = (byte)r; // R
+                if (r > 255) {
+                    r = 255;
                 }
+
+                if (g > 255) {
+                    g = 255;
+                }
+
+                if (b > 255) {
+                    b = 255;
+                }
+
+                rgb[p] = (byte)b; // B
+                rgb[p + 1] = (byte)g; // G
+                rgb[p + 2] = (byte)r; // R
             });
             #endregion
+
+            Marshal.Copy(rgb, 0, ptr, rgb.Length);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1214,27 +1218,31 @@ namespace ImageEdit_WPF.HelperClasses {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
-            int heightInPixels = bmpData.Height;
-            int widthInBytes = bmpData.Width*bytesPerPixel;
-            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * bmpData.Height;
+            byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            #region Algorithm
-            Parallel.For(0, heightInPixels, i => {
-                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
-                    int b = currentLine[j] - currentLine[j]; // B
-                    int g = currentLine[j + 1] - currentLine[j + 1]; // G
-                    int r = currentLine[j + 2] - currentLine[j + 2]; // R
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, rgb.Length);
 
-                    currentLine[j] = (byte)b; // B
-                    currentLine[j + 1] = (byte)g; // G
-                    currentLine[j + 2] = (byte)r; // R
-                }
+            #region Algorithm
+            Parallel.ForEach(BetterEnumerable.SteppedRange(0, rgb.Length, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), p => {
+                int b = rgb[p] - rgb[p]; // B
+                int g = rgb[p + 1] - rgb[p + 1]; // G
+                int r = rgb[p + 2] - rgb[p + 2]; // R
+
+                rgb[p] = (byte)b; // B
+                rgb[p + 1] = (byte)g; // G
+                rgb[p + 2] = (byte)r; // R
             });
             #endregion
+
+            Marshal.Copy(rgb, 0, ptr, rgb.Length);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1251,42 +1259,46 @@ namespace ImageEdit_WPF.HelperClasses {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
-            int heightInPixels = bmpData.Height;
-            int widthInBytes = bmpData.Width*bytesPerPixel;
-            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(bmpData.Stride)*data.M_bitmap.Height;
+            byte[] rgbValues = new byte[bytes];
+            byte[] bgrValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             switch (sizeMask) {
                 case 3:
-                    Parallel.For(1, heightInPixels - 1, i => {
-                        byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                        for (int j = 1; j < widthInBytes - 1; j = j + bytesPerPixel) {
-                            int b = currentLine[j];
-                            int g = currentLine[j + 1];
-                            int r = currentLine[j + 2];
-
-                            int txR = 0;
-                            int txG = 0;
-                            int txB = 0;
+                    for (int i = 1; i < data.M_width - 1; i++) {
+                        for (int j = 1; j < data.M_height - 1; j++) {
+                            int index;
+                            double txR = 0;
+                            double txG = 0;
+                            double txB = 0;
                             for (int k = 0; k < sizeMask; k++) {
                                 for (int l = 0; l < sizeMask; l++) {
-                                    txB = txB + b*maskX[k, l];
-                                    txG = txG + g*maskX[k, l];
-                                    txR = txR + r*maskX[k, l];
+                                    index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                                    txR = txR + rgbValues[index + 2]*maskX[k, l];
+                                    txG = txG + rgbValues[index + 1]*maskX[k, l];
+                                    txB = txB + rgbValues[index]*maskX[k, l];
                                 }
                             }
 
-                            int tyR = 0;
-                            int tyG = 0;
-                            int tyB = 0;
+                            double tyR = 0;
+                            double tyG = 0;
+                            double tyB = 0;
                             for (int k = 0; k < sizeMask; k++) {
                                 for (int l = 0; l < sizeMask; l++) {
-                                    tyB = tyB + b*maskY[k, l];
-                                    tyG = tyG + g*maskY[k, l];
-                                    tyR = tyR + r*maskY[k, l];
+                                    index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                                    tyR = tyR + rgbValues[index + 2]*maskY[k, l];
+                                    tyG = tyG + rgbValues[index + 1]*maskY[k, l];
+                                    tyB = tyB + rgbValues[index]*maskY[k, l];
                                 }
                             }
 
@@ -1312,39 +1324,39 @@ namespace ImageEdit_WPF.HelperClasses {
                                 tB = 0.0;
                             }
 
-                            currentLine[j] = (byte)tB;
-                            currentLine[j + 1] = (byte)tG;
-                            currentLine[j + 2] = (byte)tR;
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
-                    });
+                    }
                     break;
                 case 5:
-                    Parallel.For(0, heightInPixels, i => {
-                        byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                        for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
-                            int b = currentLine[j];
-                            int g = currentLine[j + 1];
-                            int r = currentLine[j + 2];
-
-                            int txR = 0;
-                            int txG = 0;
-                            int txB = 0;
+                    for (int i = 2; i < data.M_width - 2; i++) {
+                        for (int j = 2; j < data.M_height - 2; j++) {
+                            int index;
+                            double txR = 0;
+                            double txG = 0;
+                            double txB = 0;
                             for (int k = 0; k < sizeMask; k++) {
                                 for (int l = 0; l < sizeMask; l++) {
-                                    txB = txB + b*maskX[k, l];
-                                    txG = txG + g*maskX[k, l];
-                                    txR = txR + r*maskX[k, l];
+                                    index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
+                                    txR = txR + rgbValues[index + 2]*maskX[k, l];
+                                    txG = txG + rgbValues[index + 1]*maskX[k, l];
+                                    txB = txB + rgbValues[index]*maskX[k, l];
                                 }
                             }
 
-                            int tyR = 0;
-                            int tyG = 0;
-                            int tyB = 0;
+                            double tyR = 0;
+                            double tyG = 0;
+                            double tyB = 0;
                             for (int k = 0; k < sizeMask; k++) {
                                 for (int l = 0; l < sizeMask; l++) {
-                                    tyB = tyB + b*maskY[k, l];
-                                    tyG = tyG + g*maskY[k, l];
-                                    tyR = tyR + r*maskY[k, l];
+                                    index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
+                                    tyR = tyR + rgbValues[index + 2]*maskY[k, l];
+                                    tyG = tyG + rgbValues[index + 1]*maskY[k, l];
+                                    tyB = tyB + rgbValues[index]*maskY[k, l];
                                 }
                             }
 
@@ -1370,39 +1382,39 @@ namespace ImageEdit_WPF.HelperClasses {
                                 tB = 0.0;
                             }
 
-                            currentLine[j] = (byte)tB;
-                            currentLine[j + 1] = (byte)tG;
-                            currentLine[j + 2] = (byte)tR;
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
-                    });
+                    }
                     break;
                 case 7:
-                    Parallel.For(0, heightInPixels, i => {
-                        byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                        for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
-                            int b = currentLine[j];
-                            int g = currentLine[j + 1];
-                            int r = currentLine[j + 2];
-
-                            int txR = 0;
-                            int txG = 0;
-                            int txB = 0;
+                    for (int i = 3; i < data.M_width - 3; i++) {
+                        for (int j = 3; j < data.M_height - 3; j++) {
+                            int index;
+                            double txR = 0;
+                            double txG = 0;
+                            double txB = 0;
                             for (int k = 0; k < sizeMask; k++) {
                                 for (int l = 0; l < sizeMask; l++) {
-                                    txB = txB + b*maskX[k, l];
-                                    txG = txG + g*maskX[k, l];
-                                    txR = txR + r*maskX[k, l];
+                                    index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
+                                    txR = txR + rgbValues[index + 2]*maskX[k, l];
+                                    txG = txG + rgbValues[index + 1]*maskX[k, l];
+                                    txB = txB + rgbValues[index]*maskX[k, l];
                                 }
                             }
 
-                            int tyR = 0;
-                            int tyG = 0;
-                            int tyB = 0;
+                            double tyR = 0;
+                            double tyG = 0;
+                            double tyB = 0;
                             for (int k = 0; k < sizeMask; k++) {
                                 for (int l = 0; l < sizeMask; l++) {
-                                    tyB = tyB + b*maskY[k, l];
-                                    tyG = tyG + g*maskY[k, l];
-                                    tyR = tyR + r*maskY[k, l];
+                                    index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
+                                    tyR = tyR + rgbValues[index + 2]*maskY[k, l];
+                                    tyG = tyG + rgbValues[index + 1]*maskY[k, l];
+                                    tyB = tyB + rgbValues[index]*maskY[k, l];
                                 }
                             }
 
@@ -1428,11 +1440,13 @@ namespace ImageEdit_WPF.HelperClasses {
                                 tB = 0.0;
                             }
 
-                            currentLine[j] = (byte)tB;
-                            currentLine[j + 1] = (byte)tG;
-                            currentLine[j + 2] = (byte)tR;
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
-                    });
+                    }
                     break;
             }
             #endregion
@@ -1440,8 +1454,22 @@ namespace ImageEdit_WPF.HelperClasses {
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
 
+            Parallel.For(0, data.M_width, i => {
+                for (int j = 0; j < data.M_height; j++) {
+                    int index = (j*bmpData.Stride) + (i*3);
+
+                    rgbValues[index + 2] = bgrValues[index + 2];
+                    rgbValues[index + 1] = bgrValues[index + 1];
+                    rgbValues[index] = bgrValues[index];
+                }
+            });
+
+            // Copy the RGB values back to the bitmap
+            Marshal.Copy(rgbValues, 0, ptr, bytes);
+
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
+
 
             return elapsedTime;
         }
