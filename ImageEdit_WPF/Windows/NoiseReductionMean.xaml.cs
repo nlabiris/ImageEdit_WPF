@@ -96,7 +96,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.NoiseReduction_Mean(m_data, m_sizeMask, m_backgroundWorker);
+            elapsedTime = Algorithms.NoiseReduction_Mean(m_data, m_sizeMask);
         }
         
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

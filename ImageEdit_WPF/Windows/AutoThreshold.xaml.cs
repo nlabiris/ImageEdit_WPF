@@ -92,7 +92,7 @@ namespace ImageEdit_WPF.Windows {
             int distance = (int)e.Argument;
 
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.AutoThreshold(m_data, distance, m_backgroundWorker);
+            elapsedTime = Algorithms.AutoThreshold(m_data, distance);
         }
         
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

@@ -93,7 +93,7 @@ namespace ImageEdit_WPF.Windows {
             int brightness = (int)e.Argument;
 
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.Brightness(m_data, brightness, m_backgroundWorker);
+            elapsedTime = Algorithms.Brightness(m_data, brightness);
         }
         
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

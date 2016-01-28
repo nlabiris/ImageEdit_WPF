@@ -19,100 +19,82 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
         #region Shift bits
-        public static TimeSpan ShiftBits(ImageData data, int bits, BackgroundWorker backgroundWorker) {
-            unsafe {
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
-                int heightInPixels = bmpData.Height;
-                int widthInBytes = bmpData.Width*bytesPerPixel;
-                byte* ptrFirstPixel = (byte*)bmpData.Scan0;
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                Parallel.For(0, heightInPixels, i => {
-                    byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                    for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
-                        currentLine[j] = (byte)(currentLine[j] << bits); // R
-                        currentLine[j + 1] = (byte)(currentLine[j + 1] << bits); // G
-                        currentLine[j + 2] = (byte)(currentLine[j + 2] << bits); // B
-                    }
-                });
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
-            }
-        }
-        #endregion
-
-        #region Threshold
-        public static TimeSpan Threshold(ImageData data, int threshold, BackgroundWorker backgroundWorker) {
-            int i = 0;
-            int j = 0;
-            int r = 0;
-            int g = 0;
-            int b = 0;
-            int index = 0;
-
+        public static unsafe TimeSpan ShiftBits(ImageData data, int bits) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < data.M_width; i++) {
-                backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                for (j = 0; j < data.M_height; j++) {
-                    index = (j*bmpData.Stride) + (i*3);
-
-                    r = rgbValues[index + 2];
-                    g = rgbValues[index + 1];
-                    b = rgbValues[index];
-
-                    r = r < threshold ? 0 : 255;
-                    g = g < threshold ? 0 : 255;
-                    b = b < threshold ? 0 : 255;
-
-                    rgbValues[index + 2] = (byte)r;
-                    rgbValues[index + 1] = (byte)g;
-                    rgbValues[index] = (byte)b;
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    currentLine[j] = (byte)(b << bits); // B
+                    currentLine[j + 1] = (byte)(g << bits); // G
+                    currentLine[j + 2] = (byte)(r << bits); // R
                 }
-            }
+            });
             #endregion
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
 
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Threshold
+        public static unsafe TimeSpan Threshold(ImageData data, int threshold) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+
+                    r = r < threshold ? 0 : 255;
+                    g = g < threshold ? 0 : 255;
+                    b = b < threshold ? 0 : 255;
+
+                    currentLine[j] = (byte)b;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j + 2] = (byte)r;
+                }
+            });
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
@@ -122,14 +104,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Auto threshold
-        public static TimeSpan AutoThreshold(ImageData data, int distance, BackgroundWorker backgroundWorker) {
-            int i = 0;
-            int j = 0;
-            int k = 0;
-            int l = 0;
-            int b = 0;
-            int g = 0;
-            int r = 0;
+        public static unsafe TimeSpan AutoThreshold(ImageData data, int distance) {
             double z = 0.0;
             int z1R = 0;
             int z1G = 0;
@@ -156,25 +131,19 @@ namespace ImageEdit_WPF.HelperClasses {
             int[] positionR = new int[256];
             int[] positionG = new int[256];
             int[] positionB = new int[256];
-            int index = 0;
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride)*data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat) / 8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width * bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
-            for (i = 0; i < 256; i++) {
+            Parallel.For(0, 256, i => {
                 histogramR[i] = 0;
                 histogramG[i] = 0;
                 histogramB[i] = 0;
@@ -184,28 +153,26 @@ namespace ImageEdit_WPF.HelperClasses {
                 positionR[i] = i;
                 positionG[i] = i;
                 positionB[i] = i;
-            }
-            backgroundWorker.ReportProgress(20);
+            });
 
-            for (i = 0; i < data.M_width; i++) {
-                for (j = 0; j < data.M_height; j++) {
-                    index = (j*bmpData.Stride) + (i*3);
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
 
-                    b = rgbValues[index];
                     histogramB[b]++;
-                    histogramSortB[b]++;
-                    g = rgbValues[index + 1];
                     histogramG[g]++;
-                    histogramSortG[g]++;
-                    r = rgbValues[index + 2];
                     histogramR[r]++;
+                    histogramSortB[b]++;
+                    histogramSortG[g]++;
                     histogramSortR[r]++;
                 }
-            }
-            backgroundWorker.ReportProgress(40);
+            });
 
-            for (k = 1; k < 256; k++) {
-                for (l = 255; l >= k; l--) {
+            Parallel.For(1, 256, k => {
+                for (int l = 255; l >= k; l--) {
                     if (histogramSortR[l - 1] < histogramSortR[l]) {
                         temp = histogramSortR[l - 1];
                         histogramSortR[l - 1] = histogramSortR[l];
@@ -233,8 +200,7 @@ namespace ImageEdit_WPF.HelperClasses {
                         positionB[l] = temp;
                     }
                 }
-            }
-            backgroundWorker.ReportProgress(60);
+            });
 
             z1R = histogramSortR[0];
             positionz1R = positionR[0];
@@ -243,7 +209,7 @@ namespace ImageEdit_WPF.HelperClasses {
             z1B = histogramSortB[0];
             positionz1B = positionB[0];
 
-            for (i = 1; i < 256; i++) {
+            for (int i = 1; i < 256; i++) {
                 if (Math.Abs(positionR[i] - positionz1R) > distance) {
                     z2R = histogramSortR[i];
                     positionz2R = positionR[i];
@@ -265,84 +231,78 @@ namespace ImageEdit_WPF.HelperClasses {
 
             if (positionz1R < positionz2R) {
                 z = histogramR[positionz1R + 1]*1.0/z2R;
-                for (i = positionz1R + 1; i < positionz2R; i++) {
+                Parallel.For(positionz1R + 1, positionz2R, i => {
                     if ((histogramR[i]*1.0/z2R) < z) {
                         z = histogramR[i]*1.0/z2R;
                         thresholdR = i;
                     }
-                }
+                });
             } else {
                 z = histogramR[positionz2R + 1]*1.0/z1R;
-                for (i = positionz2R + 1; i < positionz1R; i++) {
+                Parallel.For(positionz2R + 1, positionz1R, i => {
                     if ((histogramR[i]*1.0/z1R) < z) {
                         z = histogramR[i]*1.0/z1R;
                         thresholdR = i;
                     }
-                }
+                });
             }
 
             if (positionz1G < positionz2G) {
                 z = histogramG[positionz1G + 1]*1.0/z2G;
-                for (i = positionz1G + 1; i < positionz2G; i++) {
+                Parallel.For(positionz1G + 1, positionz2G, i => {
                     if ((histogramG[i]*1.0/z2G) < z) {
                         z = histogramG[i]*1.0/z2G;
                         thresholdG = i;
                     }
-                }
+                });
             } else {
                 z = histogramG[positionz2G + 1]*1.0/z1G;
-                for (i = positionz2G + 1; i < positionz1G; i++) {
+                Parallel.For(positionz2G + 1, positionz1G, i => {
                     if ((histogramG[i]*1.0/z1G) < z) {
                         z = histogramG[i]*1.0/z1G;
                         thresholdG = i;
                     }
-                }
+                });
             }
 
             if (positionz1B < positionz2B) {
                 z = histogramB[positionz1B + 1]*1.0/z2B;
-                for (i = positionz1B + 1; i < positionz2B; i++) {
+                Parallel.For(positionz1B + 1, positionz2B, i => {
                     if ((histogramB[i]*1.0/z2B) < z) {
                         z = histogramB[i]*1.0/z2B;
                         thresholdB = i;
                     }
-                }
+                });
             } else {
                 z = histogramB[positionz2B + 1]*1.0/z1B;
-                for (i = positionz2B + 1; i < positionz1B; i++) {
+                Parallel.For(positionz2B + 1, positionz1B, i => {
                     if ((histogramB[i]*1.0/z1B) < z) {
                         z = histogramB[i]*1.0/z1B;
                         thresholdB = i;
                     }
-                }
+                });
             }
-            backgroundWorker.ReportProgress(70);
 
-            for (i = 0; i < data.M_width; i++) {
-                for (j = 0; j < data.M_height; j++) {
-                    index = (j*bmpData.Stride) + (i*3);
-
-                    r = rgbValues[index + 2];
-                    g = rgbValues[index + 1];
-                    b = rgbValues[index];
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
 
                     r = r < thresholdR ? 0 : 255;
                     g = g < thresholdG ? 0 : 255;
                     b = b < thresholdB ? 0 : 255;
 
-                    rgbValues[index + 2] = (byte)r;
-                    rgbValues[index + 1] = (byte)g;
-                    rgbValues[index] = (byte)b;
+                    currentLine[j + 2] = (byte)r;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j] = (byte)b;
                 }
-            }
-            backgroundWorker.ReportProgress(100);
+            });
             #endregion
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
@@ -352,266 +312,248 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Negative
-        public static TimeSpan Negative(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+        public static unsafe TimeSpan Negative(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
-                int heightInPixels = bmpData.Height;
-                int widthInBytes = bmpData.Width*bytesPerPixel;
-                byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                Parallel.For(0, heightInPixels, i => {
-                    byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
-                    for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
-                        currentLine[j] = (byte)(255 - currentLine[j]); // R
-                        currentLine[j + 1] = (byte)(255 - currentLine[j + 1]); // G
-                        currentLine[j + 2] = (byte)(255 - currentLine[j + 2]); // B
-                    }
-                });
-                #endregion
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    currentLine[j] = (byte)(255 - b); // B
+                    currentLine[j + 1] = (byte)(255 - g); // G
+                    currentLine[j + 2] = (byte)(255 - r); // R
+                }
+            });
+            #endregion
 
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
 
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                return elapsedTime;
-            }
+            return elapsedTime;
         }
         #endregion
 
         #region Square root
-        public static TimeSpan SquareRoot(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int index = 0;
+        public static unsafe TimeSpan SquareRoot(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            Stopwatch watch = Stopwatch.StartNew();
 
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-                        ptr[index + 2] = (byte)Math.Sqrt(ptr[index + 2]*255); // R
-                        ptr[index + 1] = (byte)Math.Sqrt(ptr[index + 1]*255); // G
-                        ptr[index] = (byte)Math.Sqrt(ptr[index]*255); // B
-                    }
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    currentLine[j] = (byte)Math.Sqrt(b*255); // B
+                    currentLine[j + 1] = (byte)Math.Sqrt(g*255); // G
+                    currentLine[j + 2] = (byte)Math.Sqrt(r*255); // R
                 }
-                #endregion
+            });
+            #endregion
 
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
 
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                return elapsedTime;
-            }
+            return elapsedTime;
         }
         #endregion
 
         #region Contrast enhancement
-        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                double r = 0;
-                double g = 0;
-                double b = 0;
-                int index = 0;
+        public static unsafe TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast) {
+            // Lock the bitmap's bits.
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Lock the bitmap's bits.
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            Stopwatch watch = Stopwatch.StartNew();
 
-                Stopwatch watch = Stopwatch.StartNew();
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    double b = currentLine[j];
+                    double g = currentLine[j + 1];
+                    double r = currentLine[j + 2];
+                    b = (b + brightness)*contrast;
+                    g = (g + brightness)*contrast;
+                    r = (r + brightness)*contrast;
 
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-                        r = (ptr[index + 2] + brightness)*contrast;
-                        g = (ptr[index + 1] + brightness)*contrast;
-                        b = (ptr[index] + brightness)*contrast;
-
-                        if (r > 255.0) {
-                            r = 255.0;
-                        } else if (r < 0.0) {
-                            r = 0.0;
-                        }
-
-                        if (g > 255.0) {
-                            g = 255.0;
-                        } else if (g < 0.0) {
-                            g = 0.0;
-                        }
-
-                        if (b > 255.0) {
-                            b = 255.0;
-                        } else if (b < 0.0) {
-                            b = 0.0;
-                        }
-
-                        ptr[index + 2] = (byte)r;
-                        ptr[index + 1] = (byte)g;
-                        ptr[index] = (byte)b;
+                    if (r > 255.0) {
+                        r = 255.0;
+                    } else if (r < 0.0) {
+                        r = 0.0;
                     }
+
+                    if (g > 255.0) {
+                        g = 255.0;
+                    } else if (g < 0.0) {
+                        g = 0.0;
+                    }
+
+                    if (b > 255.0) {
+                        b = 255.0;
+                    } else if (b < 0.0) {
+                        b = 0.0;
+                    }
+
+                    currentLine[j] = (byte)b;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j + 2] = (byte)r;
                 }
-                #endregion
+            });
+            #endregion
 
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
 
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                return elapsedTime;
-            }
+            return elapsedTime;
         }
         #endregion
 
         #region Brightness
-        public static TimeSpan Brightness(ImageData data, int brightness, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int r = 0;
-                int g = 0;
-                int b = 0;
-                int index = 0;
+        public static unsafe TimeSpan Brightness(ImageData data, int brightness) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            Stopwatch watch = Stopwatch.StartNew();
 
-                Stopwatch watch = Stopwatch.StartNew();
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    b = b + brightness;
+                    g = g + brightness;
+                    r = r + brightness;
 
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        r = ptr[index + 2] + brightness;
-                        g = ptr[index + 1] + brightness;
-                        b = ptr[index] + brightness;
-
-                        if (r > 255) {
-                            r = 255;
-                        } else if (r < 0) {
-                            r = 0;
-                        }
-
-                        if (g > 255) {
-                            g = 255;
-                        } else if (g < 0) {
-                            g = 0;
-                        }
-
-                        if (b > 255) {
-                            b = 255;
-                        } else if (b < 0) {
-                            b = 0;
-                        }
-
-                        ptr[index + 2] = (byte)r;
-                        ptr[index + 1] = (byte)g;
-                        ptr[index] = (byte)b;
+                    if (r > 255) {
+                        r = 255;
+                    } else if (r < 0) {
+                        r = 0;
                     }
+
+                    if (g > 255) {
+                        g = 255;
+                    } else if (g < 0) {
+                        g = 0;
+                    }
+
+                    if (b > 255) {
+                        b = 255;
+                    } else if (b < 0) {
+                        b = 0;
+                    }
+
+                    currentLine[j] = (byte)b;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j + 2] = (byte)r;
                 }
-                #endregion
+            });
+            #endregion
 
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
 
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                return elapsedTime;
-            }
+            return elapsedTime;
         }
         #endregion
 
         #region Contrast
-        public static TimeSpan Contrast(ImageData data, double contrast, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                double r = 0;
-                double g = 0;
-                double b = 0;
-                int index = 0;
+        public static unsafe TimeSpan Contrast(ImageData data, double contrast) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            Stopwatch watch = Stopwatch.StartNew();
 
-                Stopwatch watch = Stopwatch.StartNew();
+            #region Algorithms
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    double b = currentLine[j];
+                    double g = currentLine[j + 1];
+                    double r = currentLine[j + 2];
+                    b = b*contrast;
+                    g = g*contrast;
+                    r = r*contrast;
 
-                #region Algorithms
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        r = ptr[index + 2]*contrast;
-                        g = ptr[index + 1]*contrast;
-                        b = ptr[index]*contrast;
-
-                        if (r > 255.0) {
-                            r = 255.0;
-                        } else if (r < 0.0) {
-                            r = 0.0;
-                        }
-
-                        if (g > 255.0) {
-                            g = 255.0;
-                        } else if (g < 0.0) {
-                            g = 0.0;
-                        }
-
-                        if (b > 255.0) {
-                            b = 255.0;
-                        } else if (b < 0.0) {
-                            b = 0.0;
-                        }
-
-                        ptr[index + 2] = (byte)r;
-                        ptr[index + 1] = (byte)g;
-                        ptr[index] = (byte)b;
+                    if (r > 255.0) {
+                        r = 255.0;
+                    } else if (r < 0.0) {
+                        r = 0.0;
                     }
+
+                    if (g > 255.0) {
+                        g = 255.0;
+                    } else if (g < 0.0) {
+                        g = 0.0;
+                    }
+
+                    if (b > 255.0) {
+                        b = 255.0;
+                    } else if (b < 0.0) {
+                        b = 0.0;
+                    }
+
+                    currentLine[j] = (byte)b;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j + 2] = (byte)r;
                 }
-                #endregion
+            });
+            #endregion
 
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
 
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                return elapsedTime;
-            }
+            return elapsedTime;
         }
         #endregion
 
@@ -623,13 +565,13 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <param name="values">Histogram values.</param>
         /// <returns>Returns the average value.</returns>
         public static float HistogramMeanValue(ImageData data, int[] values) {
-            int i = 0;
             float mean = 0;
             float histogramSum = 0;
 
-            for (i = 0; i < 256; i++) {
+            Parallel.For(0, 256, i => {
                 histogramSum = histogramSum + (i*values[i]);
-            }
+            });
+
             mean = histogramSum/(float)(data.M_width*data.M_height);
 
             return mean;
@@ -641,38 +583,34 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the red channel.
         /// </returns>
-        public static int[] HistogramRed(ImageData data) {
-            unsafe {
-                int[] histogramR = new int[256];
-                int r = 0;
-                int i = 0;
-                int j = 0;
-                int index = 0;
+        public static unsafe int[] HistogramRed(ImageData data) {
+            int[] histogramR = new int[256];
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                for (i = 0; i < 256; i++) {
-                    histogramR[i] = 0;
+
+            Parallel.For(0, 256, i => {
+                histogramR[i] = 0;
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int r = currentLine[j + 2];
+                    histogramR[r]++;
                 }
+            });
 
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                        r = ptr[index + 2];
-                        histogramR[r]++;
-                    }
-                }
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return histogramR;
-            }
+            return histogramR;
         }
 
         /// <summary>
@@ -681,38 +619,33 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the green channel.
         /// </returns>
-        public static int[] HistogramGreen(ImageData data) {
-            unsafe {
-                int[] histogramG = new int[256];
-                int g = 0;
-                int i = 0;
-                int j = 0;
-                int index = 0;
+        public static unsafe int[] HistogramGreen(ImageData data) {
+            int[] histogramG = new int[256];
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                for (i = 0; i < 256; i++) {
-                    histogramG[i] = 0;
+            Parallel.For(0, 256, i => {
+                histogramG[i] = 0;
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int g = currentLine[j + 1];
+                    histogramG[g]++;
                 }
+            });
 
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                        g = ptr[index + 1];
-                        histogramG[g]++;
-                    }
-                }
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return histogramG;
-            }
+            return histogramG;
         }
 
         /// <summary>
@@ -721,38 +654,33 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the blue channel.
         /// </returns>
-        public static int[] HistogramBlue(ImageData data) {
-            unsafe {
-                int[] histogramB = new int[256];
-                int b = 0;
-                int i = 0;
-                int j = 0;
-                int index = 0;
+        public static unsafe int[] HistogramBlue(ImageData data) {
+            int[] histogramB = new int[256];
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-                for (i = 0; i < 256; i++) {
-                    histogramB[i] = 0;
+            Parallel.For(0, 256, i => {
+                histogramB[i] = 0;
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    histogramB[b]++;
                 }
+            });
 
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
 
-                        b = ptr[index];
-                        histogramB[b]++;
-                    }
-                }
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return histogramB;
-            }
+            return histogramB;
         }
 
         /// <summary>
@@ -761,665 +689,573 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the luminance values.
         /// </returns>
-        public static int[] HistogramLuminance(ImageData data) {
-            unsafe {
-                int[] histogramY = new int[256];
-                int r = 0;
-                int g = 0;
-                int b = 0;
-                int y = 0;
-                int i = 0;
-                int j = 0;
-                int index = 0;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
-
-                for (i = 0; i < 256; i++) {
-                    histogramY[i] = 0;
-                }
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        r = ptr[index + 2];
-                        g = ptr[index + 1];
-                        b = ptr[index];
-
-                        y = (int)(0.2126*r + 0.7152*g + 0.0722*b); // source = https://en.wikipedia.org/wiki/Grayscale#cite_note-5
-
-                        histogramY[y]++;
-                    }
-                }
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return histogramY;
-            }
-        }
-        #endregion
-
-        #region Histogram equalization [RGB]
-        public static TimeSpan HistogramEqualization_RGB(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int b = 0;
-                int g = 0;
-                int r = 0;
-                double[] possibilityR = new double[256];
-                double[] possibilityG = new double[256];
-                double[] possibilityB = new double[256];
-                int[] histogramR = new int[256];
-                int[] histogramG = new int[256];
-                int[] histogramB = new int[256];
-                double[] histogramEqR = new double[256];
-                double[] histogramEqG = new double[256];
-                double[] histogramEqB = new double[256];
-                int index = 0;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                for (i = 0; i < 256; i++) {
-                    histogramR[i] = 0;
-                    histogramG[i] = 0;
-                    histogramB[i] = 0;
-                }
-                backgroundWorker.ReportProgress(10);
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        b = ptr[index + 2];
-                        histogramB[b]++;
-                        g = ptr[index + 1];
-                        histogramG[g]++;
-                        r = ptr[index];
-                        histogramR[r]++;
-                    }
-                }
-                backgroundWorker.ReportProgress(40);
-
-                for (i = 0; i < 256; i++) {
-                    possibilityB[i] = histogramB[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
-                    possibilityG[i] = histogramG[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
-                    possibilityR[i] = histogramR[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
-                }
-                backgroundWorker.ReportProgress(60);
-
-                histogramEqB[0] = possibilityB[0];
-                histogramEqG[0] = possibilityG[0];
-                histogramEqR[0] = possibilityR[0];
-                for (i = 1; i < 256; i++) {
-                    histogramEqB[i] = histogramEqB[i - 1] + possibilityB[i];
-                    histogramEqG[i] = histogramEqG[i - 1] + possibilityG[i];
-                    histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
-                }
-                backgroundWorker.ReportProgress(70);
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        b = ptr[index + 2];
-                        b = (int)Math.Round(histogramEqB[b]*255);
-                        g = ptr[index + 1];
-                        g = (int)Math.Round(histogramEqG[g]*255);
-                        r = ptr[index];
-                        r = (int)Math.Round(histogramEqR[r]*255);
-
-                        if (b > 255) {
-                            b = 255;
-                        } else if (b < 0) {
-                            b = 0;
-                        }
-
-                        if (g > 255) {
-                            g = 255;
-                        } else if (g < 0) {
-                            g = 0;
-                        }
-
-                        if (r > 255) {
-                            r = 255;
-                        } else if (r < 0) {
-                            r = 0;
-                        }
-
-                        ptr[index + 2] = (byte)b;
-                        ptr[index + 1] = (byte)g;
-                        ptr[index] = (byte)r;
-                    }
-                }
-                backgroundWorker.ReportProgress(100);
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
-            }
-        }
-        #endregion
-
-        #region Histogram equalization [HSV]
-        public static TimeSpan HistogramEqualization_HSV(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                double max = 0.0;
-                double min = 0.0;
-                double chroma = 0.0;
-                double c = 0.0;
-                double x = 0.0;
-                double m = 0.0;
-                int[] histogramV = new int[256];
-                double[] sumHistogramEqualizationV = new double[256];
-                double[] sumHistogramV = new double[256];
-                int index = 0;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*data.M_height;
-                double[] red = new double[bytes];
-                double[] green = new double[bytes];
-                double[] blue = new double[bytes];
-                double[] hue = new double[bytes];
-                double[] value = new double[bytes];
-                double[] saturation = new double[bytes];
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                for (i = 0; i < 256; i++) {
-                    histogramV[i] = 0;
-                    sumHistogramEqualizationV[i] = 0.0;
-                }
-                backgroundWorker.ReportProgress(10);
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (bmpData.Stride*j) + (i*3);
-
-                        blue[index] = ptr[index];
-                        blue[index] = blue[index]/255.0;
-                        green[index + 1] = ptr[index + 1];
-                        green[index + 1] = green[index + 1]/255.0;
-                        red[index + 2] = ptr[index + 2];
-                        red[index + 2] = red[index + 2]/255.0;
-
-                        min = Math.Min(red[index + 2], Math.Min(green[index + 1], blue[index]));
-                        max = Math.Max(red[index + 2], Math.Max(green[index + 1], blue[index]));
-                        chroma = max - min;
-                        hue[index] = 0.0;
-                        saturation[index + 1] = 0.0;
-                        if (chroma != 0.0) {
-                            if (Math.Abs(red[index + 2] - max) < 0.00001) {
-                                hue[index] = ((green[index + 1] - blue[index])/chroma);
-                                hue[index] = hue[index]%6.0;
-                            } else if (Math.Abs(green[index + 1] - max) < 0.00001) {
-                                hue[index] = ((blue[index] - red[index + 2])/chroma) + 2;
-                            } else {
-                                hue[index] = ((red[index + 2] - green[index + 1])/chroma) + 4;
-                            }
-
-                            hue[index] = hue[index]*60.0;
-                            if (hue[index] < 0.0) {
-                                hue[index] = hue[index] + 360.0;
-                            }
-                            saturation[index + 1] = chroma/max;
-                        }
-                        value[index + 2] = max;
-
-                        value[index + 2] = value[index + 2]*255.0;
-
-                        if (value[index + 2] > 255.0) {
-                            value[index + 2] = 255.0;
-                        }
-                        if (value[index + 2] < 0.0) {
-                            value[index + 2] = 0.0;
-                        }
-
-                        k = (int)value[index + 2];
-                        histogramV[k]++;
-                    }
-                }
-                backgroundWorker.ReportProgress(40);
-
-                for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationV[i] = histogramV[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
-                }
-                backgroundWorker.ReportProgress(60);
-
-                sumHistogramV[0] = sumHistogramEqualizationV[0];
-                for (i = 1; i < 256; i++) {
-                    sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
-                }
-                backgroundWorker.ReportProgress(70);
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (bmpData.Stride*j) + (i*3);
-
-                        k = (int)value[index + 2];
-                        value[index + 2] = (byte)Math.Round(sumHistogramV[k]*255.0);
-                        value[index + 2] = value[index + 2]/255;
-
-                        c = value[index + 2]*saturation[index + 1];
-                        hue[index] = hue[index]/60.0;
-                        hue[index] = hue[index]%2;
-                        x = c*(1.0 - Math.Abs(hue[index] - 1.0));
-                        m = value[index + 2] - c;
-
-                        if (hue[index] >= 0.0 && hue[index] < 60.0) {
-                            red[index + 2] = c;
-                            green[index + 1] = x;
-                            blue[index] = 0;
-                        } else if (hue[index] >= 60.0 && hue[index] < 120.0) {
-                            red[index + 2] = x;
-                            green[index + 1] = c;
-                            blue[index] = 0;
-                        } else if (hue[index] >= 120.0 && hue[index] < 180.0) {
-                            red[index + 2] = 0;
-                            green[index + 1] = c;
-                            blue[index] = x;
-                        } else if (hue[index] >= 180.0 && hue[index] < 240.0) {
-                            red[index + 2] = 0;
-                            green[index + 1] = x;
-                            blue[index] = c;
-                        } else if (hue[index] >= 240.0 && hue[index] < 300.0) {
-                            red[index + 2] = x;
-                            green[index + 1] = 0;
-                            blue[index] = c;
-                        } else if (hue[index] >= 300.0 && hue[index] < 360.0) {
-                            red[index + 2] = c;
-                            green[index + 1] = 0;
-                            blue[index] = x;
-                        }
-
-                        red[index + 2] = red[index + 2] + m;
-                        green[index + 1] = green[index + 1] + m;
-                        blue[index] = blue[index] + m;
-
-                        red[index + 2] = red[index + 2]*255.0;
-                        green[index + 1] = green[index + 1]*255.0;
-                        blue[index] = blue[index]*255.0;
-
-                        if (red[index + 2] > 255.0) {
-                            red[index + 2] = 255.0;
-                        }
-
-                        if (red[index + 2] < 0.0) {
-                            red[index + 2] = 0.0;
-                        }
-
-                        if (green[index + 1] > 255.0) {
-                            green[index + 1] = 255.0;
-                        }
-
-                        if (green[index + 1] < 0.0) {
-                            green[index + 1] = 0.0;
-                        }
-
-                        if (blue[index] > 255.0) {
-                            blue[index] = 255.0;
-                        }
-
-                        if (blue[index] < 0.0) {
-                            blue[index] = 0.0;
-                        }
-
-                        ptr[index + 2] = (byte)red[index + 2];
-                        ptr[index + 1] = (byte)green[index + 1];
-                        ptr[index] = (byte)blue[index];
-                    }
-                }
-                backgroundWorker.ReportProgress(100);
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
-            }
-        }
-        #endregion
-
-        #region Histogram equalization [YUV]
-        public static TimeSpan HistogramEqualization_YUV(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                int[] histogramY = new int[256];
-                double[] sumHistogramEqualizationY = new double[256];
-                double[] sumHistogramY = new double[256];
-                int index = 0;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap. 
-                int bytes = Math.Abs(bmpData.Stride)*data.M_height;
-                double[] red = new double[bytes];
-                double[] green = new double[bytes];
-                double[] blue = new double[bytes];
-                double[] luminanceY = new double[bytes];
-                double[] chrominanceU = new double[bytes];
-                double[] chrominanceV = new double[bytes];
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                for (i = 0; i < 256; i++) {
-                    histogramY[i] = 0;
-                }
-                backgroundWorker.ReportProgress(10);
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (bmpData.Stride*j) + (i*3);
-
-                        blue[index] = ptr[index];
-                        blue[index] = blue[index]/255.0;
-                        green[index + 1] = ptr[index + 1];
-                        green[index + 1] = green[index + 1]/255.0;
-                        red[index + 2] = ptr[index + 2];
-                        red[index + 2] = red[index + 2]/255.0;
-
-                        luminanceY[index] = (0.299*red[index + 2]) + (0.587*green[index + 1]) + (0.114*blue[index]);
-                        chrominanceU[index + 1] = (-0.14713*red[index + 2]) - (0.28886*green[index + 1]) + (0.436*blue[index]);
-                        chrominanceV[index + 2] = (0.615*red[index + 2]) - (0.51499*green[index + 1]) - (0.10001*blue[index]);
-
-                        luminanceY[index] = luminanceY[index]*255.0;
-                        if (luminanceY[index] > 255.0) {
-                            luminanceY[index] = 255.0;
-                        }
-
-                        if (luminanceY[index] < 0.0) {
-                            luminanceY[index] = 0.0;
-                        }
-
-                        k = (int)luminanceY[index];
-                        histogramY[k]++;
-                    }
-                }
-                backgroundWorker.ReportProgress(40);
-
-                for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationY[i] = 0.0;
-                }
-                backgroundWorker.ReportProgress(50);
-
-                for (i = 0; i < 256; i++) {
-                    sumHistogramEqualizationY[i] = histogramY[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
-                }
-                backgroundWorker.ReportProgress(60);
-
-                sumHistogramY[0] = sumHistogramEqualizationY[0];
-                for (i = 1; i < 256; i++) {
-                    sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
-                }
-                backgroundWorker.ReportProgress(70);
-
-                for (i = 0; i < data.M_width; i++) {
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (bmpData.Stride*j) + (i*3);
-
-                        k = (int)luminanceY[index];
-                        luminanceY[index] = (byte)Math.Round(sumHistogramY[k]*255.0);
-                        luminanceY[index] = luminanceY[index]/255;
-
-                        red[index + 2] = luminanceY[index] + (0.0*chrominanceU[index + 1]) + (1.13983*chrominanceV[index + 2]);
-                        green[index + 1] = luminanceY[index] + (-0.39465*chrominanceU[index + 1]) + (-0.58060*chrominanceV[index + 2]);
-                        blue[index] = luminanceY[index] + (2.03211*chrominanceU[index + 1]) + (0.0*chrominanceV[index + 2]);
-
-                        red[index + 2] = red[index + 2]*255.0;
-                        green[index + 1] = green[index + 1]*255.0;
-                        blue[index] = blue[index]*255.0;
-
-                        if (red[index + 2] > 255.0) {
-                            red[index + 2] = 255.0;
-                        }
-
-                        if (red[index + 2] < 0.0) {
-                            red[index + 2] = 0.0;
-                        }
-
-                        if (green[index + 1] > 255.0) {
-                            green[index + 1] = 255.0;
-                        }
-
-                        if (green[index + 1] < 0.0) {
-                            green[index + 1] = 0.0;
-                        }
-
-                        if (blue[index] > 255.0) {
-                            blue[index] = 255.0;
-                        }
-
-                        if (blue[index] < 0.0) {
-                            blue[index] = 0.0;
-                        }
-
-                        ptr[index + 2] = (byte)red[index + 2];
-                        ptr[index + 1] = (byte)green[index + 1];
-                        ptr[index] = (byte)blue[index];
-                    }
-                }
-                backgroundWorker.ReportProgress(100);
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
-            }
-        }
-        #endregion
-
-        #region Image summarization
-        public static TimeSpan ImageSummarization(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int b = 0;
-                int g = 0;
-                int r = 0;
-                int index = 0;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-                        r = ptr[index + 2] + ptr[index + 2]; // R
-                        g = ptr[index + 1] + ptr[index + 1]; // G
-                        b = ptr[index] + ptr[index]; // B
-
-                        if (r > 255) {
-                            r = 255;
-                        }
-
-                        if (g > 255) {
-                            g = 255;
-                        }
-
-                        if (b > 255) {
-                            b = 255;
-                        }
-
-                        ptr[index + 2] = (byte)r; // R
-                        ptr[index + 1] = (byte)g; // G
-                        ptr[index] = (byte)b; // B
-                    }
-                }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
-            }
-        }
-        #endregion
-
-        #region Image subtraction
-        public static TimeSpan ImageSubtraction(ImageData data, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int b = 0;
-                int g = 0;
-                int r = 0;
-                int index = 0;
-
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
-
-                Stopwatch watch = Stopwatch.StartNew();
-
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        r = ptr[index + 2] - ptr[index + 2]; // R
-                        g = ptr[index + 1] - ptr[index + 1]; // G
-                        b = ptr[index] - ptr[index]; // B
-
-                        ptr[index + 2] = (byte)r; // R
-                        ptr[index + 1] = (byte)g; // G
-                        ptr[index] = (byte)b; // B
-                    }
-                }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
-            }
-        }
-        #endregion
-
-        #region Edge detection [Sobel]
-        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY, BackgroundWorker backgroundWorker) {
-            int i = 0;
-            int j = 0;
-            int k = 0;
-            int l = 0;
-            double tR = 0.0;
-            double tG = 0.0;
-            double tB = 0.0;
-            int txR = 0;
-            int txG = 0;
-            int txB = 0;
-            int tyR = 0;
-            int tyG = 0;
-            int tyB = 0;
-            int index = 0;
+        public static unsafe int[] HistogramLuminance(ImageData data) {
+            int[] histogramY = new int[256];
 
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
-            // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride) * data.M_bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-            byte[] bgrValues = new byte[bytes];
+            Parallel.For(0, 256, i => {
+                histogramY[i] = 0;
+            });
 
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    int y = (int)(0.2126*r + 0.7152*g + 0.0722*b); // source = https://en.wikipedia.org/wiki/Grayscale#cite_note-5
+                    histogramY[y]++;
+                }
+            });
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return histogramY;
+        }
+        #endregion
+
+        #region Histogram equalization [RGB]
+        public static unsafe TimeSpan HistogramEqualization_RGB(ImageData data) {
+            double[] possibilityR = new double[256];
+            double[] possibilityG = new double[256];
+            double[] possibilityB = new double[256];
+            int[] histogramR = new int[256];
+            int[] histogramG = new int[256];
+            int[] histogramB = new int[256];
+            double[] histogramEqR = new double[256];
+            double[] histogramEqG = new double[256];
+            double[] histogramEqB = new double[256];
+
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            #region Algorithm
+            Parallel.For(0, 256, i => {
+                histogramR[i] = 0;
+                histogramG[i] = 0;
+                histogramB[i] = 0;
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    histogramB[b]++;
+                    histogramG[g]++;
+                    histogramR[r]++;
+                }
+            });
+
+            Parallel.For(0, 256, i => {
+                possibilityB[i] = histogramB[i]/(double)(data.M_width*data.M_height);
+                possibilityG[i] = histogramG[i]/(double)(data.M_width*data.M_height);
+                possibilityR[i] = histogramR[i]/(double)(data.M_width*data.M_height);
+            });
+
+            histogramEqB[0] = possibilityB[0];
+            histogramEqG[0] = possibilityG[0];
+            histogramEqR[0] = possibilityR[0];
+            Parallel.For(1, 256, i => {
+                histogramEqB[i] = histogramEqB[i - 1] + possibilityB[i];
+                histogramEqG[i] = histogramEqG[i - 1] + possibilityG[i];
+                histogramEqR[i] = histogramEqR[i - 1] + possibilityR[i];
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j];
+                    int g = currentLine[j + 1];
+                    int r = currentLine[j + 2];
+                    b = (int)Math.Round(histogramEqB[b]*255);
+                    g = (int)Math.Round(histogramEqG[g]*255);
+                    r = (int)Math.Round(histogramEqR[r]*255);
+
+                    if (b > 255) {
+                        b = 255;
+                    } else if (b < 0) {
+                        b = 0;
+                    }
+
+                    if (g > 255) {
+                        g = 255;
+                    } else if (g < 0) {
+                        g = 0;
+                    }
+
+                    if (r > 255) {
+                        r = 255;
+                    } else if (r < 0) {
+                        r = 0;
+                    }
+
+                    currentLine[j] = (byte)b;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j + 2] = (byte)r;
+                }
+            });
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Histogram equalization [HSV]
+        public static unsafe TimeSpan HistogramEqualization_HSV(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride)*data.M_height;
+            double[] hsv = new double[widthInBytes];
+            int[] histogramV = new int[256];
+            double[] sumHistogramEqualizationV = new double[256];
+            double[] sumHistogramV = new double[256];
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            #region Algorithm
+            Parallel.For(0, 256, i => {
+                histogramV[i] = 0;
+                sumHistogramEqualizationV[i] = 0.0;
+                sumHistogramV[i] = 0.0;
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int index = (bmpData.Stride*j) + (i*3);
+                    double b = currentLine[j];
+                    double g = currentLine[j + 1];
+                    double r = currentLine[j + 2];
+
+                    b = b/255.0;
+                    g = g/255.0;
+                    r = r/255.0;
+
+                    double min = Math.Min(r, Math.Min(g, b));
+                    double max = Math.Max(r, Math.Max(g, b));
+                    double chroma = max - min;
+                    hsv[index + 2] = 0.0;
+                    hsv[index + 1] = 0.0;
+                    if (chroma != 0.0) {
+                        if (Math.Abs(r - max) < 0.00001) {
+                            hsv[index + 2] = ((g - b)/chroma);
+                            hsv[index + 2] = hsv[index + 2]%6.0;
+                        } else if (Math.Abs(g - max) < 0.00001) {
+                            hsv[index + 2] = ((b - r)/chroma) + 2;
+                        } else {
+                            hsv[index + 2] = ((r - g)/chroma) + 4;
+                        }
+
+                        hsv[index + 2] = hsv[index + 2]*60.0;
+                        if (hsv[index + 2] < 0.0) {
+                            hsv[index + 2] = hsv[index + 2] + 360.0;
+                        }
+                        hsv[index + 1] = chroma/max;
+                    }
+                    hsv[index] = max;
+
+                    hsv[index] = hsv[index]*255.0;
+
+                    if (hsv[index] > 255.0) {
+                        hsv[index] = 255.0;
+                    }
+                    if (hsv[index] < 0.0) {
+                        hsv[index] = 0.0;
+                    }
+
+                    int k = (int)hsv[index];
+                    histogramV[k]++;
+                }
+            });
+
+            Parallel.For(0, 256, i => {
+                sumHistogramEqualizationV[i] = histogramV[i]/(double)(data.M_width*data.M_height);
+            });
+
+            sumHistogramV[0] = sumHistogramEqualizationV[0];
+            Parallel.For(1, 256, i => {
+                sumHistogramV[i] = sumHistogramV[i - 1] + sumHistogramEqualizationV[i];
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int index = (bmpData.Stride*j) + (i*3);
+                    double b = currentLine[j];
+                    double g = currentLine[j + 1];
+                    double r = currentLine[j + 2];
+
+                    int k = (int)hsv[index];
+                    hsv[index] = (byte)Math.Round(sumHistogramV[k]*255.0);
+                    hsv[index] = hsv[index]/255;
+
+                    double c = hsv[index]*hsv[index + 1];
+                    hsv[index + 2] = hsv[index + 2]/60.0;
+                    hsv[index + 2] = hsv[index + 2]%2;
+                    double x = c*(1.0 - Math.Abs(hsv[index + 2] - 1.0));
+                    double m = hsv[index] - c;
+
+                    if (hsv[index + 2] >= 0.0 && hsv[index + 2] < 60.0) {
+                        b = 0;
+                        g = x;
+                        r = c;
+                    } else if (hsv[index + 2] >= 60.0 && hsv[index + 2] < 120.0) {
+                        b = 0;
+                        g = c;
+                        r = x;
+                    } else if (hsv[index + 2] >= 120.0 && hsv[index + 2] < 180.0) {
+                        b = x;
+                        g = c;
+                        r = 0;
+                    } else if (hsv[index + 2] >= 180.0 && hsv[index + 2] < 240.0) {
+                        b = c;
+                        g = x;
+                        r = 0;
+                    } else if (hsv[index + 2] >= 240.0 && hsv[index + 2] < 300.0) {
+                        b = c;
+                        g = 0;
+                        r = x;
+                    } else if (hsv[index + 2] >= 300.0 && hsv[index + 2] < 360.0) {
+                        b = x;
+                        g = 0;
+                        r = c;
+                    }
+
+                    b = b + m;
+                    g = g + m;
+                    r = r + m;
+
+                    b = b*255.0;
+                    g = g*255.0;
+                    r = r*255.0;
+
+                    if (r > 255.0) {
+                        r = 255.0;
+                    }
+
+                    if (r < 0.0) {
+                        r = 0.0;
+                    }
+
+                    if (g > 255.0) {
+                        g = 255.0;
+                    }
+
+                    if (g < 0.0) {
+                        g = 0.0;
+                    }
+
+                    if (b > 255.0) {
+                        b = 255.0;
+                    }
+
+                    if (b < 0.0) {
+                        b = 0.0;
+                    }
+
+                    currentLine[j] = (byte)b;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j + 2] = (byte)r;
+                }
+            });
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Histogram equalization [YUV]
+        public static unsafe TimeSpan HistogramEqualization_YUV(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride)*data.M_height;
+            double[] yuv = new double[widthInBytes];
+            int[] histogramY = new int[256];
+            double[] sumHistogramEqualizationY = new double[256];
+            double[] sumHistogramY = new double[256];
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            #region Algorithm
+            Parallel.For(0, 256, i => {
+                histogramY[i] = 0;
+                sumHistogramEqualizationY[i] = 0;
+                sumHistogramY[i] = 0;
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    double b = currentLine[j];
+                    double g = currentLine[j + 1];
+                    double r = currentLine[j + 2];
+                    b = b/255.0;
+                    g = g/255.0;
+                    r = r/255.0;
+
+                    yuv[j] = (0.299*r) + (0.587*g) + (0.114*b);
+                    yuv[j + 1] = (-0.14713*r) - (0.28886*g) + (0.436*b);
+                    yuv[j + 2] = (0.615*r) - (0.51499*g) - (0.10001*b);
+
+                    yuv[j] = yuv[j]*255.0;
+                    if (yuv[j] > 255.0) {
+                        yuv[j] = 255.0;
+                    }
+
+                    if (yuv[j] < 0.0) {
+                        yuv[j] = 0.0;
+                    }
+
+                    int k = (int)yuv[j];
+                    histogramY[k]++;
+                }
+            });
+
+            Parallel.For(0, 256, i => {
+                sumHistogramEqualizationY[i] = histogramY[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
+            });
+
+            sumHistogramY[0] = sumHistogramEqualizationY[0];
+            Parallel.For(1, 256, i => {
+                sumHistogramY[i] = sumHistogramY[i - 1] + sumHistogramEqualizationY[i];
+            });
+
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    double b = currentLine[j];
+                    double g = currentLine[j + 1];
+                    double r = currentLine[j + 2];
+
+                    int k = (int)yuv[j];
+                    yuv[j] = (byte)Math.Round(sumHistogramY[k]*255.0);
+                    yuv[j] = yuv[j]/255;
+
+                    r = yuv[j] + (0.0*yuv[j + 1]) + (1.13983*yuv[j + 2]);
+                    g = yuv[j] + (-0.39465*yuv[j + 1]) + (-0.58060*yuv[j + 2]);
+                    b = yuv[j] + (2.03211*yuv[j + 1]) + (0.0*yuv[j + 2]);
+
+                    r = r*255.0;
+                    g = g*255.0;
+                    b = b*255.0;
+
+                    if (r > 255.0) {
+                        r = 255.0;
+                    }
+
+                    if (r < 0.0) {
+                        r = 0.0;
+                    }
+
+                    if (g > 255.0) {
+                        g = 255.0;
+                    }
+
+                    if (g < 0.0) {
+                        g = 0.0;
+                    }
+
+                    if (b > 255.0) {
+                        b = 255.0;
+                    }
+
+                    if (b < 0.0) {
+                        b = 0.0;
+                    }
+
+                    currentLine[j + 2] = (byte)r;
+                    currentLine[j + 1] = (byte)g;
+                    currentLine[j] = (byte)b;
+                }
+            });
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Image summarization
+        public static unsafe TimeSpan ImageSummarization(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j] + currentLine[j]; // B
+                    int g = currentLine[j + 1] + currentLine[j + 1]; // G
+                    int r = currentLine[j + 2] + currentLine[j + 2]; // R
+
+                    if (r > 255) {
+                        r = 255;
+                    }
+
+                    if (g > 255) {
+                        g = 255;
+                    }
+
+                    if (b > 255) {
+                        b = 255;
+                    }
+
+                    currentLine[j] = (byte)b; // B
+                    currentLine[j + 1] = (byte)g; // G
+                    currentLine[j + 2] = (byte)r; // R
+                }
+            });
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Image subtraction
+        public static unsafe TimeSpan ImageSubtraction(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            #region Algorithm
+            Parallel.For(0, heightInPixels, i => {
+                byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                    int b = currentLine[j] - currentLine[j]; // B
+                    int g = currentLine[j + 1] - currentLine[j + 1]; // G
+                    int r = currentLine[j + 2] - currentLine[j + 2]; // R
+
+                    currentLine[j] = (byte)b; // B
+                    currentLine[j + 1] = (byte)g; // G
+                    currentLine[j + 2] = (byte)r; // R
+                }
+            });
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Edge detection [Sobel]
+        public static unsafe TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+            int heightInPixels = bmpData.Height;
+            int widthInBytes = bmpData.Width*bytesPerPixel;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
 
             Stopwatch watch = Stopwatch.StartNew();
 
             #region Algorithm
             switch (sizeMask) {
                 case 3:
-                    for (i = 1; i < data.M_width - 1; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                        for (j = 1; j < data.M_height - 1; j++) {
-                            txR = 0;
-                            txG = 0;
-                            txB = 0;
-                            for (k = 0; k < sizeMask; k++) {
-                                for (l = 0; l < sizeMask; l++) {
-                                    index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                    Parallel.For(1, heightInPixels - 1, i => {
+                        byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                        for (int j = 1; j < widthInBytes - 1; j = j + bytesPerPixel) {
+                            int b = currentLine[j];
+                            int g = currentLine[j + 1];
+                            int r = currentLine[j + 2];
 
-                                    txR = txR + rgbValues[index + 2]*maskX[k, l];
-                                    txG = txG + rgbValues[index + 1] * maskX[k, l];
-                                    txB = txB + rgbValues[index]*maskX[k, l];
+                            int txR = 0;
+                            int txG = 0;
+                            int txB = 0;
+                            for (int k = 0; k < sizeMask; k++) {
+                                for (int l = 0; l < sizeMask; l++) {
+                                    txB = txB + b*maskX[k, l];
+                                    txG = txG + g*maskX[k, l];
+                                    txR = txR + r*maskX[k, l];
                                 }
                             }
 
-                            tyR = 0;
-                            tyG = 0;
-                            tyB = 0;
-                            for (k = 0; k < sizeMask; k++) {
-                                for (l = 0; l < sizeMask; l++) {
-                                    index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-
-                                    tyR = tyR + rgbValues[index + 2] * maskY[k, l];
-                                    tyG = tyG + rgbValues[index + 1] * maskY[k, l];
-                                    tyB = tyB + rgbValues[index] * maskY[k, l];
+                            int tyR = 0;
+                            int tyG = 0;
+                            int tyB = 0;
+                            for (int k = 0; k < sizeMask; k++) {
+                                for (int l = 0; l < sizeMask; l++) {
+                                    tyB = tyB + b*maskY[k, l];
+                                    tyG = tyG + g*maskY[k, l];
+                                    tyR = tyR + r*maskY[k, l];
                                 }
                             }
 
-                            tR = Math.Sqrt(txR*txR + tyR*tyR);
-                            tG = Math.Sqrt(txG*txG + tyG*tyG);
-                            tB = Math.Sqrt(txB*txB + tyB*tyB);
+                            double tR = Math.Sqrt(txR*txR + tyR*tyR);
+                            double tG = Math.Sqrt(txG*txG + tyG*tyG);
+                            double tB = Math.Sqrt(txB*txB + tyB*tyB);
 
                             if (tR > 255.0) {
                                 tR = 255.0;
@@ -1439,45 +1275,45 @@ namespace ImageEdit_WPF.HelperClasses {
                                 tB = 0.0;
                             }
 
-                            index = (j*bmpData.Stride) + (i*3);
-
-                            bgrValues[index + 2] = (byte)tR;
-                            bgrValues[index + 1] = (byte)tG;
-                            bgrValues[index] = (byte)tB;
+                            currentLine[j] = (byte)tB;
+                            currentLine[j + 1] = (byte)tG;
+                            currentLine[j + 2] = (byte)tR;
                         }
-                    }
+                    });
                     break;
                 case 5:
-                    for (i = 2; i < data.M_width - 2; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                        for (j = 2; j < data.M_height - 2; j++) {
-                            txR = 0;
-                            txG = 0;
-                            txB = 0;
-                            for (k = 0; k < sizeMask; k++) {
-                                for (l = 0; l < sizeMask; l++) {
-                                    index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                    txR = txR + rgbValues[index + 2] * maskX[k, l];
-                                    txG = txG + rgbValues[index + 1] * maskX[k, l];
-                                    txB = txB + rgbValues[index] * maskX[k, l];
+                    Parallel.For(0, heightInPixels, i => {
+                        byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                        for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                            int b = currentLine[j];
+                            int g = currentLine[j + 1];
+                            int r = currentLine[j + 2];
+
+                            int txR = 0;
+                            int txG = 0;
+                            int txB = 0;
+                            for (int k = 0; k < sizeMask; k++) {
+                                for (int l = 0; l < sizeMask; l++) {
+                                    txB = txB + b*maskX[k, l];
+                                    txG = txG + g*maskX[k, l];
+                                    txR = txR + r*maskX[k, l];
                                 }
                             }
 
-                            tyR = 0;
-                            tyG = 0;
-                            tyB = 0;
-                            for (k = 0; k < sizeMask; k++) {
-                                for (l = 0; l < sizeMask; l++) {
-                                    index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                    tyR = tyR + rgbValues[index + 2] * maskY[k, l];
-                                    tyG = tyG + rgbValues[index + 1] * maskY[k, l];
-                                    tyB = tyB + rgbValues[index] * maskY[k, l];
+                            int tyR = 0;
+                            int tyG = 0;
+                            int tyB = 0;
+                            for (int k = 0; k < sizeMask; k++) {
+                                for (int l = 0; l < sizeMask; l++) {
+                                    tyB = tyB + b*maskY[k, l];
+                                    tyG = tyG + g*maskY[k, l];
+                                    tyR = tyR + r*maskY[k, l];
                                 }
                             }
 
-                            tR = Math.Sqrt(txR*txR + tyR*tyR);
-                            tG = Math.Sqrt(txG*txG + tyG*tyG);
-                            tB = Math.Sqrt(txB*txB + tyB*tyB);
+                            double tR = Math.Sqrt(txR*txR + tyR*tyR);
+                            double tG = Math.Sqrt(txG*txG + tyG*tyG);
+                            double tB = Math.Sqrt(txB*txB + tyB*tyB);
 
                             if (tR > 255.0) {
                                 tR = 255.0;
@@ -1497,45 +1333,45 @@ namespace ImageEdit_WPF.HelperClasses {
                                 tB = 0.0;
                             }
 
-                            index = (j*bmpData.Stride) + (i*3);
-
-                            bgrValues[index + 2] = (byte)tR;
-                            bgrValues[index + 1] = (byte)tG;
-                            bgrValues[index] = (byte)tB;
+                            currentLine[j] = (byte)tB;
+                            currentLine[j + 1] = (byte)tG;
+                            currentLine[j + 2] = (byte)tR;
                         }
-                    }
+                    });
                     break;
                 case 7:
-                    for (i = 3; i < data.M_width - 3; i++) {
-                        backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                        for (j = 3; j < data.M_height - 3; j++) {
-                            txR = 0;
-                            txG = 0;
-                            txB = 0;
-                            for (k = 0; k < sizeMask; k++) {
-                                for (l = 0; l < sizeMask; l++) {
-                                    index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                    txR = txR + rgbValues[index + 2] * maskX[k, l];
-                                    txG = txG + rgbValues[index + 1] * maskX[k, l];
-                                    txB = txB + rgbValues[index] * maskX[k, l];
+                    Parallel.For(0, heightInPixels, i => {
+                        byte* currentLine = ptrFirstPixel + (i*bmpData.Stride);
+                        for (int j = 0; j < widthInBytes; j = j + bytesPerPixel) {
+                            int b = currentLine[j];
+                            int g = currentLine[j + 1];
+                            int r = currentLine[j + 2];
+
+                            int txR = 0;
+                            int txG = 0;
+                            int txB = 0;
+                            for (int k = 0; k < sizeMask; k++) {
+                                for (int l = 0; l < sizeMask; l++) {
+                                    txB = txB + b*maskX[k, l];
+                                    txG = txG + g*maskX[k, l];
+                                    txR = txR + r*maskX[k, l];
                                 }
                             }
 
-                            tyR = 0;
-                            tyG = 0;
-                            tyB = 0;
-                            for (k = 0; k < sizeMask; k++) {
-                                for (l = 0; l < sizeMask; l++) {
-                                    index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                    tyR = tyR + rgbValues[index + 2] * maskY[k, l];
-                                    tyG = tyG + rgbValues[index + 1] * maskY[k, l];
-                                    tyB = tyB + rgbValues[index] * maskY[k, l];
+                            int tyR = 0;
+                            int tyG = 0;
+                            int tyB = 0;
+                            for (int k = 0; k < sizeMask; k++) {
+                                for (int l = 0; l < sizeMask; l++) {
+                                    tyB = tyB + b*maskY[k, l];
+                                    tyG = tyG + g*maskY[k, l];
+                                    tyR = tyR + r*maskY[k, l];
                                 }
                             }
 
-                            tR = Math.Sqrt(txR*txR + tyR*tyR);
-                            tG = Math.Sqrt(txG*txG + tyG*tyG);
-                            tB = Math.Sqrt(txB*txB + tyB*tyB);
+                            double tR = Math.Sqrt(txR*txR + tyR*tyR);
+                            double tG = Math.Sqrt(txG*txG + tyG*tyG);
+                            double tB = Math.Sqrt(txB*txB + tyB*tyB);
 
                             if (tR > 255.0) {
                                 tR = 255.0;
@@ -1555,32 +1391,17 @@ namespace ImageEdit_WPF.HelperClasses {
                                 tB = 0.0;
                             }
 
-                            index = (j*bmpData.Stride) + (i*3);
-
-                            bgrValues[index + 2] = (byte)tR;
-                            bgrValues[index + 1] = (byte)tG;
-                            bgrValues[index] = (byte)tB;
+                            currentLine[j] = (byte)tB;
+                            currentLine[j + 1] = (byte)tG;
+                            currentLine[j + 2] = (byte)tR;
                         }
-                    }
+                    });
                     break;
             }
             #endregion
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
-
-            for (i = 0; i < data.M_width; i++) {
-                for (j = 0; j < data.M_height; j++) {
-                    index = (j*bmpData.Stride) + (i*3);
-
-                    rgbValues[index + 2] = bgrValues[index + 2];
-                    rgbValues[index + 1] = bgrValues[index + 1];
-                    rgbValues[index] = bgrValues[index];
-                }
-            }
-
-            // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
@@ -1590,637 +1411,615 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Gaussian blur
-        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                int l = 0;
-                double tR = 0.0;
-                double tG = 0.0;
-                double tB = 0.0;
-                int sumMask = 0;
-                int index = 0;
+        public static unsafe TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            int l = 0;
+            double tR = 0.0;
+            double tG = 0.0;
+            double tB = 0.0;
+            int sumMask = 0;
+            int index = 0;
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            byte* ptr = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                switch (sizeMask) {
-                    case 3:
-                        for (i = 0; i < sizeMask; i++) {
-                            for (j = 0; j < sizeMask; j++) {
-                                sumMask += maskX[i, j];
-                            }
+            #region Algorithm
+            switch (sizeMask) {
+                case 3:
+                    for (i = 0; i < sizeMask; i++) {
+                        for (j = 0; j < sizeMask; j++) {
+                            sumMask += maskX[i, j];
                         }
+                    }
 
-                        for (i = 1; i < data.M_width - 1; i++) {
-                            backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                            for (j = 1; j < data.M_height - 1; j++) {
+                    for (i = 1; i < data.M_width - 1; i++) {
+                        for (j = 1; j < data.M_height - 1; j++) {
+                            tR = 0.0;
+                            tG = 0.0;
+                            tB = 0.0;
+                            for (k = 0; k < sizeMask; k++) {
+                                for (l = 0; l < sizeMask; l++) {
+                                    index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
+                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
+                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                }
+                            }
+
+                            if (tR > 255.0) {
+                                tR = 255.0;
+                            } else if (tR < 0.0) {
                                 tR = 0.0;
+                            }
+
+                            if (tG > 255.0) {
+                                tG = 255.0;
+                            } else if (tG < 0.0) {
                                 tG = 0.0;
+                            }
+
+                            if (tB > 255.0) {
+                                tB = 255.0;
+                            } else if (tB < 0.0) {
                                 tB = 0.0;
-                                for (k = 0; k < sizeMask; k++) {
-                                    for (l = 0; l < sizeMask; l++) {
-                                        index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-                                        tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                        tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                        tB = tB + (ptr[index]*maskX[k, l])/sumMask;
-                                    }
-                                }
-
-                                if (tR > 255.0) {
-                                    tR = 255.0;
-                                } else if (tR < 0.0) {
-                                    tR = 0.0;
-                                }
-
-                                if (tG > 255.0) {
-                                    tG = 255.0;
-                                } else if (tG < 0.0) {
-                                    tG = 0.0;
-                                }
-
-                                if (tB > 255.0) {
-                                    tB = 255.0;
-                                } else if (tB < 0.0) {
-                                    tB = 0.0;
-                                }
-
-                                index = (j*bmpData.Stride) + (i*3);
-
-                                ptr[index + 2] = (byte)tR;
-                                ptr[index + 1] = (byte)tG;
-                                ptr[index] = (byte)tB;
                             }
-                        }
-                        break;
-                    case 5:
-                        for (i = 0; i < sizeMask; i++) {
-                            for (j = 0; j < sizeMask; j++) {
-                                sumMask += maskX[i, j];
-                            }
-                        }
 
-                        for (i = 2; i < data.M_width - 2; i++) {
-                            backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                            for (j = 2; j < data.M_height - 2; j++) {
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            ptr[index + 2] = (byte)tR;
+                            ptr[index + 1] = (byte)tG;
+                            ptr[index] = (byte)tB;
+                        }
+                    }
+                    break;
+                case 5:
+                    for (i = 0; i < sizeMask; i++) {
+                        for (j = 0; j < sizeMask; j++) {
+                            sumMask += maskX[i, j];
+                        }
+                    }
+
+                    for (i = 2; i < data.M_width - 2; i++) {
+                        for (j = 2; j < data.M_height - 2; j++) {
+                            tR = 0.0;
+                            tG = 0.0;
+                            tB = 0.0;
+                            for (k = 0; k < sizeMask; k++) {
+                                for (l = 0; l < sizeMask; l++) {
+                                    index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
+                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
+                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
+                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                }
+                            }
+
+                            if (tR > 255.0) {
+                                tR = 255.0;
+                            } else if (tR < 0.0) {
                                 tR = 0.0;
+                            }
+
+                            if (tG > 255.0) {
+                                tG = 255.0;
+                            } else if (tG < 0.0) {
                                 tG = 0.0;
+                            }
+
+                            if (tB > 255.0) {
+                                tB = 255.0;
+                            } else if (tB < 0.0) {
                                 tB = 0.0;
-                                for (k = 0; k < sizeMask; k++) {
-                                    for (l = 0; l < sizeMask; l++) {
-                                        index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                        tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                        tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                        tB = tB + (ptr[index]*maskX[k, l])/sumMask;
-                                    }
-                                }
-
-                                if (tR > 255.0) {
-                                    tR = 255.0;
-                                } else if (tR < 0.0) {
-                                    tR = 0.0;
-                                }
-
-                                if (tG > 255.0) {
-                                    tG = 255.0;
-                                } else if (tG < 0.0) {
-                                    tG = 0.0;
-                                }
-
-                                if (tB > 255.0) {
-                                    tB = 255.0;
-                                } else if (tB < 0.0) {
-                                    tB = 0.0;
-                                }
-
-                                index = (j*bmpData.Stride) + (i*3);
-
-                                ptr[index + 2] = (byte)tR;
-                                ptr[index + 1] = (byte)tG;
-                                ptr[index] = (byte)tB;
                             }
-                        }
-                        break;
-                    case 7:
-                        for (i = 0; i < sizeMask; i++) {
-                            for (j = 0; j < sizeMask; j++) {
-                                sumMask += maskX[i, j];
-                            }
-                        }
 
-                        for (i = 3; i < data.M_width - 3; i++) {
-                            backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                            for (j = 3; j < data.M_height - 3; j++) {
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            ptr[index + 2] = (byte)tR;
+                            ptr[index + 1] = (byte)tG;
+                            ptr[index] = (byte)tB;
+                        }
+                    }
+                    break;
+                case 7:
+                    for (i = 0; i < sizeMask; i++) {
+                        for (j = 0; j < sizeMask; j++) {
+                            sumMask += maskX[i, j];
+                        }
+                    }
+
+                    for (i = 3; i < data.M_width - 3; i++) {
+                        for (j = 3; j < data.M_height - 3; j++) {
+                            tR = 0.0;
+                            tG = 0.0;
+                            tB = 0.0;
+                            for (k = 0; k < sizeMask; k++) {
+                                for (l = 0; l < sizeMask; l++) {
+                                    index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
+                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
+                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
+                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                }
+                            }
+
+                            if (tR > 255.0) {
+                                tR = 255.0;
+                            } else if (tR < 0.0) {
                                 tR = 0.0;
-                                tG = 0.0;
-                                tB = 0.0;
-                                for (k = 0; k < sizeMask; k++) {
-                                    for (l = 0; l < sizeMask; l++) {
-                                        index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                        tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                        tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                        tB = tB + (ptr[index]*maskX[k, l])/sumMask;
-                                    }
-                                }
-
-                                if (tR > 255.0) {
-                                    tR = 255.0;
-                                } else if (tR < 0.0) {
-                                    tR = 0.0;
-                                }
-
-                                if (tG > 255.0) {
-                                    tG = 255.0;
-                                } else if (tG < 0.0) {
-                                    tG = 0.0;
-                                }
-
-                                if (tB > 255.0) {
-                                    tB = 255.0;
-                                } else if (tB < 0.0) {
-                                    tB = 0.0;
-                                }
-
-                                index = (j*bmpData.Stride) + (i*3);
-
-                                ptr[index + 2] = (byte)tR;
-                                ptr[index + 1] = (byte)tG;
-                                ptr[index] = (byte)tB;
                             }
+
+                            if (tG > 255.0) {
+                                tG = 255.0;
+                            } else if (tG < 0.0) {
+                                tG = 0.0;
+                            }
+
+                            if (tB > 255.0) {
+                                tB = 255.0;
+                            } else if (tB < 0.0) {
+                                tB = 0.0;
+                            }
+
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            ptr[index + 2] = (byte)tR;
+                            ptr[index + 1] = (byte)tG;
+                            ptr[index] = (byte)tB;
                         }
-                        break;
-                }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
+                    }
+                    break;
             }
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
         #endregion
 
         #region Sharpen
-        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                int l = 0;
-                double tR = 0.0;
-                double tG = 0.0;
-                double tB = 0.0;
-                int sumMask = 0;
-                int index = 0;
+        public static unsafe TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            int l = 0;
+            double tR = 0.0;
+            double tG = 0.0;
+            double tB = 0.0;
+            int sumMask = 0;
+            int index = 0;
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            byte* ptr = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                switch (sizeMask) {
-                    case 3:
-                        for (i = 0; i < sizeMask; i++) {
-                            for (j = 0; j < sizeMask; j++) {
-                                sumMask += maskX[i, j];
-                            }
+            #region Algorithm
+            switch (sizeMask) {
+                case 3:
+                    for (i = 0; i < sizeMask; i++) {
+                        for (j = 0; j < sizeMask; j++) {
+                            sumMask += maskX[i, j];
                         }
+                    }
 
-                        for (i = 1; i < data.M_width - 1; i++) {
-                            backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                            for (j = 1; j < data.M_height - 1; j++) {
+                    for (i = 1; i < data.M_width - 1; i++) {
+                        for (j = 1; j < data.M_height - 1; j++) {
+                            tR = 0.0;
+                            tG = 0.0;
+                            tB = 0.0;
+                            for (k = 0; k < sizeMask; k++) {
+                                for (l = 0; l < sizeMask; l++) {
+                                    index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
+                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
+                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
+                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                }
+                            }
+
+                            if (tR > 255.0) {
+                                tR = 255.0;
+                            } else if (tR < 0.0) {
                                 tR = 0.0;
+                            }
+
+                            if (tG > 255.0) {
+                                tG = 255.0;
+                            } else if (tG < 0.0) {
                                 tG = 0.0;
+                            }
+
+                            if (tB > 255.0) {
+                                tB = 255.0;
+                            } else if (tB < 0.0) {
                                 tB = 0.0;
-                                for (k = 0; k < sizeMask; k++) {
-                                    for (l = 0; l < sizeMask; l++) {
-                                        index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-                                        tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                        tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                        tB = tB + (ptr[index]*maskX[k, l])/sumMask;
-                                    }
-                                }
-
-                                if (tR > 255.0) {
-                                    tR = 255.0;
-                                } else if (tR < 0.0) {
-                                    tR = 0.0;
-                                }
-
-                                if (tG > 255.0) {
-                                    tG = 255.0;
-                                } else if (tG < 0.0) {
-                                    tG = 0.0;
-                                }
-
-                                if (tB > 255.0) {
-                                    tB = 255.0;
-                                } else if (tB < 0.0) {
-                                    tB = 0.0;
-                                }
-
-                                index = (j*bmpData.Stride) + (i*3);
-
-                                ptr[index + 2] = (byte)tR;
-                                ptr[index + 1] = (byte)tG;
-                                ptr[index] = (byte)tB;
                             }
-                        }
-                        break;
-                    case 5:
-                        for (i = 0; i < sizeMask; i++) {
-                            for (j = 0; j < sizeMask; j++) {
-                                sumMask += maskX[i, j];
-                            }
-                        }
 
-                        for (i = 2; i < data.M_width - 2; i++) {
-                            backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                            for (j = 2; j < data.M_height - 2; j++) {
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            ptr[index + 2] = (byte)tR;
+                            ptr[index + 1] = (byte)tG;
+                            ptr[index] = (byte)tB;
+                        }
+                    }
+                    break;
+                case 5:
+                    for (i = 0; i < sizeMask; i++) {
+                        for (j = 0; j < sizeMask; j++) {
+                            sumMask += maskX[i, j];
+                        }
+                    }
+
+                    for (i = 2; i < data.M_width - 2; i++) {
+                        for (j = 2; j < data.M_height - 2; j++) {
+                            tR = 0.0;
+                            tG = 0.0;
+                            tB = 0.0;
+                            for (k = 0; k < sizeMask; k++) {
+                                for (l = 0; l < sizeMask; l++) {
+                                    index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
+                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
+                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
+                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                }
+                            }
+
+                            if (tR > 255.0) {
+                                tR = 255.0;
+                            } else if (tR < 0.0) {
                                 tR = 0.0;
+                            }
+
+                            if (tG > 255.0) {
+                                tG = 255.0;
+                            } else if (tG < 0.0) {
                                 tG = 0.0;
+                            }
+
+                            if (tB > 255.0) {
+                                tB = 255.0;
+                            } else if (tB < 0.0) {
                                 tB = 0.0;
-                                for (k = 0; k < sizeMask; k++) {
-                                    for (l = 0; l < sizeMask; l++) {
-                                        index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                        tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                        tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                        tB = tB + (ptr[index]*maskX[k, l])/sumMask;
-                                    }
-                                }
-
-                                if (tR > 255.0) {
-                                    tR = 255.0;
-                                } else if (tR < 0.0) {
-                                    tR = 0.0;
-                                }
-
-                                if (tG > 255.0) {
-                                    tG = 255.0;
-                                } else if (tG < 0.0) {
-                                    tG = 0.0;
-                                }
-
-                                if (tB > 255.0) {
-                                    tB = 255.0;
-                                } else if (tB < 0.0) {
-                                    tB = 0.0;
-                                }
-
-                                index = (j*bmpData.Stride) + (i*3);
-
-                                ptr[index + 2] = (byte)tR;
-                                ptr[index + 1] = (byte)tG;
-                                ptr[index] = (byte)tB;
                             }
-                        }
-                        break;
-                    case 7:
-                        for (i = 0; i < sizeMask; i++) {
-                            for (j = 0; j < sizeMask; j++) {
-                                sumMask += maskX[i, j];
-                            }
-                        }
 
-                        for (i = 3; i < data.M_width - 3; i++) {
-                            backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                            for (j = 3; j < data.M_height - 3; j++) {
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            ptr[index + 2] = (byte)tR;
+                            ptr[index + 1] = (byte)tG;
+                            ptr[index] = (byte)tB;
+                        }
+                    }
+                    break;
+                case 7:
+                    for (i = 0; i < sizeMask; i++) {
+                        for (j = 0; j < sizeMask; j++) {
+                            sumMask += maskX[i, j];
+                        }
+                    }
+
+                    for (i = 3; i < data.M_width - 3; i++) {
+                        for (j = 3; j < data.M_height - 3; j++) {
+                            tR = 0.0;
+                            tG = 0.0;
+                            tB = 0.0;
+                            for (k = 0; k < sizeMask; k++) {
+                                for (l = 0; l < sizeMask; l++) {
+                                    index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
+                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
+                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
+                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                }
+                            }
+
+                            if (tR > 255.0) {
+                                tR = 255.0;
+                            } else if (tR < 0.0) {
                                 tR = 0.0;
-                                tG = 0.0;
-                                tB = 0.0;
-                                for (k = 0; k < sizeMask; k++) {
-                                    for (l = 0; l < sizeMask; l++) {
-                                        index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                        tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                        tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                        tB = tB + (ptr[index]*maskX[k, l])/sumMask;
-                                    }
-                                }
-
-                                if (tR > 255.0) {
-                                    tR = 255.0;
-                                } else if (tR < 0.0) {
-                                    tR = 0.0;
-                                }
-
-                                if (tG > 255.0) {
-                                    tG = 255.0;
-                                } else if (tG < 0.0) {
-                                    tG = 0.0;
-                                }
-
-                                if (tB > 255.0) {
-                                    tB = 255.0;
-                                } else if (tB < 0.0) {
-                                    tB = 0.0;
-                                }
-
-                                index = (j*bmpData.Stride) + (i*3);
-
-                                ptr[index + 2] = (byte)tR;
-                                ptr[index + 1] = (byte)tG;
-                                ptr[index] = (byte)tB;
                             }
+
+                            if (tG > 255.0) {
+                                tG = 255.0;
+                            } else if (tG < 0.0) {
+                                tG = 0.0;
+                            }
+
+                            if (tB > 255.0) {
+                                tB = 255.0;
+                            } else if (tB < 0.0) {
+                                tB = 0.0;
+                            }
+
+                            index = (j*bmpData.Stride) + (i*3);
+
+                            ptr[index + 2] = (byte)tR;
+                            ptr[index + 1] = (byte)tG;
+                            ptr[index] = (byte)tB;
                         }
-                        break;
-                }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
+                    }
+                    break;
             }
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
         #endregion
 
         #region Salt and Pepper Noise generator [Color]
-        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int d = 0;
-                int d1 = 0;
-                int d2 = 0;
-                int index = 0;
-                Random rand = new Random();
+        public static unsafe TimeSpan SaltPepperNoise_Color(ImageData data, double probability) {
+            int i = 0;
+            int j = 0;
+            int d = 0;
+            int d1 = 0;
+            int d2 = 0;
+            int index = 0;
+            Random rand = new Random();
 
-                d = (int)(probability*32768/2);
-                d1 = d + 16384;
-                d2 = 16384 - d;
+            d = (int)(probability*32768/2);
+            d1 = d + 16384;
+            d2 = 16384 - d;
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            byte* ptr = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
+            #region Algorithm
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
+                    index = (j*bmpData.Stride) + (i*3);
 
-                        d = rand.Next(32768);
-                        if (d >= 16384 && d < d1) {
-                            ptr[index + 2] = 0;
-                        }
-                        if (d >= d2 && d <= 16384) {
-                            ptr[index + 2] = 255;
-                        }
+                    d = rand.Next(32768);
+                    if (d >= 16384 && d < d1) {
+                        ptr[index + 2] = 0;
+                    }
+                    if (d >= d2 && d <= 16384) {
+                        ptr[index + 2] = 255;
+                    }
 
-                        d = rand.Next(32768);
-                        if (d >= 16384 && d < d1) {
-                            ptr[index + 1] = 0;
-                        }
-                        if (d >= d2 && d <= 16384) {
-                            ptr[index + 1] = 255;
-                        }
+                    d = rand.Next(32768);
+                    if (d >= 16384 && d < d1) {
+                        ptr[index + 1] = 0;
+                    }
+                    if (d >= d2 && d <= 16384) {
+                        ptr[index + 1] = 255;
+                    }
 
-                        d = rand.Next(32768);
-                        if (d >= 16384 && d < d1) {
-                            ptr[index] = 0;
-                        }
-                        if (d >= d2 && d <= 16384) {
-                            ptr[index] = 255;
-                        }
+                    d = rand.Next(32768);
+                    if (d >= 16384 && d < d1) {
+                        ptr[index] = 0;
+                    }
+                    if (d >= d2 && d <= 16384) {
+                        ptr[index] = 255;
                     }
                 }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
             }
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
         #endregion
 
         #region Salt and Pepper Noise generator [BW]
-        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int d = 0;
-                int d1 = 0;
-                int d2 = 0;
-                int index = 0;
-                Random rand = new Random();
+        public static unsafe TimeSpan SaltPepperNoise_BW(ImageData data, double probability) {
+            int i = 0;
+            int j = 0;
+            int d = 0;
+            int d1 = 0;
+            int d2 = 0;
+            int index = 0;
+            Random rand = new Random();
 
-                d = (int)(probability*32768/2);
-                d1 = d + 16384;
-                d2 = 16384 - d;
+            d = (int)(probability*32768/2);
+            d1 = d + 16384;
+            d2 = 16384 - d;
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            byte* ptr = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                for (i = 0; i < data.M_width; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = 0; j < data.M_height; j++) {
-                        index = (j*bmpData.Stride) + (i*3);
+            #region Algorithm
+            for (i = 0; i < data.M_width; i++) {
+                for (j = 0; j < data.M_height; j++) {
+                    index = (j*bmpData.Stride) + (i*3);
 
-                        d = rand.Next(32768);
-                        if (d >= 16384 && d < d1) {
-                            ptr[index + 2] = 0;
-                            ptr[index + 1] = 0;
-                            ptr[index] = 0;
-                        }
-                        if (d >= d2 && d <= 16384) {
-                            ptr[index + 2] = 255;
-                            ptr[index + 1] = 255;
-                            ptr[index] = 255;
-                        }
+                    d = rand.Next(32768);
+                    if (d >= 16384 && d < d1) {
+                        ptr[index + 2] = 0;
+                        ptr[index + 1] = 0;
+                        ptr[index] = 0;
+                    }
+                    if (d >= d2 && d <= 16384) {
+                        ptr[index + 2] = 255;
+                        ptr[index + 1] = 255;
+                        ptr[index] = 255;
                     }
                 }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
             }
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
         #endregion
 
         #region Noise reduction filter [Mean]
-        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                int l = 0;
-                int sumR = 0;
-                int sumG = 0;
-                int sumB = 0;
-                int index = 0;
+        public static unsafe TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask) {
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            int l = 0;
+            int sumR = 0;
+            int sumG = 0;
+            int sumB = 0;
+            int index = 0;
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            byte* ptr = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
-                        sumR = 0;
-                        sumG = 0;
-                        sumB = 0;
-                        for (k = -sizeMask/2; k <= sizeMask/2; k++) {
-                            for (l = -sizeMask/2; l <= sizeMask/2; l++) {
-                                index = ((j + l)*bmpData.Stride) + ((i + k)*3);
-                                sumR = sumR + ptr[index + 2];
-                                sumG = sumG + ptr[index + 1];
-                                sumB = sumB + ptr[index];
-                            }
+            #region Algorithm
+            for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
+                for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
+                    sumR = 0;
+                    sumG = 0;
+                    sumB = 0;
+                    for (k = -sizeMask/2; k <= sizeMask/2; k++) {
+                        for (l = -sizeMask/2; l <= sizeMask/2; l++) {
+                            index = ((j + l)*bmpData.Stride) + ((i + k)*3);
+                            sumR = sumR + ptr[index + 2];
+                            sumG = sumG + ptr[index + 1];
+                            sumB = sumB + ptr[index];
                         }
-
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        ptr[index + 2] = (byte)(sumR/(sizeMask*sizeMask));
-                        ptr[index + 1] = (byte)(sumG/(sizeMask*sizeMask));
-                        ptr[index] = (byte)(sumB/(sizeMask*sizeMask));
                     }
+
+                    index = (j*bmpData.Stride) + (i*3);
+
+                    ptr[index + 2] = (byte)(sumR/(sizeMask*sizeMask));
+                    ptr[index + 1] = (byte)(sumG/(sizeMask*sizeMask));
+                    ptr[index] = (byte)(sumB/(sizeMask*sizeMask));
                 }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
             }
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
         #endregion
 
         #region Noise reduction filter [Median]
-        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask, BackgroundWorker backgroundWorker) {
-            unsafe {
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                int l = 0;
-                int z = 0;
-                int aR = 0;
-                int aG = 0;
-                int aB = 0;
-                int[] arR = new int[121];
-                int[] arG = new int[121];
-                int[] arB = new int[121];
-                int index = 0;
+        public static unsafe TimeSpan NoiseReduction_Median(ImageData data, int sizeMask) {
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            int l = 0;
+            int z = 0;
+            int aR = 0;
+            int aG = 0;
+            int aB = 0;
+            int[] arR = new int[121];
+            int[] arG = new int[121];
+            int[] arB = new int[121];
+            int index = 0;
 
-                // Lock the bitmap's bits.  
-                BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
-                // Get the address of the first line.
-                byte* ptr = (byte*)bmpData.Scan0;
+            // Get the address of the first line.
+            byte* ptr = (byte*)bmpData.Scan0;
 
-                Stopwatch watch = Stopwatch.StartNew();
+            Stopwatch watch = Stopwatch.StartNew();
 
-                #region Algorithm
-                for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
-                    backgroundWorker.ReportProgress(Convert.ToInt32(((double)i/data.M_width)*100));
-                    for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
-                        z = 0;
-                        for (k = -sizeMask/2; k <= sizeMask/2; k++) {
-                            for (l = -sizeMask/2; l <= sizeMask/2; l++) {
-                                index = ((j + l)*bmpData.Stride) + ((i + k)*3);
-                                arR[z] = ptr[index + 2];
-                                arG[z] = ptr[index + 1];
-                                arB[z] = ptr[index];
-                                z++;
-                            }
+            #region Algorithm
+            for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
+                for (j = sizeMask/2; j < data.M_height - sizeMask/2; j++) {
+                    z = 0;
+                    for (k = -sizeMask/2; k <= sizeMask/2; k++) {
+                        for (l = -sizeMask/2; l <= sizeMask/2; l++) {
+                            index = ((j + l)*bmpData.Stride) + ((i + k)*3);
+                            arR[z] = ptr[index + 2];
+                            arG[z] = ptr[index + 1];
+                            arB[z] = ptr[index];
+                            z++;
                         }
-
-                        for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
-                            aR = arR[k];
-                            l = k - 1;
-
-                            while (l >= 0 && arR[l] > aR) {
-                                arR[l + 1] = arR[l];
-                                l--;
-                            }
-
-                            arR[l + 1] = aR;
-                        }
-
-                        for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
-                            aG = arG[k];
-                            l = k - 1;
-
-                            while (l >= 0 && arG[l] > aG) {
-                                arG[l + 1] = arG[l];
-                                l--;
-                            }
-
-                            arG[l + 1] = aG;
-                        }
-
-                        for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
-                            aB = arB[k];
-                            l = k - 1;
-
-                            while (l >= 0 && arB[l] > aB) {
-                                arB[l + 1] = arB[l];
-                                l--;
-                            }
-
-                            arB[l + 1] = aB;
-                        }
-
-                        index = (j*bmpData.Stride) + (i*3);
-
-                        ptr[index + 2] = (byte)arR[sizeMask*sizeMask/2];
-                        ptr[index + 1] = (byte)arG[sizeMask*sizeMask/2];
-                        ptr[index] = (byte)arB[sizeMask*sizeMask/2];
                     }
+
+                    for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
+                        aR = arR[k];
+                        l = k - 1;
+
+                        while (l >= 0 && arR[l] > aR) {
+                            arR[l + 1] = arR[l];
+                            l--;
+                        }
+
+                        arR[l + 1] = aR;
+                    }
+
+                    for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
+                        aG = arG[k];
+                        l = k - 1;
+
+                        while (l >= 0 && arG[l] > aG) {
+                            arG[l + 1] = arG[l];
+                            l--;
+                        }
+
+                        arG[l + 1] = aG;
+                    }
+
+                    for (k = 1; k <= sizeMask*sizeMask - 1; k++) {
+                        aB = arB[k];
+                        l = k - 1;
+
+                        while (l >= 0 && arB[l] > aB) {
+                            arB[l + 1] = arB[l];
+                            l--;
+                        }
+
+                        arB[l + 1] = aB;
+                    }
+
+                    index = (j*bmpData.Stride) + (i*3);
+
+                    ptr[index + 2] = (byte)arR[sizeMask*sizeMask/2];
+                    ptr[index + 1] = (byte)arG[sizeMask*sizeMask/2];
+                    ptr[index] = (byte)arB[sizeMask*sizeMask/2];
                 }
-                #endregion
-
-                watch.Stop();
-                TimeSpan elapsedTime = watch.Elapsed;
-
-                // Unlock the bits.
-                data.M_bitmap.UnlockBits(bmpData);
-
-                return elapsedTime;
             }
+            #endregion
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
         }
         #endregion
     }

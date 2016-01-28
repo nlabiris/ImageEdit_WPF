@@ -85,7 +85,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.SaltPepperNoise_Color(m_data, probability, m_backgroundWorker);
+            elapsedTime = Algorithms.SaltPepperNoise_Color(m_data, probability);
         }
         
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

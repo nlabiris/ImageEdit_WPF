@@ -513,7 +513,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.Sharpen(m_data, m_sizeMask, maskX, m_backgroundWorker);
+            elapsedTime = Algorithms.Sharpen(m_data, m_sizeMask, maskX);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

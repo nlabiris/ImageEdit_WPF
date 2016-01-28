@@ -94,7 +94,7 @@ namespace ImageEdit_WPF.Windows {
             double contrast = (double)e.Argument;
 
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.Contrast(m_data, contrast, m_backgroundWorker);
+            elapsedTime = Algorithms.Contrast(m_data, contrast);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

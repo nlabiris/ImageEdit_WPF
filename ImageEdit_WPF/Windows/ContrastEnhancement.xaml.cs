@@ -93,7 +93,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.ContrastEnhancement(m_data, brightness, contrast, m_backgroundWorker);
+            elapsedTime = Algorithms.ContrastEnhancement(m_data, brightness, contrast);
         }
         
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

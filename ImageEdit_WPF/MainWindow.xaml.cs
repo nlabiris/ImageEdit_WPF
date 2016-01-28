@@ -1113,31 +1113,31 @@ namespace ImageEdit_WPF {
             switch (m_data.M_action) {
                 case ActionType.Negative:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.Negative(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.Negative(m_data);
                     break;
                 case ActionType.SquareRoot:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.SquareRoot(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.SquareRoot(m_data);
                     break;
                 case ActionType.ImageSummarization:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageSummarization(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.ImageSummarization(m_data);
                     break;
                 case ActionType.ImageSubtraction:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageSubtraction(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.ImageSubtraction(m_data);
                     break;
                 case ActionType.ImageEqualizationRGB:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.HistogramEqualization_RGB(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.HistogramEqualization_RGB(m_data);
                     break;
                 case ActionType.ImageEqualizationHSV:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.HistogramEqualization_HSV(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.HistogramEqualization_HSV(m_data);
                     break;
                 case ActionType.ImageEqualizationYUV:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.HistogramEqualization_YUV(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.HistogramEqualization_YUV(m_data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

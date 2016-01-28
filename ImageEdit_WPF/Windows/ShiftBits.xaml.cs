@@ -89,7 +89,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.ShiftBits(m_data, bits, m_backgroundWorker);
+            elapsedTime = Algorithms.ShiftBits(m_data, bits);
         }
         
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
