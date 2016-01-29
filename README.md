@@ -7,7 +7,7 @@ Currently supports the following file formats:
 - PNG
 - BMP
 
-![Main window](https://i.imgur.com/honAYWn.png)
+![Main window](https://i.imgur.com/q7Q5J4T.png)
 
 
 ### Algorithms
