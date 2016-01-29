@@ -18,20 +18,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System.Windows.Input;
+using System.Collections.Generic;
 
-namespace ImageEdit_WPF.Commands {
-    public class HelpCommand {
-        private static readonly RoutedUICommand m_help;
-
-        public static RoutedUICommand Help {
-            get { return m_help; }
-        }
-
-        static HelpCommand() {
-            InputGestureCollection gestures = new InputGestureCollection();
-            gestures.Add(new KeyGesture(Key.F1, ModifierKeys.None, "F1"));
-            m_help = new RoutedUICommand("Help", "Help", typeof (HelpCommand), gestures);
+namespace ImageEdit_WPF.HelperClasses {
+    public static class BetterEnumerable {
+        public static IEnumerable<int> SteppedRange(int fromInclusive, int toExclusive, int step) {
+            for (var i = fromInclusive; i < toExclusive; i += step) {
+                yield return i;
+            }
         }
     }
 }

@@ -73,13 +73,10 @@ namespace ImageEdit_WPF {
             InitializeComponent();
             DataContext = m_vm;
 
-            m_vm.M_progress = progressBar;
-
             m_backgroundWorker = new BackgroundWorker();
-            m_backgroundWorker.WorkerReportsProgress = true;
+            m_backgroundWorker.WorkerReportsProgress = false;
             m_backgroundWorker.WorkerSupportsCancellation = false;
             m_backgroundWorker.DoWork += backgroundWorker_DoWork;
-            m_backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
             m_backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
 
             undo.IsEnabled = false;
@@ -401,7 +398,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("ImageEdit v0.6.1 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.7 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -1091,7 +1088,6 @@ namespace ImageEdit_WPF {
             imageResolution.Text = resolution;
             imageSize.Text = size;
             separatorFirst.Visibility = Visibility.Visible;
-            separatorSecond.Visibility = Visibility.Visible;
         }
         #endregion
 
@@ -1117,39 +1113,35 @@ namespace ImageEdit_WPF {
             switch (m_data.M_action) {
                 case ActionType.Negative:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.Negative(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.Negative(m_data);
                     break;
                 case ActionType.SquareRoot:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.SquareRoot(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.SquareRoot(m_data);
                     break;
                 case ActionType.ImageSummarization:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageSummarization(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.ImageSummarization(m_data);
                     break;
                 case ActionType.ImageSubtraction:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageSubtraction(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.ImageSubtraction(m_data);
                     break;
                 case ActionType.ImageEqualizationRGB:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.HistogramEqualization_RGB(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.HistogramEqualization_RGB(m_data);
                     break;
                 case ActionType.ImageEqualizationHSV:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.HistogramEqualization_HSV(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.HistogramEqualization_HSV(m_data);
                     break;
                 case ActionType.ImageEqualizationYUV:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.HistogramEqualization_YUV(m_data, m_backgroundWorker);
+                    elapsedTime = Algorithms.HistogramEqualization_YUV(m_data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e) {
-            m_vm.M_progress.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
@@ -1162,7 +1154,6 @@ namespace ImageEdit_WPF {
 
             result = MessageBox.Show(messageOperation, "Elapsed time", MessageBoxButton.OK, MessageBoxImage.Information);
             if (result == MessageBoxResult.OK) {
-                m_vm.M_progress.Value = 0;
                 m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource(); // Set main image
                 m_data.M_noChange = false;
                 m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;

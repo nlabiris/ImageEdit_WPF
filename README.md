@@ -7,7 +7,7 @@ Currently supports the following file formats:
 - PNG
 - BMP
 
-![Main window](https://i.imgur.com/honAYWn.png)
+![Main window](https://i.imgur.com/q7Q5J4T.png)
 
 
 ### Algorithms
@@ -46,7 +46,7 @@ git clone https://github.com/nlabiris/ImageEdit_WPF.git
 
 #### Download binary
 
-[ImageEdit v0.6.1 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.6.1_beta.rar?raw=true)
+[ImageEdit v0.7 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7_beta.rar?raw=true)
 
 
 #### License

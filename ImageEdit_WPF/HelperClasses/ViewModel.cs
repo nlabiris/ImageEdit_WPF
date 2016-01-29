@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace ImageEdit_WPF.HelperClasses {
@@ -8,11 +7,6 @@ namespace ImageEdit_WPF.HelperClasses {
         /// Image that binds to the GUI.
         /// </summary>
         private ImageSource m_bitmapBind = null;
-
-        /// <summary>
-        /// Progress bar at main window.
-        /// </summary>
-        private ProgressBar m_progress = null;
 
         /// <summary>
         /// Points that represent the values of the histogram.
@@ -24,14 +18,6 @@ namespace ImageEdit_WPF.HelperClasses {
             set {
                 m_bitmapBind = value;
                 OnPropertyChanged("M_bitmapBind");
-            }
-        }
-
-        public ProgressBar M_progress {
-            get { return m_progress; }
-            set {
-                m_progress = value;
-                OnPropertyChanged("M_progress");
             }
         }
 
