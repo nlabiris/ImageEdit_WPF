@@ -46,3 +46,4 @@ C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\WPFToolkit.dll
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.pdb
 C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\bin\Debug\WPFToolkit.pdb
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageEdit_WPF\obj\Debug\ImageEdit_WPF.csprojResolveAssemblyReference.cache
