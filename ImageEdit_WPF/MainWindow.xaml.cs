@@ -1143,7 +1143,7 @@ namespace ImageEdit_WPF {
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             string messageOperation = "Done!\r\n\r\nElapsed time (HH:MM:SS.MS): " + elapsedTime;
             MessageBoxResult result = MessageBoxResult.None;

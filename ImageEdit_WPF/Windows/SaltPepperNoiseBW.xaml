@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0">
-            <TextBlock Margin="10">Noise possibility (0.0 - 1.0):</TextBlock>
+            <TextBlock Margin="10">Noise possibility (0,0 - 1,0):</TextBlock>
             <TextBox Name="textboxNoiseBW" Width="40" Height="25"></TextBox>
         </WrapPanel>
         <StackPanel Grid.Row="1" Margin="10" HorizontalAlignment="Center">

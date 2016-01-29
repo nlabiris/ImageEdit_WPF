@@ -78,6 +78,7 @@
     </ApplicationDefinition>
     <Compile Include="HelperClasses\Algorithms.cs" />
     <Compile Include="HelperClasses\BetterEnumerable.cs" />
+    <Compile Include="HelperClasses\AlgorithmsBackup.cs" />
     <Compile Include="HelperClasses\ConvertionMethods.cs" />
     <Compile Include="HelperClasses\ImageData.cs" />
     <Compile Include="HelperClasses\SaveImage.cs" />

@@ -22,13 +22,14 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
         #region Shift bits
-        public static unsafe TimeSpan ShiftBits(ImageData data, int bits) {
+        public static TimeSpan ShiftBits(ImageData data, int bits) {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
@@ -65,7 +66,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Threshold
-        public static unsafe TimeSpan Threshold(ImageData data, int threshold) {
+        public static TimeSpan Threshold(ImageData data, int threshold) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -73,7 +74,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -110,7 +111,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Auto threshold
-        public static unsafe TimeSpan AutoThreshold(ImageData data, int distance) {
+        public static TimeSpan AutoThreshold(ImageData data, int distance) {
             double z = 0.0;
             int z1R = 0;
             int z1G = 0;
@@ -145,7 +146,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -292,17 +293,17 @@ namespace ImageEdit_WPF.HelperClasses {
             }
 
             Parallel.ForEach(BetterEnumerable.SteppedRange(0, rgb.Length, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
-                    int b = rgb[k];
-                    int g = rgb[k + 1];
-                    int r = rgb[k + 2];
+                int b = rgb[k];
+                int g = rgb[k + 1];
+                int r = rgb[k + 2];
 
-                    r = r < thresholdR ? 0 : 255;
-                    g = g < thresholdG ? 0 : 255;
-                    b = b < thresholdB ? 0 : 255;
+                r = r < thresholdR ? 0 : 255;
+                g = g < thresholdG ? 0 : 255;
+                b = b < thresholdB ? 0 : 255;
 
-                    rgb[k + 2] = (byte)r;
-                    rgb[k + 1] = (byte)g;
-                    rgb[k] = (byte)b;
+                rgb[k + 2] = (byte)r;
+                rgb[k + 1] = (byte)g;
+                rgb[k] = (byte)b;
             });
             #endregion
 
@@ -319,7 +320,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Negative
-        public static unsafe TimeSpan Negative(ImageData data) {
+        public static TimeSpan Negative(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -327,7 +328,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -359,7 +360,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Square root
-        public static unsafe TimeSpan SquareRoot(ImageData data) {
+        public static TimeSpan SquareRoot(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -367,7 +368,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -380,9 +381,9 @@ namespace ImageEdit_WPF.HelperClasses {
                 int b = rgb[k];
                 int g = rgb[k + 1];
                 int r = rgb[k + 2];
-                rgb[k] = (byte)Math.Sqrt(b * 255); // B
-                rgb[k + 1] = (byte)Math.Sqrt(g * 255); // G
-                rgb[k + 2] = (byte)Math.Sqrt(r * 255); // R
+                rgb[k] = (byte)Math.Sqrt(b*255); // B
+                rgb[k + 1] = (byte)Math.Sqrt(g*255); // G
+                rgb[k + 2] = (byte)Math.Sqrt(r*255); // R
             });
             #endregion
 
@@ -399,7 +400,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Contrast enhancement
-        public static unsafe TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast) {
+        public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast) {
             // Lock the bitmap's bits.
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -407,7 +408,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -461,7 +462,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Brightness
-        public static unsafe TimeSpan Brightness(ImageData data, int brightness) {
+        public static TimeSpan Brightness(ImageData data, int brightness) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -469,7 +470,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -523,7 +524,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Contrast
-        public static unsafe TimeSpan Contrast(ImageData data, double contrast) {
+        public static TimeSpan Contrast(ImageData data, double contrast) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -531,7 +532,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -610,7 +611,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the red channel.
         /// </returns>
-        public static unsafe int[] HistogramRed(ImageData data) {
+        public static int[] HistogramRed(ImageData data) {
             int[] histogramR = new int[256];
 
             // Lock the bitmap's bits.  
@@ -620,7 +621,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -649,7 +650,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the green channel.
         /// </returns>
-        public static unsafe int[] HistogramGreen(ImageData data) {
+        public static int[] HistogramGreen(ImageData data) {
             int[] histogramG = new int[256];
 
             // Lock the bitmap's bits.  
@@ -659,7 +660,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -688,7 +689,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the blue channel.
         /// </returns>
-        public static unsafe int[] HistogramBlue(ImageData data) {
+        public static int[] HistogramBlue(ImageData data) {
             int[] histogramB = new int[256];
 
             // Lock the bitmap's bits.  
@@ -698,7 +699,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -727,7 +728,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <returns>
         /// Histogram of the luminance values.
         /// </returns>
-        public static unsafe int[] HistogramLuminance(ImageData data) {
+        public static int[] HistogramLuminance(ImageData data) {
             int[] histogramY = new int[256];
 
             // Lock the bitmap's bits.  
@@ -737,7 +738,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -765,7 +766,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Histogram equalization [RGB]
-        public static unsafe TimeSpan HistogramEqualization_RGB(ImageData data) {
+        public static TimeSpan HistogramEqualization_RGB(ImageData data) {
             double[] possibilityR = new double[256];
             double[] possibilityG = new double[256];
             double[] possibilityB = new double[256];
@@ -783,7 +784,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -867,7 +868,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Histogram equalization [HSV]
-        public static unsafe TimeSpan HistogramEqualization_HSV(ImageData data) {
+        public static TimeSpan HistogramEqualization_HSV(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -875,7 +876,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
             double[] hsv = new double[bytes];
             int[] histogramV = new int[256];
@@ -886,7 +887,7 @@ namespace ImageEdit_WPF.HelperClasses {
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgb, 0, rgb.Length);
-            
+
             #region Algorithm
             Parallel.For(0, 256, i => {
                 histogramV[i] = 0;
@@ -898,7 +899,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 double b = rgb[p];
                 double g = rgb[p + 1];
                 double r = rgb[p + 2];
-                
+
                 b = b/255.0;
                 g = g/255.0;
                 r = r/255.0;
@@ -940,7 +941,7 @@ namespace ImageEdit_WPF.HelperClasses {
             });
 
             for (int i = 0; i < 256; i++) {
-                sumHistogramEqualizationV[i] = histogramV[i] / (double)(data.M_width * data.M_height);
+                sumHistogramEqualizationV[i] = histogramV[i]/(double)(data.M_width*data.M_height);
             }
 
             sumHistogramV[0] = sumHistogramEqualizationV[0];
@@ -1040,7 +1041,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Histogram equalization [YUV]
-        public static unsafe TimeSpan HistogramEqualization_YUV(ImageData data) {
+        public static TimeSpan HistogramEqualization_YUV(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -1048,7 +1049,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
             double[] yuv = new double[bytes];
             int[] histogramY = new int[256];
@@ -1093,7 +1094,7 @@ namespace ImageEdit_WPF.HelperClasses {
             });
 
             for (int i = 0; i < 256; i++) {
-                sumHistogramEqualizationY[i] = histogramY[i] / (double)(data.M_bitmap.Width * data.M_bitmap.Height);
+                sumHistogramEqualizationY[i] = histogramY[i]/(double)(data.M_bitmap.Width*data.M_bitmap.Height);
             }
 
             sumHistogramY[0] = sumHistogramEqualizationY[0];
@@ -1161,7 +1162,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Image summarization
-        public static unsafe TimeSpan ImageSummarization(ImageData data) {
+        public static TimeSpan ImageSummarization(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -1169,7 +1170,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -1214,7 +1215,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Image subtraction
-        public static unsafe TimeSpan ImageSubtraction(ImageData data) {
+        public static TimeSpan ImageSubtraction(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -1222,7 +1223,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -1255,7 +1256,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Edge detection [Sobel]
-        public static unsafe TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
+        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -1263,7 +1264,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride)*data.M_bitmap.Height;
+            int bytes = bmpData.Stride*data.M_height;
             byte[] rgbValues = new byte[bytes];
             byte[] bgrValues = new byte[bytes];
 
@@ -1454,18 +1455,8 @@ namespace ImageEdit_WPF.HelperClasses {
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
 
-            Parallel.For(0, data.M_width, i => {
-                for (int j = 0; j < data.M_height; j++) {
-                    int index = (j*bmpData.Stride) + (i*3);
-
-                    rgbValues[index + 2] = bgrValues[index + 2];
-                    rgbValues[index + 1] = bgrValues[index + 1];
-                    rgbValues[index] = bgrValues[index];
-                }
-            });
-
             // Copy the RGB values back to the bitmap
-            Marshal.Copy(rgbValues, 0, ptr, bytes);
+            Marshal.Copy(bgrValues, 0, ptr, bytes);
 
             // Unlock the bits.
             data.M_bitmap.UnlockBits(bmpData);
@@ -1476,7 +1467,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Gaussian blur
-        public static unsafe TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
+        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1491,9 +1482,17 @@ namespace ImageEdit_WPF.HelperClasses {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
-            byte* ptr = (byte*)bmpData.Scan0;
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * data.M_height;
+            byte[] rgbValues = new byte[bytes];
+            byte[] bgrValues = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             #region Algorithm
             switch (sizeMask) {
@@ -1512,9 +1511,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1538,9 +1537,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
                             index = (j*bmpData.Stride) + (i*3);
 
-                            ptr[index + 2] = (byte)tR;
-                            ptr[index + 1] = (byte)tG;
-                            ptr[index] = (byte)tB;
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
                     }
                     break;
@@ -1559,9 +1558,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1585,9 +1584,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
                             index = (j*bmpData.Stride) + (i*3);
 
-                            ptr[index + 2] = (byte)tR;
-                            ptr[index + 1] = (byte)tG;
-                            ptr[index] = (byte)tB;
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
                     }
                     break;
@@ -1606,9 +1605,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1632,14 +1631,16 @@ namespace ImageEdit_WPF.HelperClasses {
 
                             index = (j*bmpData.Stride) + (i*3);
 
-                            ptr[index + 2] = (byte)tR;
-                            ptr[index + 1] = (byte)tG;
-                            ptr[index] = (byte)tB;
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
                     }
                     break;
             }
             #endregion
+
+            Marshal.Copy(bgrValues, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1652,7 +1653,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Sharpen
-        public static unsafe TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
+        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1667,9 +1668,17 @@ namespace ImageEdit_WPF.HelperClasses {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
-            byte* ptr = (byte*)bmpData.Scan0;
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * data.M_height;
+            byte[] rgbValues = new byte[bytes];
+            byte[] bgrValues = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             #region Algorithm
             switch (sizeMask) {
@@ -1688,9 +1697,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1714,9 +1723,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
                             index = (j*bmpData.Stride) + (i*3);
 
-                            ptr[index + 2] = (byte)tR;
-                            ptr[index + 1] = (byte)tG;
-                            ptr[index] = (byte)tB;
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
                     }
                     break;
@@ -1735,9 +1744,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1761,9 +1770,9 @@ namespace ImageEdit_WPF.HelperClasses {
 
                             index = (j*bmpData.Stride) + (i*3);
 
-                            ptr[index + 2] = (byte)tR;
-                            ptr[index + 1] = (byte)tG;
-                            ptr[index] = (byte)tB;
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
                     }
                     break;
@@ -1782,9 +1791,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                    tR = tR + (ptr[index + 2]*maskX[k, l])/sumMask;
-                                    tG = tG + (ptr[index + 1]*maskX[k, l])/sumMask;
-                                    tB = tB + (ptr[index]*maskX[k, l])/sumMask;
+                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1808,14 +1817,16 @@ namespace ImageEdit_WPF.HelperClasses {
 
                             index = (j*bmpData.Stride) + (i*3);
 
-                            ptr[index + 2] = (byte)tR;
-                            ptr[index + 1] = (byte)tG;
-                            ptr[index] = (byte)tB;
+                            bgrValues[index + 2] = (byte)tR;
+                            bgrValues[index + 1] = (byte)tG;
+                            bgrValues[index] = (byte)tB;
                         }
                     }
                     break;
             }
             #endregion
+
+            Marshal.Copy(bgrValues, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1828,7 +1839,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Salt and Pepper Noise generator [Color]
-        public static unsafe TimeSpan SaltPepperNoise_Color(ImageData data, double probability) {
+        public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability) {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1845,9 +1856,16 @@ namespace ImageEdit_WPF.HelperClasses {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
-            byte* ptr = (byte*)bmpData.Scan0;
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * data.M_height;
+            byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, bytes);
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
@@ -1856,30 +1874,32 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     d = rand.Next(32768);
                     if (d >= 16384 && d < d1) {
-                        ptr[index + 2] = 0;
+                        rgb[index + 2] = 0;
                     }
                     if (d >= d2 && d <= 16384) {
-                        ptr[index + 2] = 255;
+                        rgb[index + 2] = 255;
                     }
 
                     d = rand.Next(32768);
                     if (d >= 16384 && d < d1) {
-                        ptr[index + 1] = 0;
+                        rgb[index + 1] = 0;
                     }
                     if (d >= d2 && d <= 16384) {
-                        ptr[index + 1] = 255;
+                        rgb[index + 1] = 255;
                     }
 
                     d = rand.Next(32768);
                     if (d >= 16384 && d < d1) {
-                        ptr[index] = 0;
+                        rgb[index] = 0;
                     }
                     if (d >= d2 && d <= 16384) {
-                        ptr[index] = 255;
+                        rgb[index] = 255;
                     }
                 }
             }
             #endregion
+
+            Marshal.Copy(rgb, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1892,7 +1912,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Salt and Pepper Noise generator [BW]
-        public static unsafe TimeSpan SaltPepperNoise_BW(ImageData data, double probability) {
+        public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability) {
             int i = 0;
             int j = 0;
             int d = 0;
@@ -1909,9 +1929,16 @@ namespace ImageEdit_WPF.HelperClasses {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
-            byte* ptr = (byte*)bmpData.Scan0;
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * data.M_height;
+            byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, bytes);
 
             #region Algorithm
             for (i = 0; i < data.M_width; i++) {
@@ -1920,18 +1947,20 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     d = rand.Next(32768);
                     if (d >= 16384 && d < d1) {
-                        ptr[index + 2] = 0;
-                        ptr[index + 1] = 0;
-                        ptr[index] = 0;
+                        rgb[index + 2] = 0;
+                        rgb[index + 1] = 0;
+                        rgb[index] = 0;
                     }
                     if (d >= d2 && d <= 16384) {
-                        ptr[index + 2] = 255;
-                        ptr[index + 1] = 255;
-                        ptr[index] = 255;
+                        rgb[index + 2] = 255;
+                        rgb[index + 1] = 255;
+                        rgb[index] = 255;
                     }
                 }
             }
             #endregion
+
+            Marshal.Copy(rgb, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1944,7 +1973,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Noise reduction filter [Mean]
-        public static unsafe TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask) {
+        public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1958,9 +1987,16 @@ namespace ImageEdit_WPF.HelperClasses {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
-            byte* ptr = (byte*)bmpData.Scan0;
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride*data.M_height;
+            byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, bytes);
 
             #region Algorithm
             for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
@@ -1971,20 +2007,22 @@ namespace ImageEdit_WPF.HelperClasses {
                     for (k = -sizeMask/2; k <= sizeMask/2; k++) {
                         for (l = -sizeMask/2; l <= sizeMask/2; l++) {
                             index = ((j + l)*bmpData.Stride) + ((i + k)*3);
-                            sumR = sumR + ptr[index + 2];
-                            sumG = sumG + ptr[index + 1];
-                            sumB = sumB + ptr[index];
+                            sumR = sumR + rgb[index + 2];
+                            sumG = sumG + rgb[index + 1];
+                            sumB = sumB + rgb[index];
                         }
                     }
 
                     index = (j*bmpData.Stride) + (i*3);
 
-                    ptr[index + 2] = (byte)(sumR/(sizeMask*sizeMask));
-                    ptr[index + 1] = (byte)(sumG/(sizeMask*sizeMask));
-                    ptr[index] = (byte)(sumB/(sizeMask*sizeMask));
+                    rgb[index + 2] = (byte)(sumR/(sizeMask*sizeMask));
+                    rgb[index + 1] = (byte)(sumG/(sizeMask*sizeMask));
+                    rgb[index] = (byte)(sumB/(sizeMask*sizeMask));
                 }
             }
             #endregion
+
+            Marshal.Copy(rgb, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;
@@ -1997,7 +2035,7 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Noise reduction filter [Median]
-        public static unsafe TimeSpan NoiseReduction_Median(ImageData data, int sizeMask) {
+        public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -2015,9 +2053,16 @@ namespace ImageEdit_WPF.HelperClasses {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
-            byte* ptr = (byte*)bmpData.Scan0;
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * data.M_height;
+            byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, bytes);
 
             #region Algorithm
             for (i = sizeMask/2; i < data.M_width - sizeMask/2; i++) {
@@ -2026,9 +2071,9 @@ namespace ImageEdit_WPF.HelperClasses {
                     for (k = -sizeMask/2; k <= sizeMask/2; k++) {
                         for (l = -sizeMask/2; l <= sizeMask/2; l++) {
                             index = ((j + l)*bmpData.Stride) + ((i + k)*3);
-                            arR[z] = ptr[index + 2];
-                            arG[z] = ptr[index + 1];
-                            arB[z] = ptr[index];
+                            arR[z] = rgb[index + 2];
+                            arG[z] = rgb[index + 1];
+                            arB[z] = rgb[index];
                             z++;
                         }
                     }
@@ -2071,12 +2116,14 @@ namespace ImageEdit_WPF.HelperClasses {
 
                     index = (j*bmpData.Stride) + (i*3);
 
-                    ptr[index + 2] = (byte)arR[sizeMask*sizeMask/2];
-                    ptr[index + 1] = (byte)arG[sizeMask*sizeMask/2];
-                    ptr[index] = (byte)arB[sizeMask*sizeMask/2];
+                    rgb[index + 2] = (byte)arR[sizeMask * sizeMask / 2];
+                    rgb[index + 1] = (byte)arG[sizeMask * sizeMask / 2];
+                    rgb[index] = (byte)arB[sizeMask * sizeMask / 2];
                 }
             }
             #endregion
+
+            Marshal.Copy(rgb, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;

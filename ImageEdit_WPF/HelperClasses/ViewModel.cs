@@ -20,7 +20,7 @@ namespace ImageEdit_WPF.HelperClasses {
                 OnPropertyChanged("M_bitmapBind");
             }
         }
-        
+
         /// <summary>
         /// Get or set histogram's points. Checking if we have a different set of points to show.
         /// </summary>
