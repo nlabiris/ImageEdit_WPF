@@ -23,7 +23,8 @@ using System.Drawing;
 
 namespace ImageEdit_WPF.HelperClasses {
     /// <summary>
-    /// <c>ActionType</c> enumeration is used at the Undo/Redo sytem (not now).
+    /// <c>ActionType</c> enumeration.
+    /// <para>Used to distinguish different actions (algorithms).</para>
     /// </summary>
     public enum ActionType {
         Unknown = -1,
@@ -46,7 +47,9 @@ namespace ImageEdit_WPF.HelperClasses {
         SaltPepperNoiseBW = 16,
         SaltPepperNoiseColor = 17,
         NoiseReductionMean = 18,
-        NoiseReductionMedian = 19
+        NoiseReductionMedian = 19,
+        Grayscale = 20,
+        Sepia = 21
     }
 
     public class ImageData {

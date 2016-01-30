@@ -61,15 +61,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <MenuItem Header="Image" StaysOpenOnClick="True">
                 <MenuItem Name="information" Header="Information" Command="commands:InformationCommand.Information"></MenuItem>
                 <Separator></Separator>
+                <MenuItem Name="histogram" Header="Histogram" Click="histogram_Click"></MenuItem>
                 <MenuItem Name="shiftBits" Header="Shift bits" Click="shiftBits_Click"></MenuItem>
                 <MenuItem Name="threshold" Header="Threshold" Click="threshold_Click"></MenuItem>
                 <MenuItem Name="autoThreshold" Header="Auto Threshold" Click="autoThreshold_Click"></MenuItem>
-                <MenuItem Name="negative" Header="Negative" Click="negative_Click"></MenuItem>
-                <MenuItem Name="squareRoot" Header="Square root (increase brightness)" Click="squareRoot_Click"></MenuItem>
                 <MenuItem Name="contrastEnhancement" Header="Contrast Enhancement" Click="contrastEnhancement_Click"></MenuItem>
                 <MenuItem Name="brightness" Header="Brightness" Click="brightness_Click"></MenuItem>
                 <MenuItem Name="contrast" Header="Contrast" Click="contrast_Click"></MenuItem>
-                <MenuItem Name="histogram" Header="Histogram" Click="histogram_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Effect" StaysOpenOnClick="True">
+                <MenuItem Name="negative" Header="Negative" Click="negative_Click"></MenuItem>
+                <MenuItem Name="squareRoot" Header="Square root (increase brightness)" Click="squareRoot_Click"></MenuItem>
+                <MenuItem Name="grayscale" Header="Grayscale" Click="grayscale_Click"></MenuItem>
+                <MenuItem Name="sepia" Header="Sepia" Click="Sepia_OnClick"></MenuItem>
+                <MenuItem Name="cartoonEffect" Header="Cartoon"></MenuItem>
+                <MenuItem Name="oilPaintEffect" Header="Oil Painting"></MenuItem>
                 <MenuItem Name="histogramEqualization" Header="Histogram Equalization">
                     <MenuItem Name="histogramEqualizationRGB" Header="RGB" Click="histogramEqualizationRGB_Click"></MenuItem>
                     <MenuItem Name="histogramEqualizationHSV" Header="HSV" Click="histogramEqualizationHSV_Click"></MenuItem>
@@ -77,15 +83,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </MenuItem>
                 <MenuItem Name="imageSummarization" Header="Image Summarization" Click="imageSummarization_Click"></MenuItem>
                 <MenuItem Name="imageSubtraction" Header="Image Subtraction" Click="imageSubtraction_Click"></MenuItem>
-                <MenuItem Name="imageConvolution2d" Header="Filters/Edge detection">
-                    <MenuItem Name="sobel" Header="Sobel (Edge detection)" Click="sobel_Click"></MenuItem>
-                    <MenuItem Name="gaussianBlur" Header="Gaussian Blur" Click="gaussianBlur_Click"></MenuItem>
-                    <MenuItem Name="sharpen" Header="Sharpen" Click="sharpen_Click"></MenuItem>
-                    <MenuItem Name="noiseColor" Header="Salt-and-Pepper noise (Color)" Click="noiseColor_Click"></MenuItem>
-                    <MenuItem Name="noiseBW" Header="Salt-and-Pepper noise (Black/White)" Click="noiseBW_Click"></MenuItem>
-                    <MenuItem Name="noiseReductionMean" Header="Noise reduction (Mean)" Click="noiseReductionMean_Click"></MenuItem>
-                    <MenuItem Name="noiseReductionMedian" Header="Noise reduction (Median)" Click="noiseReductionMedian_Click"></MenuItem>
-                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Filters" StaysOpenOnClick="True">
+                <MenuItem Name="sobel" Header="Sobel (Edge detection)" Click="sobel_Click"></MenuItem>
+                <MenuItem Name="gaussianBlur" Header="Gaussian Blur" Click="gaussianBlur_Click"></MenuItem>
+                <MenuItem Name="sharpen" Header="Sharpen" Click="sharpen_Click"></MenuItem>
+                <MenuItem Name="noiseColor" Header="Salt-and-Pepper noise (Color)" Click="noiseColor_Click"></MenuItem>
+                <MenuItem Name="noiseBW" Header="Salt-and-Pepper noise (Black/White)" Click="noiseBW_Click"></MenuItem>
+                <MenuItem Name="noiseReductionMean" Header="Noise reduction (Mean)" Click="noiseReductionMean_Click"></MenuItem>
+                <MenuItem Name="noiseReductionMedian" Header="Noise reduction (Median)" Click="noiseReductionMedian_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Options" StaysOpenOnClick="True">
                 <MenuItem Name="preferences" Header="Preferences"></MenuItem>

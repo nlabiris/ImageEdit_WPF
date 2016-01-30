@@ -398,7 +398,7 @@ namespace ImageEdit_WPF {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void about_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("ImageEdit v0.7 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("ImageEdit v0.7.1 beta", "Version", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
 
@@ -651,7 +651,7 @@ namespace ImageEdit_WPF {
 
         #region Contrast
         /// <summary>
-        /// Contrast algorithm. Here we create a new window from where we implement the algorithm.
+        /// Contrast algorithm.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -665,6 +665,64 @@ namespace ImageEdit_WPF {
                 Contrast contrastWindow = new Contrast(m_data, m_vm);
                 contrastWindow.Owner = this;
                 contrastWindow.Show();
+            } catch (FileNotFoundException ex) {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (InvalidOperationException ex) {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (IndexOutOfRangeException ex) {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Convert to grayscale
+        /// <summary>
+        /// Convert a colored image to grayscale algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void grayscale_Click(object sender, RoutedEventArgs e) {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try {
+                m_data.M_action = ActionType.Grayscale;
+                m_backgroundWorker.RunWorkerAsync();
+            } catch (FileNotFoundException ex) {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (InvalidOperationException ex) {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (IndexOutOfRangeException ex) {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Sepia tone
+        /// <summary>
+        /// Sepia tone.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Sepia_OnClick(object sender, RoutedEventArgs e) {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try {
+                m_data.M_action = ActionType.Sepia;
+                m_backgroundWorker.RunWorkerAsync();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -1138,6 +1196,14 @@ namespace ImageEdit_WPF {
                 case ActionType.ImageEqualizationYUV:
                     // Apply algorithm and return execution time
                     elapsedTime = Algorithms.HistogramEqualization_YUV(m_data);
+                    break;
+                case ActionType.Grayscale:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.ConvertToGrayscale(m_data);
+                    break;
+                case ActionType.Sepia:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.Sepia(m_data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

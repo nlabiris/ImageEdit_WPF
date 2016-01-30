@@ -30,10 +30,11 @@ Currently supports the following file formats:
 - Gaussian Blur filter
 - Sharpen filter
 - Image equalization [RGB],[HSV],[YUV]
+- Color to grayscale
+- Sepia tone
 
 ### Supported platforms
 - Windows
-- Linux *(not tested yet)*
 
 #### Source code
 
@@ -46,7 +47,7 @@ git clone https://github.com/nlabiris/ImageEdit_WPF.git
 
 #### Download binary
 
-[ImageEdit v0.7 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7_beta.rar?raw=true)
+[ImageEdit v0.7.1 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.1_beta.rar?raw=true)
 
 
 #### License

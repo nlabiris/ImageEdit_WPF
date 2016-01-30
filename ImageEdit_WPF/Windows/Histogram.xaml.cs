@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using ImageEdit_WPF.HelperClasses;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;

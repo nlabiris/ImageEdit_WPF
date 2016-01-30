@@ -28,6 +28,12 @@ using System.Threading.Tasks;
 namespace ImageEdit_WPF.HelperClasses {
     public static class Algorithms {
         #region Shift bits
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="bits">Bits.</param>
+        /// <returns></returns>
         public static TimeSpan ShiftBits(ImageData data, int bits) {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -65,6 +71,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Threshold
+        /// <summary>
+        /// Set a specific threshold. one threshold for all channels.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="threshold">Threshold.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan Threshold(ImageData data, int threshold) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -110,6 +122,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Auto threshold
+        /// <summary>
+        /// Set a threshold depending on the histogram of the image.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="distance">Distance of 2 peaks in histogram.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan AutoThreshold(ImageData data, int distance) {
             double z = 0.0;
             int z1R = 0;
@@ -319,6 +337,11 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Negative
+        /// <summary>
+        /// Invert image.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan Negative(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -359,6 +382,11 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Square root
+        /// <summary>
+        /// Increase brightness exponentially.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan SquareRoot(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -399,6 +427,14 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Contrast enhancement
+        /// <summary>
+        /// Contrast enhancement.
+        /// <para>Change brightness and cotnrast at the same time.</para>
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="brightness">Brightness.</param>
+        /// <param name="contrast">Contrast.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan ContrastEnhancement(ImageData data, int brightness, double contrast) {
             // Lock the bitmap's bits.
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -461,6 +497,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Brightness
+        /// <summary>
+        /// Change brightness of the image.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="brightness">Brightness.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan Brightness(ImageData data, int brightness) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -523,6 +565,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Contrast
+        /// <summary>
+        /// Change contrast of the image.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="contrast">Contrast.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan Contrast(ImageData data, double contrast) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -569,6 +617,102 @@ namespace ImageEdit_WPF.HelperClasses {
                 rgb[k] = (byte)b;
                 rgb[k + 1] = (byte)g;
                 rgb[k + 2] = (byte)r;
+            });
+            #endregion
+
+            Marshal.Copy(rgb, 0, ptr, rgb.Length);
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        /// <summary>
+        /// Convert colored image to grayscale.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns></returns>
+        public static TimeSpan ConvertToGrayscale(ImageData data) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride*bmpData.Height;
+            byte[] rgb = new byte[bytes];
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, rgb.Length);
+
+            #region Algorithms
+            Parallel.ForEach(BetterEnumerable.SteppedRange(0, rgb.Length, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
+                double b = rgb[k];
+                double g = rgb[k + 1];
+                double r = rgb[k + 2];
+                double y = b*0.114 + g*0.587 + r*0.299;
+
+                rgb[k] = (byte)y;
+                rgb[k + 1] = (byte)y;
+                rgb[k + 2] = (byte)y;
+            });
+            #endregion
+
+            Marshal.Copy(rgb, 0, ptr, rgb.Length);
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+
+        #region Sepia tone
+        /// <summary>
+        /// Sepia tone.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
+        public static TimeSpan Sepia(ImageData data)
+        {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * bmpData.Height;
+            byte[] rgb = new byte[bytes];
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, rgb.Length);
+
+            #region Algorithms
+            Parallel.ForEach(BetterEnumerable.SteppedRange(0, rgb.Length, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
+                double b = rgb[k];
+                double g = rgb[k + 1];
+                double r = rgb[k + 2];
+
+                b = b*0.131 + g*0.534 + r*0.272;
+                g = b*0.168 + g*0.686 + r*0.349;
+                r = b*0.189 + g*0.769 + r*0.393;
+
+                rgb[k] = b > 255 ? (byte)255 : (byte)b;
+                rgb[k + 1] = g > 255 ? (byte)255 : (byte)g;
+                rgb[k + 2] = r > 255 ? (byte)255 : (byte)r;
             });
             #endregion
 
@@ -765,6 +909,11 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Histogram equalization [RGB]
+        /// <summary>
+        /// Histogram equalization at the RGB color space.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan HistogramEqualization_RGB(ImageData data) {
             double[] possibilityR = new double[256];
             double[] possibilityG = new double[256];
@@ -867,6 +1016,11 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Histogram equalization [HSV]
+        /// <summary>
+        /// Histogram equalization at the HSV color space.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan HistogramEqualization_HSV(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1040,6 +1194,11 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Histogram equalization [YUV]
+        /// <summary>
+        /// Histogram equalization at the YUV color space.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan HistogramEqualization_YUV(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1161,6 +1320,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Image summarization
+        /// <summary>
+        /// Image Summarization.
+        /// <para>Adding the same image, increasing its brightness.</para>
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan ImageSummarization(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1214,6 +1379,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Image subtraction
+        /// <summary>
+        /// Image subtraction.
+        /// <para>Subtract image from itselft which results to a black image. Not useful at all. It will be chnaged soon.</para>
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan ImageSubtraction(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1255,6 +1426,14 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Edge detection [Sobel]
+        /// <summary>
+        /// Sobel edge detector.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="sizeMask">Kernel size.</param>
+        /// <param name="maskX">X axis kernel</param>
+        /// <param name="maskY">Y axis kernel</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
@@ -1466,6 +1645,13 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Gaussian blur
+        /// <summary>
+        /// Gaussian blur filter.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="sizeMask">Kernel size.</param>
+        /// <param name="maskX">X axis kernel.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
             int i = 0;
             int j = 0;
@@ -1652,6 +1838,13 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Sharpen
+        /// <summary>
+        /// Sharpen filter.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="sizeMask">Kernel size.</param>
+        /// <param name="maskX">X axis mask.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
             int i = 0;
             int j = 0;
@@ -1837,7 +2030,13 @@ namespace ImageEdit_WPF.HelperClasses {
         }
         #endregion
 
-        #region Salt and Pepper Noise generator [Color]
+        #region Salt and Pepper noise generator [Color]
+        /// <summary>
+        /// Colored Salt and Pepper noise generator.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="probability">Probability.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan SaltPepperNoise_Color(ImageData data, double probability) {
             int i = 0;
             int j = 0;
@@ -1911,6 +2110,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Salt and Pepper Noise generator [BW]
+        /// <summary>
+        /// Black and white Salt and Pepper noise generator.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="probability">Probability.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan SaltPepperNoise_BW(ImageData data, double probability) {
             int i = 0;
             int j = 0;
@@ -1972,6 +2177,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Noise reduction filter [Mean]
+        /// <summary>
+        /// Noise reduction filter (Arithmetic Mean algorithm).
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="sizeMask">Kernel size.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan NoiseReduction_Mean(ImageData data, int sizeMask) {
             int i = 0;
             int j = 0;
@@ -2034,6 +2245,12 @@ namespace ImageEdit_WPF.HelperClasses {
         #endregion
 
         #region Noise reduction filter [Median]
+        /// <summary>
+        /// Noise reduction filter (Median algorithm).
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="sizeMask">Kernel size.</param>
+        /// <returns>Execution time.</returns>
         public static TimeSpan NoiseReduction_Median(ImageData data, int sizeMask) {
             int i = 0;
             int j = 0;
