@@ -24,8 +24,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 
-namespace ImageEdit_WPF.HelperClasses {
+namespace ImageEdit_WPF.HelperClasses.Algorithms {
     public static class Algorithms {
         #region Shift bits
         /// <summary>
@@ -683,8 +684,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// </summary>
         /// <param name="data">Image data.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan Sepia(ImageData data)
-        {
+        public static TimeSpan Sepia(ImageData data) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -692,7 +692,7 @@ namespace ImageEdit_WPF.HelperClasses {
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmpData.Height;
+            int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgb = new byte[bytes];
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -1261,9 +1261,9 @@ namespace ImageEdit_WPF.HelperClasses {
             }
 
             Parallel.ForEach(BetterEnumerable.SteppedRange(0, rgb.Length, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), p => {
-                double b = rgb[p];
-                double g = rgb[p + 1];
-                double r = rgb[p + 2];
+                double b = 0;
+                double g = 0;
+                double r = 0;
 
                 int k = (int)yuv[p];
                 yuv[p] = (byte)Math.Round(sumHistogramY[k]*255.0);
@@ -1434,7 +1434,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <param name="maskX">X axis kernel</param>
         /// <param name="maskY">Y axis kernel</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, int[,] maskX, int[,] maskY) {
+        public static TimeSpan EdgeDetection_Sobel(ImageData data, int sizeMask, double[,] maskX, double[,] maskY) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -1652,7 +1652,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <param name="sizeMask">Kernel size.</param>
         /// <param name="maskX">X axis kernel.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, int[,] maskX) {
+        public static TimeSpan GaussianBlur(ImageData data, int sizeMask, double[,] maskX) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1660,7 +1660,7 @@ namespace ImageEdit_WPF.HelperClasses {
             double tR = 0.0;
             double tG = 0.0;
             double tB = 0.0;
-            int sumMask = 0;
+            double sumMask = 0;
             int index = 0;
 
             // Lock the bitmap's bits.  
@@ -1696,9 +1696,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
-                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
-                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
+                                    tR = tR + (rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1743,9 +1743,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
-                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
-                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
+                                    tR = tR + (rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1790,9 +1790,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
-                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
-                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
+                                    tR = tR + (rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1845,7 +1845,7 @@ namespace ImageEdit_WPF.HelperClasses {
         /// <param name="sizeMask">Kernel size.</param>
         /// <param name="maskX">X axis mask.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan Sharpen(ImageData data, int sizeMask, int[,] maskX) {
+        public static TimeSpan Sharpen(ImageData data, int sizeMask, double[,] maskX) {
             int i = 0;
             int j = 0;
             int k = 0;
@@ -1853,7 +1853,7 @@ namespace ImageEdit_WPF.HelperClasses {
             double tR = 0.0;
             double tG = 0.0;
             double tB = 0.0;
-            int sumMask = 0;
+            double sumMask = 0;
             int index = 0;
 
             // Lock the bitmap's bits.  
@@ -1889,9 +1889,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 1)*bmpData.Stride) + ((i + k - 1)*3);
-                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
-                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
-                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
+                                    tR = tR + (rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1936,9 +1936,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 2)*bmpData.Stride) + ((i + k - 2)*3);
-                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
-                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
-                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
+                                    tR = tR + (rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 
@@ -1983,9 +1983,9 @@ namespace ImageEdit_WPF.HelperClasses {
                             for (k = 0; k < sizeMask; k++) {
                                 for (l = 0; l < sizeMask; l++) {
                                     index = ((j + l - 3)*bmpData.Stride) + ((i + k - 3)*3);
-                                    tR = tR + (double)(rgbValues[index + 2] * maskX[k, l]) / sumMask;
-                                    tG = tG + (double)(rgbValues[index + 1] * maskX[k, l]) / sumMask;
-                                    tB = tB + (double)(rgbValues[index] * maskX[k, l]) / sumMask;
+                                    tR = tR + (rgbValues[index + 2] * maskX[k, l]) / sumMask;
+                                    tG = tG + (rgbValues[index + 1] * maskX[k, l]) / sumMask;
+                                    tB = tB + (rgbValues[index] * maskX[k, l]) / sumMask;
                                 }
                             }
 

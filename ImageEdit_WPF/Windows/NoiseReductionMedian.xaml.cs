@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
@@ -37,7 +38,7 @@ namespace ImageEdit_WPF.Windows {
         /// <summary>
         /// Size of the kernel.
         /// </summary>
-        private int m_sizeMask = 0;
+        private int m_kernelSize = 0;
 
         /// <summary>
         /// Noise Reduction (Median filter) <c>constuctor</c>.
@@ -63,7 +64,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void three_Checked(object sender, RoutedEventArgs e) {
-            m_sizeMask = 3;
+            m_kernelSize = 3;
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void five_Checked(object sender, RoutedEventArgs e) {
-            m_sizeMask = 5;
+            m_kernelSize = 5;
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void seven_Checked(object sender, RoutedEventArgs e) {
-            m_sizeMask = 7;
+            m_kernelSize = 7;
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.NoiseReduction_Median(m_data, m_sizeMask);
+            elapsedTime = Algorithms.NoiseReduction_Median(m_data, m_kernelSize);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

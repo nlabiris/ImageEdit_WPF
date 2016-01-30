@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>

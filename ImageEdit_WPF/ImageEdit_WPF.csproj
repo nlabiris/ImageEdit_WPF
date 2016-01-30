@@ -76,11 +76,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="HelperClasses\Algorithms.cs" />
+    <Compile Include="HelperClasses\Algorithms\Algorithms.cs" />
+    <Compile Include="HelperClasses\Algorithms\Kernels.cs" />
     <Compile Include="HelperClasses\BetterEnumerable.cs" />
-    <Compile Include="HelperClasses\AlgorithmsBackup.cs" />
+    <Compile Include="HelperClasses\Algorithms\AlgorithmsBackup.cs" />
     <Compile Include="HelperClasses\ConvertionMethods.cs" />
-    <Compile Include="HelperClasses\ImageData.cs" />
+    <Compile Include="HelperClasses\Algorithms\ImageData.cs" />
     <Compile Include="HelperClasses\SaveImage.cs" />
     <Compile Include="HelperClasses\ViewModel.cs" />
     <Compile Include="Windows\AutoThreshold.xaml.cs">

@@ -32,6 +32,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 
 // BUG: Undo/Redo
 // PENDING: Color to Grayscale algorithm
@@ -737,6 +738,64 @@ namespace ImageEdit_WPF {
         }
         #endregion
 
+        #region Cartoon effect
+        /// <summary>
+        /// Cartoon effect.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CartoonEffect_OnClick(object sender, RoutedEventArgs e) {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try {
+                m_data.M_action = ActionType.Cartoon;
+                m_backgroundWorker.RunWorkerAsync();
+            } catch (FileNotFoundException ex) {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (InvalidOperationException ex) {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (IndexOutOfRangeException ex) {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Oil Paint effect
+        /// <summary>
+        /// Oil paint effect.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OilPaintEffect_OnClick(object sender, RoutedEventArgs e) {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try {
+                m_data.M_action = ActionType.OilPaint;
+                m_backgroundWorker.RunWorkerAsync();
+            } catch (FileNotFoundException ex) {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (InvalidOperationException ex) {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (IndexOutOfRangeException ex) {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
         #region Histogram
         /// <summary>
         /// Histogram algorithm. Here we create a new window from where we implement the algorithm.
@@ -1204,6 +1263,14 @@ namespace ImageEdit_WPF {
                 case ActionType.Sepia:
                     // Apply algorithm and return execution time
                     elapsedTime = Algorithms.Sepia(m_data);
+                    break;
+                case ActionType.Cartoon:
+                    // Apply algorithm and return execution time
+                    //elapsedTime = Algorithms.Sepia(m_data);
+                    break;
+                case ActionType.OilPaint:
+                    // Apply algorithm and return execution time
+                    //elapsedTime = Algorithms.Sepia(m_data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

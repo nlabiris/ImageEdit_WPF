@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
@@ -37,12 +38,7 @@ namespace ImageEdit_WPF.Windows {
         /// <summary>
         /// Size of the kernel.
         /// </summary>
-        private int m_sizeMask = 0;
-
-        /// <summary>
-        /// Kernel.
-        /// </summary>
-        private int[,] maskX = null;
+        private int m_kernelSize = 0;
 
         /// <summary>
         /// Sharpen <c>constructor</c>.
@@ -65,411 +61,30 @@ namespace ImageEdit_WPF.Windows {
         }
 
         /// <summary>
-        /// If kernel's size is 3x3, the following attributes are set.
-        /// <list type="bullet">
-        ///     <item>
-        ///     <description>
-        ///         Kernel size.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Height of the window.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Width of the window.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Group box width.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Group box height.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         OK button attributes.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Text Boxes visibility and values.
-        ///     </description>
-        ///     </item>
-        /// </list>
+        /// Set kernel's size to 3.
         /// </summary>
-        /// <remarks>
-        /// As for the textBoxes that hold the values of the kernel,
-        /// some of them are not visible because is not needed to.
-        /// They exist only for bigger kernels.
-        /// </remarks>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void three_Checked(object sender, RoutedEventArgs e) {
-            m_sizeMask = 3;
-
-            Height = 260;
-            Width = 180;
-
-            groupBox.Width = 110;
-            groupBox.Height = 90;
-
-            ok.Margin = new Thickness(50, 10, 50, 10);
-
-            tbx1.Text = "-1";
-            tbx2.Text = "-1";
-            tbx3.Text = "-1";
-            tbx8.Text = "-1";
-            tbx9.Text = "9";
-            tbx10.Text = "-1";
-            tbx15.Text = "-1";
-            tbx16.Text = "-1";
-            tbx17.Text = "-1";
-
-            tbx1.Visibility = Visibility.Visible;
-            tbx2.Visibility = Visibility.Visible;
-            tbx3.Visibility = Visibility.Visible;
-            tbx4.Visibility = Visibility.Collapsed;
-            tbx5.Visibility = Visibility.Collapsed;
-            tbx6.Visibility = Visibility.Collapsed;
-            tbx7.Visibility = Visibility.Collapsed;
-            tbx8.Visibility = Visibility.Visible;
-            tbx9.Visibility = Visibility.Visible;
-            tbx10.Visibility = Visibility.Visible;
-            tbx11.Visibility = Visibility.Collapsed;
-            tbx12.Visibility = Visibility.Collapsed;
-            tbx13.Visibility = Visibility.Collapsed;
-            tbx14.Visibility = Visibility.Collapsed;
-            tbx15.Visibility = Visibility.Visible;
-            tbx16.Visibility = Visibility.Visible;
-            tbx17.Visibility = Visibility.Visible;
-            tbx18.Visibility = Visibility.Collapsed;
-            tbx19.Visibility = Visibility.Collapsed;
-            tbx20.Visibility = Visibility.Collapsed;
-            tbx21.Visibility = Visibility.Collapsed;
-            tbx22.Visibility = Visibility.Collapsed;
-            tbx23.Visibility = Visibility.Collapsed;
-            tbx24.Visibility = Visibility.Collapsed;
-            tbx25.Visibility = Visibility.Collapsed;
-            tbx26.Visibility = Visibility.Collapsed;
-            tbx27.Visibility = Visibility.Collapsed;
-            tbx28.Visibility = Visibility.Collapsed;
-            tbx29.Visibility = Visibility.Collapsed;
-            tbx30.Visibility = Visibility.Collapsed;
-            tbx31.Visibility = Visibility.Collapsed;
-            tbx32.Visibility = Visibility.Collapsed;
-            tbx33.Visibility = Visibility.Collapsed;
-            tbx34.Visibility = Visibility.Collapsed;
-            tbx35.Visibility = Visibility.Collapsed;
-            tbx36.Visibility = Visibility.Collapsed;
-            tbx37.Visibility = Visibility.Collapsed;
-            tbx38.Visibility = Visibility.Collapsed;
-            tbx39.Visibility = Visibility.Collapsed;
-            tbx40.Visibility = Visibility.Collapsed;
-            tbx41.Visibility = Visibility.Collapsed;
-            tbx42.Visibility = Visibility.Collapsed;
-            tbx43.Visibility = Visibility.Collapsed;
-            tbx44.Visibility = Visibility.Collapsed;
-            tbx45.Visibility = Visibility.Collapsed;
-            tbx46.Visibility = Visibility.Collapsed;
-            tbx47.Visibility = Visibility.Collapsed;
-            tbx48.Visibility = Visibility.Collapsed;
-            tbx49.Visibility = Visibility.Collapsed;
+            m_kernelSize = 3;
         }
 
         /// <summary>
-        /// If kernel's size is 5x5, the following attributes are set.
-        /// <list type="bullet">
-        ///     <item>
-        ///     <description>
-        ///         Kernel size.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Height of the window.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Width of the window.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Group box width.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Group box height.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         OK button attributes.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Text Boxes visibility and values.
-        ///     </description>
-        ///     </item>
-        /// </list>
+        /// Set kernel's size to 5.
         /// </summary>
-        /// <remarks>
-        /// As for the textBoxes that hold the values of the kernel,
-        /// some of them are not visible because is not needed to.
-        /// They exist only for bigger kernels.
-        /// </remarks>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void five_Checked(object sender, RoutedEventArgs e) {
-            m_sizeMask = 5;
-
-            Height = 310;
-            Width = 220;
-
-            groupBox.Width = 170;
-            groupBox.Height = 140;
-
-            ok.Margin = new Thickness(70, 10, 70, 10);
-
-            tbx1.Text = "-1";
-            tbx2.Text = "-1";
-            tbx3.Text = "-1";
-            tbx4.Text = "-1";
-            tbx5.Text = "-1";
-            tbx8.Text = "-1";
-            tbx9.Text = "-1";
-            tbx10.Text = "-1";
-            tbx11.Text = "-1";
-            tbx12.Text = "-1";
-            tbx15.Text = "-1";
-            tbx16.Text = "-1";
-            tbx17.Text = "25";
-            tbx18.Text = "-1";
-            tbx19.Text = "-1";
-            tbx22.Text = "-1";
-            tbx23.Text = "-1";
-            tbx24.Text = "-1";
-            tbx25.Text = "-1";
-            tbx26.Text = "-1";
-            tbx29.Text = "-1";
-            tbx30.Text = "-1";
-            tbx31.Text = "-1";
-            tbx32.Text = "-1";
-            tbx33.Text = "-1";
-
-            tbx1.Visibility = Visibility.Visible;
-            tbx2.Visibility = Visibility.Visible;
-            tbx3.Visibility = Visibility.Visible;
-            tbx4.Visibility = Visibility.Visible;
-            tbx5.Visibility = Visibility.Visible;
-            tbx6.Visibility = Visibility.Collapsed;
-            tbx7.Visibility = Visibility.Collapsed;
-            tbx8.Visibility = Visibility.Visible;
-            tbx9.Visibility = Visibility.Visible;
-            tbx10.Visibility = Visibility.Visible;
-            tbx11.Visibility = Visibility.Visible;
-            tbx12.Visibility = Visibility.Visible;
-            tbx13.Visibility = Visibility.Collapsed;
-            tbx14.Visibility = Visibility.Collapsed;
-            tbx15.Visibility = Visibility.Visible;
-            tbx16.Visibility = Visibility.Visible;
-            tbx17.Visibility = Visibility.Visible;
-            tbx18.Visibility = Visibility.Visible;
-            tbx19.Visibility = Visibility.Visible;
-            tbx20.Visibility = Visibility.Collapsed;
-            tbx21.Visibility = Visibility.Collapsed;
-            tbx22.Visibility = Visibility.Visible;
-            tbx23.Visibility = Visibility.Visible;
-            tbx24.Visibility = Visibility.Visible;
-            tbx25.Visibility = Visibility.Visible;
-            tbx26.Visibility = Visibility.Visible;
-            tbx27.Visibility = Visibility.Collapsed;
-            tbx28.Visibility = Visibility.Collapsed;
-            tbx29.Visibility = Visibility.Visible;
-            tbx30.Visibility = Visibility.Visible;
-            tbx31.Visibility = Visibility.Visible;
-            tbx32.Visibility = Visibility.Visible;
-            tbx33.Visibility = Visibility.Visible;
-            tbx34.Visibility = Visibility.Collapsed;
-            tbx35.Visibility = Visibility.Collapsed;
-            tbx36.Visibility = Visibility.Collapsed;
-            tbx37.Visibility = Visibility.Collapsed;
-            tbx38.Visibility = Visibility.Collapsed;
-            tbx39.Visibility = Visibility.Collapsed;
-            tbx40.Visibility = Visibility.Collapsed;
-            tbx41.Visibility = Visibility.Collapsed;
-            tbx42.Visibility = Visibility.Collapsed;
-            tbx43.Visibility = Visibility.Collapsed;
-            tbx44.Visibility = Visibility.Collapsed;
-            tbx45.Visibility = Visibility.Collapsed;
-            tbx46.Visibility = Visibility.Collapsed;
-            tbx47.Visibility = Visibility.Collapsed;
-            tbx48.Visibility = Visibility.Collapsed;
-            tbx49.Visibility = Visibility.Collapsed;
+            m_kernelSize = 5;
         }
 
         /// <summary>
-        /// If kernel's size is 7x7, the following attributes are set.
-        /// <list type="bullet">
-        ///     <item>
-        ///     <description>
-        ///         Kernel size.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Height of the window.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Width of the window.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Group box width.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Group box height.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         OK button attributes.
-        ///     </description>
-        ///     </item>
-        ///     <item>
-        ///     <description>
-        ///         Text Boxes visibility and values.
-        ///     </description>
-        ///     </item>
-        /// </list>
+        /// Set kernel's size to 7.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void seven_Checked(object sender, RoutedEventArgs e) {
-            m_sizeMask = 7;
-
-            Height = 350;
-            Width = 270;
-
-            groupBox.Width = 230;
-            groupBox.Height = 180;
-
-            ok.Margin = new Thickness(90, 10, 90, 10);
-
-            tbx1.Text = "-1";
-            tbx2.Text = "-1";
-            tbx3.Text = "-1";
-            tbx4.Text = "-1";
-            tbx5.Text = "-1";
-            tbx6.Text = "-1";
-            tbx7.Text = "-1";
-            tbx8.Text = "-1";
-            tbx9.Text = "-1";
-            tbx10.Text = "-1";
-            tbx11.Text = "-1";
-            tbx12.Text = "-1";
-            tbx13.Text = "-1";
-            tbx14.Text = "-1";
-            tbx15.Text = "-1";
-            tbx16.Text = "-1";
-            tbx17.Text = "-1";
-            tbx18.Text = "-1";
-            tbx19.Text = "-1";
-            tbx20.Text = "-1";
-            tbx21.Text = "-1";
-            tbx22.Text = "-1";
-            tbx23.Text = "-1";
-            tbx24.Text = "-1";
-            tbx25.Text = "49";
-            tbx26.Text = "-1";
-            tbx27.Text = "-1";
-            tbx28.Text = "-1";
-            tbx29.Text = "-1";
-            tbx30.Text = "-1";
-            tbx31.Text = "-1";
-            tbx32.Text = "-1";
-            tbx33.Text = "-1";
-            tbx34.Text = "-1";
-            tbx35.Text = "-1";
-            tbx36.Text = "-1";
-            tbx37.Text = "-1";
-            tbx38.Text = "-1";
-            tbx39.Text = "-1";
-            tbx40.Text = "-1";
-            tbx41.Text = "-1";
-            tbx42.Text = "-1";
-            tbx43.Text = "-1";
-            tbx44.Text = "-1";
-            tbx45.Text = "-1";
-            tbx46.Text = "-1";
-            tbx47.Text = "-1";
-            tbx48.Text = "-1";
-            tbx49.Text = "-1";
-
-            tbx1.Visibility = Visibility.Visible;
-            tbx2.Visibility = Visibility.Visible;
-            tbx3.Visibility = Visibility.Visible;
-            tbx4.Visibility = Visibility.Visible;
-            tbx5.Visibility = Visibility.Visible;
-            tbx6.Visibility = Visibility.Visible;
-            tbx7.Visibility = Visibility.Visible;
-            tbx8.Visibility = Visibility.Visible;
-            tbx9.Visibility = Visibility.Visible;
-            tbx10.Visibility = Visibility.Visible;
-            tbx11.Visibility = Visibility.Visible;
-            tbx12.Visibility = Visibility.Visible;
-            tbx13.Visibility = Visibility.Visible;
-            tbx14.Visibility = Visibility.Visible;
-            tbx15.Visibility = Visibility.Visible;
-            tbx16.Visibility = Visibility.Visible;
-            tbx17.Visibility = Visibility.Visible;
-            tbx18.Visibility = Visibility.Visible;
-            tbx19.Visibility = Visibility.Visible;
-            tbx20.Visibility = Visibility.Visible;
-            tbx21.Visibility = Visibility.Visible;
-            tbx22.Visibility = Visibility.Visible;
-            tbx23.Visibility = Visibility.Visible;
-            tbx24.Visibility = Visibility.Visible;
-            tbx25.Visibility = Visibility.Visible;
-            tbx26.Visibility = Visibility.Visible;
-            tbx27.Visibility = Visibility.Visible;
-            tbx28.Visibility = Visibility.Visible;
-            tbx29.Visibility = Visibility.Visible;
-            tbx30.Visibility = Visibility.Visible;
-            tbx31.Visibility = Visibility.Visible;
-            tbx32.Visibility = Visibility.Visible;
-            tbx33.Visibility = Visibility.Visible;
-            tbx34.Visibility = Visibility.Visible;
-            tbx35.Visibility = Visibility.Visible;
-            tbx36.Visibility = Visibility.Visible;
-            tbx37.Visibility = Visibility.Visible;
-            tbx38.Visibility = Visibility.Visible;
-            tbx39.Visibility = Visibility.Visible;
-            tbx40.Visibility = Visibility.Visible;
-            tbx41.Visibility = Visibility.Visible;
-            tbx42.Visibility = Visibility.Visible;
-            tbx43.Visibility = Visibility.Visible;
-            tbx44.Visibility = Visibility.Visible;
-            tbx45.Visibility = Visibility.Visible;
-            tbx46.Visibility = Visibility.Visible;
-            tbx47.Visibility = Visibility.Visible;
-            tbx48.Visibility = Visibility.Visible;
-            tbx49.Visibility = Visibility.Visible;
+            m_kernelSize = 7;
         }
 
         /// <summary>
@@ -478,42 +93,26 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            switch (m_sizeMask) {
-                case 3:
-                    maskX = new int[3, 3] {
-                        {int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text)},
-                        {int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text)},
-                        {int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text)}
-                    };
-                    break;
-                case 5:
-                    maskX = new int[5, 5] {
-                        {int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text), int.Parse(tbx4.Text), int.Parse(tbx5.Text)},
-                        {int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text), int.Parse(tbx11.Text), int.Parse(tbx12.Text)},
-                        {int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text), int.Parse(tbx18.Text), int.Parse(tbx19.Text)},
-                        {int.Parse(tbx22.Text), int.Parse(tbx23.Text), int.Parse(tbx24.Text), int.Parse(tbx25.Text), int.Parse(tbx26.Text)},
-                        {int.Parse(tbx29.Text), int.Parse(tbx30.Text), int.Parse(tbx31.Text), int.Parse(tbx32.Text), int.Parse(tbx33.Text)}
-                    };
-                    break;
-                case 7:
-                    maskX = new int[7, 7] {
-                        {int.Parse(tbx1.Text), int.Parse(tbx2.Text), int.Parse(tbx3.Text), int.Parse(tbx4.Text), int.Parse(tbx5.Text), int.Parse(tbx6.Text), int.Parse(tbx7.Text)},
-                        {int.Parse(tbx8.Text), int.Parse(tbx9.Text), int.Parse(tbx10.Text), int.Parse(tbx11.Text), int.Parse(tbx12.Text), int.Parse(tbx13.Text), int.Parse(tbx14.Text)},
-                        {int.Parse(tbx15.Text), int.Parse(tbx16.Text), int.Parse(tbx17.Text), int.Parse(tbx18.Text), int.Parse(tbx19.Text), int.Parse(tbx20.Text), int.Parse(tbx21.Text)},
-                        {int.Parse(tbx22.Text), int.Parse(tbx23.Text), int.Parse(tbx24.Text), int.Parse(tbx25.Text), int.Parse(tbx26.Text), int.Parse(tbx27.Text), int.Parse(tbx28.Text)},
-                        {int.Parse(tbx29.Text), int.Parse(tbx30.Text), int.Parse(tbx31.Text), int.Parse(tbx32.Text), int.Parse(tbx33.Text), int.Parse(tbx34.Text), int.Parse(tbx35.Text)},
-                        {int.Parse(tbx36.Text), int.Parse(tbx37.Text), int.Parse(tbx38.Text), int.Parse(tbx39.Text), int.Parse(tbx40.Text), int.Parse(tbx41.Text), int.Parse(tbx42.Text)},
-                        {int.Parse(tbx43.Text), int.Parse(tbx44.Text), int.Parse(tbx45.Text), int.Parse(tbx46.Text), int.Parse(tbx47.Text), int.Parse(tbx48.Text), int.Parse(tbx49.Text)}
-                    };
-                    break;
-            }
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
-            // Apply algorithm and return execution time
-            elapsedTime = Algorithms.Sharpen(m_data, m_sizeMask, maskX);
+            switch(m_kernelSize)
+            {
+                case 3:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.Sharpen(m_data, m_kernelSize, Kernel.M_Sharpen3x3);
+                    break;
+                case 5:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.Sharpen(m_data, m_kernelSize, Kernel.M_Sharpen5x5);
+                    break;
+                case 7:
+                    // Apply algorithm and return execution time
+                    elapsedTime = Algorithms.Sharpen(m_data, m_kernelSize, Kernel.M_Sharpen7x7);
+                    break;
+            }
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

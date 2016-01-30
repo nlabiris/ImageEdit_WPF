@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>

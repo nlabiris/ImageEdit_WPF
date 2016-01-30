@@ -23,74 +23,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Window x:Class="ImageEdit_WPF.Windows.Sharpen"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Sharpen" Height="330" Width="280" Background="WhiteSmoke" ResizeMode="NoResize">
+        Title="Sharpen" Height="150" Width="200" Background="WhiteSmoke" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="10,5,0,0">
-            <TextBlock>Size of mask:</TextBlock>
+            <TextBlock>Kernel size:</TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="0" Margin="90,5,0,10">
             <RadioButton Name="three" Checked="three_Checked">3x3</RadioButton>
             <RadioButton Name="five" Checked="five_Checked">5x5</RadioButton>
             <RadioButton Name="seven" Checked="seven_Checked">7x7</RadioButton>
         </StackPanel>
-        <GroupBox Name="groupBox" Grid.Row="1" Header="Filter" Width="230" Height="170" HorizontalAlignment="Center" Margin="10">
-            <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBox Name="tbx1" Width="30">-1</TextBox>
-                <TextBox Name="tbx2" Width="30">-2</TextBox>
-                <TextBox Name="tbx3" Width="30">-1</TextBox>
-                <TextBox Name="tbx4" Width="30">0</TextBox>
-                <TextBox Name="tbx5" Width="30">0</TextBox>
-                <TextBox Name="tbx6" Width="30">0</TextBox>
-                <TextBox Name="tbx7" Width="30">-1</TextBox>
-                <TextBox Name="tbx8" Width="30">-2</TextBox>
-                <TextBox Name="tbx9" Width="30">-1</TextBox>
-                <TextBox Name="tbx10" Width="30">-1</TextBox>
-                <TextBox Name="tbx11" Width="30">-2</TextBox>
-                <TextBox Name="tbx12" Width="30">-1</TextBox>
-                <TextBox Name="tbx13" Width="30">-1</TextBox>
-                <TextBox Name="tbx14" Width="30">-2</TextBox>
-                <TextBox Name="tbx15" Width="30">-1</TextBox>
-                <TextBox Name="tbx16" Width="30">-1</TextBox>
-                <TextBox Name="tbx17" Width="30">-2</TextBox>
-                <TextBox Name="tbx18" Width="30">-1</TextBox>
-                <TextBox Name="tbx19" Width="30">-1</TextBox>
-                <TextBox Name="tbx20" Width="30">-2</TextBox>
-                <TextBox Name="tbx21" Width="30">-1</TextBox>
-                <TextBox Name="tbx22" Width="30">-1</TextBox>
-                <TextBox Name="tbx23" Width="30">-1</TextBox>
-                <TextBox Name="tbx24" Width="30">-1</TextBox>
-                <TextBox Name="tbx25" Width="30">-1</TextBox>
-                <TextBox Name="tbx26" Width="30">-1</TextBox>
-                <TextBox Name="tbx27" Width="30">-2</TextBox>
-                <TextBox Name="tbx28" Width="30">-1</TextBox>
-                <TextBox Name="tbx29" Width="30">0</TextBox>
-                <TextBox Name="tbx30" Width="30">0</TextBox>
-                <TextBox Name="tbx31" Width="30">0</TextBox>
-                <TextBox Name="tbx32" Width="30">-1</TextBox>
-                <TextBox Name="tbx33" Width="30">-2</TextBox>
-                <TextBox Name="tbx34" Width="30">-1</TextBox>
-                <TextBox Name="tbx35" Width="30">-1</TextBox>
-                <TextBox Name="tbx36" Width="30">-2</TextBox>
-                <TextBox Name="tbx37" Width="30">-1</TextBox>
-                <TextBox Name="tbx38" Width="30">-1</TextBox>
-                <TextBox Name="tbx39" Width="30">-2</TextBox>
-                <TextBox Name="tbx40" Width="30">-1</TextBox>
-                <TextBox Name="tbx41" Width="30">-1</TextBox>
-                <TextBox Name="tbx42" Width="30">-2</TextBox>
-                <TextBox Name="tbx43" Width="30">-1</TextBox>
-                <TextBox Name="tbx44" Width="30">-1</TextBox>
-                <TextBox Name="tbx45" Width="30">-2</TextBox>
-                <TextBox Name="tbx46" Width="30">-1</TextBox>
-                <TextBox Name="tbx47" Width="30">-1</TextBox>
-                <TextBox Name="tbx48" Width="30">-1</TextBox>
-                <TextBox Name="tbx49" Width="30">-1</TextBox>
-            </WrapPanel>
-        </GroupBox>
-        <Button Name="ok" Grid.Row="2" Margin="90,10,90,10" Click="ok_Click">OK</Button>
+        <Button Name="ok" Grid.Row="1" Margin="50,10,50,10" Click="ok_Click">OK</Button>
     </Grid>
 </Window>

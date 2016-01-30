@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace ImageEdit_WPF.HelperClasses {
+namespace ImageEdit_WPF.HelperClasses.Algorithms {
     /// <summary>
     /// <c>ActionType</c> enumeration.
     /// <para>Used to distinguish different actions (algorithms).</para>
@@ -49,7 +49,9 @@ namespace ImageEdit_WPF.HelperClasses {
         NoiseReductionMean = 18,
         NoiseReductionMedian = 19,
         Grayscale = 20,
-        Sepia = 21
+        Sepia = 21,
+        Cartoon = 22,
+        OilPaint = 23
     }
 
     public class ImageData {

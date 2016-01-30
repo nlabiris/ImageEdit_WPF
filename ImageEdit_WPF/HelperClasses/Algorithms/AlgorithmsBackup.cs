@@ -25,7 +25,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace ImageEdit_WPF.HelperClasses {
+namespace ImageEdit_WPF.HelperClasses.Algorithms {
     internal static class AlgorithmsBackup {
         #region Shift bits
         private static TimeSpan ShiftBits(ImageData data, int bits, BackgroundWorker backgroundWorker) {
