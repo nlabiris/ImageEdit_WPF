@@ -33,7 +33,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         /// </summary>
         /// <param name="data">Image data.</param>
         /// <param name="bits">Bits.</param>
-        /// <returns></returns>
+        /// <returns>Execution time.</returns>
         public static TimeSpan ShiftBits(ImageData data, int bits) {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -49,6 +49,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgb, 0, bytes);
 
+            #region Algorithm
             Parallel.ForEach(BetterEnumerable.SteppedRange(0, bytes, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
                 int b = rgb[k];
                 int g = rgb[k + 1];
@@ -57,6 +58,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                 rgb[k + 1] = (byte)(g << bits); // G
                 rgb[k + 2] = (byte)(r << bits); // R
             });
+            #endregion
 
             Marshal.Copy(rgb, 0, ptr, bytes);
 
@@ -142,7 +144,6 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             int positionz2R = 0;
             int positionz2G = 0;
             int positionz2B = 0;
-            int temp = 0;
             int thresholdR = 0;
             int thresholdG = 0;
             int thresholdB = 0;
@@ -199,6 +200,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
 
             Parallel.For(1, 256, k => {
                 for (int l = 255; l >= k; l--) {
+                    int temp = 0;
                     if (histogramSortR[l - 1] < histogramSortR[l]) {
                         temp = histogramSortR[l - 1];
                         histogramSortR[l - 1] = histogramSortR[l];
@@ -587,7 +589,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgb, 0, bytes);
 
-            #region Algorithms
+            #region Algorithm
             Parallel.ForEach(BetterEnumerable.SteppedRange(0, bytes, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
                 double b = rgb[k];
                 double g = rgb[k + 1];
@@ -653,7 +655,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgb, 0, bytes);
 
-            #region Algorithms
+            #region Algorithm
             Parallel.ForEach(BetterEnumerable.SteppedRange(0, bytes, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
                 double b = rgb[k];
                 double g = rgb[k + 1];
@@ -699,7 +701,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgb, 0, bytes);
 
-            #region Algorithms
+            #region Algorithm
             Parallel.ForEach(BetterEnumerable.SteppedRange(0, bytes, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), k => {
                 double b = rgb[k];
                 double g = rgb[k + 1];

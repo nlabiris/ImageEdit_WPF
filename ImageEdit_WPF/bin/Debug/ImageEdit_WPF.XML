@@ -1,0 +1,1687 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ImageEdit_WPF</name>
+    </assembly>
+    <members>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.ShiftBits(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="bits">Bits.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.Threshold(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Set a specific threshold. one threshold for all channels.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="threshold">Threshold.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.AutoThreshold(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Set a threshold depending on the histogram of the image.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="distance">Distance of 2 peaks in histogram.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.Negative(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Invert image.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.SquareRoot(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Increase brightness exponentially.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.ContrastEnhancement(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double)">
+            <summary>
+            Contrast enhancement.
+            <para>Change brightness and cotnrast at the same time.</para>
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="brightness">Brightness.</param>
+            <param name="contrast">Contrast.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.Brightness(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Change brightness of the image.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="brightness">Brightness.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.Contrast(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Double)">
+            <summary>
+            Change contrast of the image.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="contrast">Contrast.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.ConvertToGrayscale(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Convert colored image to grayscale.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.Sepia(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Sepia tone.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramMeanValue(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32[])">
+            <summary>
+            Calculate the average value of histogram.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="values">Histogram values.</param>
+            <returns>Returns the average value.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramRed(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the red channel.
+            </summary>
+            <returns>
+            Histogram of the red channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramGreen(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the green channel.
+            </summary>
+            <returns>
+            Histogram of the green channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramBlue(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the blue channel.
+            </summary>
+            <returns>
+            Histogram of the blue channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramLuminance(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram for the luminance values.
+            </summary>
+            <returns>
+            Histogram of the luminance values.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramEqualization_RGB(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Histogram equalization at the RGB color space.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramEqualization_HSV(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Histogram equalization at the HSV color space.
+            </summary>
+            <param name="data"></param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.HistogramEqualization_YUV(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Histogram equalization at the YUV color space.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.ImageSummarization(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Image Summarization.
+            <para>Adding the same image, increasing its brightness.</para>
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.ImageSubtraction(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Image subtraction.
+            <para>Subtract image from itselft which results to a black image. Not useful at all. It will be chnaged soon.</para>
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.EdgeDetection_Sobel(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double[0:,0:],System.Double[0:,0:])">
+            <summary>
+            Sobel edge detector.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <param name="kernelX">X axis kernel</param>
+            <param name="kernelY">Y axis kernel</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.GaussianBlur(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double[0:,0:])">
+            <summary>
+            Gaussian blur filter.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <param name="kernelX">X axis kernel.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.Sharpen(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double[0:,0:])">
+            <summary>
+            Sharpen filter.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <param name="kernelX">X axis mask.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.SaltPepperNoise_Color(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Double)">
+            <summary>
+            Colored Salt and Pepper noise generator.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="probability">Probability.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.SaltPepperNoise_BW(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Double)">
+            <summary>
+            Black and white Salt and Pepper noise generator.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="probability">Probability.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.NoiseReduction_Mean(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Noise reduction filter (Arithmetic Mean algorithm).
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.Algorithms.NoiseReduction_Median(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Noise reduction filter (Median algorithm).
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="T:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup">
+            <summary>
+            This class contains older implementations of algorithms. It is not meant for use in the program.
+            Newer implementations are faster and with less bugs (if any).
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup.HistogramMeanValue(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32[])">
+            <summary>
+            Calculate the average value of histogram.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="values">Histogram values.</param>
+            <returns>Returns the average value.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup.HistogramRed(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the red channel.
+            </summary>
+            <returns>
+            Histogram of the red channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup.HistogramGreen(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the green channel.
+            </summary>
+            <returns>
+            Histogram of the green channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup.HistogramBlue(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the blue channel.
+            </summary>
+            <returns>
+            Histogram of the blue channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup.HistogramLuminance(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram for the luminance values.
+            </summary>
+            <returns>
+            Histogram of the luminance values.
+            </returns>
+        </member>
+        <member name="T:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2">
+            <summary>
+            This class contains older implementations of algorithms. It is not meant for use in the program.
+            Newer implementations are faster and with less bugs (if any).
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.ShiftBits(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="bits">Bits.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.Threshold(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Set a specific threshold. one threshold for all channels.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="threshold">Threshold.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.AutoThreshold(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Set a threshold depending on the histogram of the image.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="distance">Distance of 2 peaks in histogram.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.Negative(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Invert image.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.SquareRoot(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Increase brightness exponentially.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.ContrastEnhancement(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double)">
+            <summary>
+            Contrast enhancement.
+            <para>Change brightness and cotnrast at the same time.</para>
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="brightness">Brightness.</param>
+            <param name="contrast">Contrast.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.Brightness(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Change brightness of the image.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="brightness">Brightness.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.Contrast(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Double)">
+            <summary>
+            Change contrast of the image.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="contrast">Contrast.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.ConvertToGrayscale(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Convert colored image to grayscale.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.Sepia(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Sepia tone.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramMeanValue(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32[])">
+            <summary>
+            Calculate the average value of histogram.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="values">Histogram values.</param>
+            <returns>Returns the average value.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramRed(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the red channel.
+            </summary>
+            <returns>
+            Histogram of the red channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramGreen(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the green channel.
+            </summary>
+            <returns>
+            Histogram of the green channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramBlue(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram of the blue channel.
+            </summary>
+            <returns>
+            Histogram of the blue channel.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramLuminance(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Calculating the histogram for the luminance values.
+            </summary>
+            <returns>
+            Histogram of the luminance values.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramEqualization_RGB(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Histogram equalization at the RGB color space.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramEqualization_HSV(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Histogram equalization at the HSV color space.
+            </summary>
+            <param name="data"></param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.HistogramEqualization_YUV(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Histogram equalization at the YUV color space.
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.ImageSummarization(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Image Summarization.
+            <para>Adding the same image, increasing its brightness.</para>
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.ImageSubtraction(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Image subtraction.
+            <para>Subtract image from itselft which results to a black image. Not useful at all. It will be chnaged soon.</para>
+            </summary>
+            <param name="data">Image data.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.EdgeDetection_Sobel(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double[0:,0:],System.Double[0:,0:])">
+            <summary>
+            Sobel edge detector.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <param name="kernelX">X axis kernel</param>
+            <param name="kernelY">Y axis kernel</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.GaussianBlur(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double[0:,0:])">
+            <summary>
+            Gaussian blur filter.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <param name="kernelX">X axis kernel.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.Sharpen(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32,System.Double[0:,0:])">
+            <summary>
+            Sharpen filter.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <param name="kernelX">X axis mask.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.SaltPepperNoise_Color(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Double)">
+            <summary>
+            Colored Salt and Pepper noise generator.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="probability">Probability.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.SaltPepperNoise_BW(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Double)">
+            <summary>
+            Black and white Salt and Pepper noise generator.
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="probability">Probability.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.NoiseReduction_Mean(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Noise reduction filter (Arithmetic Mean algorithm).
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.Algorithms.AlgorithmsBackup2.NoiseReduction_Median(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,System.Int32)">
+            <summary>
+            Noise reduction filter (Median algorithm).
+            </summary>
+            <param name="data">Image data.</param>
+            <param name="kernelSize">Kernel size.</param>
+            <returns>Execution time.</returns>
+        </member>
+        <member name="T:ImageEdit_WPF.HelperClasses.ConvertionMethods">
+            <summary>
+            Static class with extension methods for convertions between different type of classes that handle images.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ConvertionMethods.BitmapSourceToBitmapImage(System.Windows.Media.Imaging.BitmapSource)">
+            <summary>
+            Extension method
+            </summary>
+            <param name="bitmapsource"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ConvertionMethods.BitmapSourceToBitmap(System.Windows.Media.Imaging.BitmapSource)">
+            <summary>
+            Extension method
+            </summary>
+            <param name="bitmapsource"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ConvertionMethods.BitmapToBitmapSource(System.Drawing.Bitmap)">
+            <summary>
+            <c>Bitmap</c> to <c>BitmapSource</c> conversion method in order to show the edited image at the main window.
+            </summary>
+            <remarks>Extension method.</remarks>
+        </member>
+        <member name="T:ImageEdit_WPF.HelperClasses.Algorithms.ActionType">
+            <summary>
+            <c>ActionType</c> enumeration.
+            <para>Used to distinguish different actions (algorithms).</para>
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_inputFilename">
+            <summary>
+            Input filename of the image.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_outputFilename">
+            <summary>
+            Output filename of the image.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_noChange">
+            <summary>
+            Check if the image has been modified.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_bitmap">
+            <summary>
+            Output image that carries all changes until saved.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_undoStack">
+            <summary>
+            Stack that contains all undone actions.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_redoStack">
+            <summary>
+            Stack that contains actions to be redone.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_action">
+            <summary>
+            Type of action (which algorithm used).
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.Algorithms.ImageData.m_bmpUndoRedo">
+            <summary>
+            Image used at the Undo/Redo system.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.SaveImage.GetEncoder(System.Drawing.Imaging.ImageFormat)">
+            <summary>
+            Get the encoder info in order to use it at <c>Save</c> or <c>Save as...</c> method.
+            </summary>
+            <param name="format">Format of the image</param>
+            <returns></returns>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ViewModel.m_bitmapBind">
+            <summary>
+            Image that binds to the GUI.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ViewModel.m_histogramPoints">
+            <summary>
+            Points that represent the values of the histogram.
+            </summary>
+        </member>
+        <member name="P:ImageEdit_WPF.HelperClasses.ViewModel.M_histogramPoints">
+            <summary>
+            Get or set histogram's points. Checking if we have a different set of points to show.
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.AutoThreshold">
+            <summary>
+            Interaction logic for AutoThreshold.xaml
+            </summary>
+            <summary>
+            AutoThreshold
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.AutoThreshold.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Auto Threshold <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.AutoThreshold.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Auto Threshold algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.AutoThreshold.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Brightness">
+            <summary>
+            Interaction logic for Brightness.xaml
+            </summary>
+            <summary>
+            Brightness
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Brightness.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Brightness <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Brightness.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Brightness algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Brightness.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Contrast">
+            <summary>
+            Interaction logic for Contrast.xaml
+            </summary>
+            <summary>
+            Contrast
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Contrast.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Contrast <c>constructor</c>
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Contrast.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Contrast algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Contrast.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.ContrastEnhancement">
+            <summary>
+            Interaction logic for ContrastEnhancement.xaml
+            </summary>
+            <summary>
+            ContrastEnhancement
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.ContrastEnhancement.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Contrast Enhancement <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.ContrastEnhancement.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Contrast Enhancement algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.ContrastEnhancement.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.GaussianBlur">
+            <summary>
+            Interaction logic for GaussianBlur.xaml
+            </summary>
+            <summary>
+            GaussianBlur
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.GaussianBlur.m_kernelSize">
+            <summary>
+            Size of the kernel.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.GaussianBlur.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Gaussian Blur <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus
+            at the 'OK' button and at one of the three radio boxes (kernel size).
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.GaussianBlur.three_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 3.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.GaussianBlur.five_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 5.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.GaussianBlur.seven_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 7.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.GaussianBlur.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Gaussian Blur algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.GaussianBlur.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Information">
+            <summary>
+            Interaction logic for Information.xaml
+            </summary>
+            <summary>
+            Information
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Information.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData)">
+            <summary>
+            Information <c>constructor</c>.
+            Here we calculate all the neccesary information about some aspects of the image.
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Information.CalculateData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Information.GetEncoderInfo(System.Drawing.Imaging.ImageFormat)">
+            <summary>
+            Get the format of the image.
+            </summary>
+            <param name="format">Format of the image.</param>
+            <returns>
+            A string with the name of the format - compression.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Information.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.NoiseReductionMean">
+            <summary>
+            Interaction logic for NoiseReductionMean.xaml
+            </summary>
+            <summary>
+            NoiseReductionMean
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.NoiseReductionMean.m_kernelSize">
+            <summary>
+            Size of the kernel.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMean.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Noise Reduction (Mean filter) <c>constructor</c>.
+            Here we initialiaze the images and also we set the default kernel.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMean.three_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If 3x3 radioBox is checked, set kernel's size.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMean.five_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If 5x5 radioBox is checked, set kernel's size.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMean.seven_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If 7x7 radioBox is checked, set kernel's size.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMean.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Noise Reduction (Mean filter) algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMean.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.NoiseReductionMedian">
+            <summary>
+            Interaction logic for NoiseReductionMedian.xaml
+            </summary>
+            <summary>
+            NoiseReductionMedian
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.NoiseReductionMedian.m_kernelSize">
+            <summary>
+            Size of the kernel.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMedian.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Noise Reduction (Median filter) <c>constuctor</c>.
+            Here we initialiaze the images and also we set the default kernel.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMedian.three_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If 3x3 radioBox is checked, set kernel's size.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMedian.five_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If 5x5 radioBox is checked, set kernel's size.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMedian.seven_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If 7x7 radioBox is checked, set kernel's size.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMedian.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Noise Reduction (Median filter) algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.NoiseReductionMedian.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.SaltPepperNoiseBW">
+            <summary>
+            Interaction logic for SaltPepperNoiseBW.xaml
+            </summary>
+            <summary>
+            SaltPepperNoiseBW
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.SaltPepperNoiseBW.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Salt-and-Pepper Noise generator (Black/White) <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.SaltPepperNoiseBW.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Salt-and-Pepper Noise generator (Black/White) algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.SaltPepperNoiseBW.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.SaltPepperNoiseColor">
+            <summary>
+            Interaction logic for SaltPepperNoiseColor.xaml
+            </summary>
+            <summary>
+            SaltPepperNoiseColor
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.SaltPepperNoiseColor.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Salt-and-Pepper Noise generator (Color) <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.SaltPepperNoiseColor.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Salt-and-Pepper Noise generator (Color) algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.SaltPepperNoiseColor.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Sharpen">
+            <summary>
+            Interaction logic for Sharpen.xaml
+            </summary>
+            <summary>
+            Sharpen
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Sharpen.m_kernelSize">
+            <summary>
+            Size of the kernel.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sharpen.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Sharpen <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus
+            at the 'OK' button and at one of the three radio boxes (kernel size).
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sharpen.three_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 3.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sharpen.five_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 5.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sharpen.seven_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 7.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sharpen.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Sharpen algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sharpen.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.ShiftBits">
+            <summary>
+            Interaction logic for ShiftBits.xaml
+            </summary>
+            <summary>
+            ShiftBits
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.ShiftBits.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Shift Bits <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.ShiftBits.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Shift bits algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.ShiftBits.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Sobel">
+            <summary>
+            Interaction logic for Sobel.xaml
+            </summary>
+            <summary>
+            Sobel
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Sobel.m_kernelSize">
+            <summary>
+            Size of the kernels.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sobel.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Sobel <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus
+            at the 'OK' button and at one of the three radio boxes (kernel size).
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sobel.three_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 3.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sobel.five_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size 5.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sobel.seven_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Set kernel's size to 7.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sobel.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Sobel (Edge detector) algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Sobel.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Threshold">
+            <summary>
+            Interaction logic for Threshold.xaml
+            </summary>
+            <summary>
+            Threshold
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Threshold.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Threshold <c>constructor</c>.
+            Here we initialiaze the images and also we set the focus at the textBox being used.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Threshold.ok_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Implementation of the Threshold algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Threshold.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.HelperClasses.ZoomBorder">
+            <summary>
+            Implementation of Pan and Zoom capabilities of the interface.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ZoomBorder._child">
+            <summary>
+            The border.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ZoomBorder._isStillDownLeft">
+            <summary>
+            Is the left click of the mouse still pressed?
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ZoomBorder._isStillDownMiddle">
+            <summary>
+            Is the middle click of the mouse still pressed?
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ZoomBorder._origin">
+            <summary>
+            Original position of the mouse pointer.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.HelperClasses.ZoomBorder._start">
+            <summary>
+            start position of the mouse pointer.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.GetTranslateTransform(System.Windows.UIElement)">
+            <summary>
+            Move the mouse pointer (delta expression).
+            </summary>
+            <param name="element">The border.</param>
+            <returns>
+            New position of the mouse pointer.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.GetScaleTransform(System.Windows.UIElement)">
+            <summary>
+            Scale the border as well as the image (delta expression).
+            </summary>
+            <param name="element">The border.</param>
+            <returns>
+            New size of the border - image.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.Initialize(System.Windows.UIElement)">
+            <summary>
+            Initialization of the user-made border (<c>ZoomBorder</c>).
+            Initialize the position of the mouse pointer (upper-left corner) as well as the events that take place.
+            </summary>
+            <param name="element">The border.</param>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.child_MouseUp(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            <c>MouseUp</c> event. Concerns the left or middle buttons.
+            Note that when the left is released then we stop mouse capturing.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.child_MouseDown(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            <c>MouseDown</c> event.
+            If the middle button is pressed then start capturing the movement of the mouse pointer.
+            If the left button is pressed then get the current position (under construction).
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.Reset">
+            <summary>
+            Reset the Pan and Zoom.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.child_MouseWheel(System.Object,System.Windows.Input.MouseWheelEventArgs)">
+            <summary>
+            <c>MouseWheel</c> event. Here we implement the zoom function.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.child_PreviewMouseRightButtonDown(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            <c>RightButtonDown</c> event. If the right click of the mouse is pressed then we reset the Pan and Zoom.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.HelperClasses.ZoomBorder.child_MouseMove(System.Object,System.Windows.Input.MouseEventArgs)">
+            <summary>
+            <c>MouseMove</c> event. When moving the mouse, we keep tracking its position only if the middle button is pressed.
+            If the left clickof the mouse is pressed then we keep that position in order to create a rectangle (under construction).
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="P:ImageEdit_WPF.HelperClasses.ZoomBorder.Child">
+            <summary>
+            Get or set the <c>UIElement</c>, which is the border.
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Windows.Histogram">
+            <summary>
+            Interaction logic for Histogram.xaml
+            </summary>
+            <summary>
+            Histogram
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_data">
+            <summary>
+            Image data.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_vm">
+            <summary>
+            Object used for binding with the UI.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramR">
+            <summary>
+            Histogram of the Red channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramG">
+            <summary>
+            Histogram of the Green channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramB">
+            <summary>
+            Histogram of the Blue channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramY">
+            <summary>
+            Histogram of the Luminance values.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramMeanR">
+            <summary>
+            Mean value of the histogram for the Red channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramMeanG">
+            <summary>
+            Mean value of the histogram for the Green channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramMeanB">
+            <summary>
+            Mean value of the histogram for the Blue channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_histogramMeanY">
+            <summary>
+            Mean value of the histogram for the Luminance values.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_isCalculatedR">
+            <summary>
+            Check if we have already calculated histogram for the Red channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_isCalculatedG">
+            <summary>
+            Check if we have already calculated histogram for the Green channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_isCalculatedB">
+            <summary>
+            Check if we have already calculated histogram for the Blue channel.
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.Windows.Histogram.m_isCalculatedY">
+            <summary>
+            Check if we have already calculated histogram for the Luminance.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.#ctor(ImageEdit_WPF.HelperClasses.Algorithms.ImageData,ImageEdit_WPF.HelperClasses.ViewModel)">
+            <summary>
+            Histogram <c>constructor</c>.
+            Here we initialiaze the image, the data binding of the histogram diagram and the default hitogram that will be loaded.
+            </summary>
+            <param name="data">Input image.</param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.ConvertToPointCollection(System.Int32[])">
+            <summary>
+            Convert raw integer values into a <c>PointCollection</c>.
+            </summary>
+            <param name="values">Histogram for each channel as well as the one with the luminance values.</param>
+            <returns>
+            A set of <c>PointCollection</c> for the prefered histogram.
+            </returns>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.gray_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If gray radioBox is selected, calculate or just show the histogram of the luminance values.
+            groupBox header is also changed to reflect the current selection.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.red_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If red radioBox is selected, calculate or just show the histogram of the red channel.
+            groupBox header is also changed to reflect the current selection.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.green_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If red radioBox is selected, calculate or just show the histogram of the green channel.
+            groupBox header is also changed to reflect the current selection.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.blue_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            If red radioBox is selected, calculate or just show the histogram of the blue channel.
+            groupBox header is also changed to reflect the current selection.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.Windows.Histogram.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml.
+            Here we have all the components that appear on the main window.
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.#ctor">
+            <summary>
+            Main Window constructor. Here we initialize the state of some menu items
+            as well as checking the visibility of the status bar.
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.open_CanExecute(System.Object,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+            Command implementation of Open menu item. Check if the command can execute.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.open_Executed(System.Object,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+            Command implementation of Open menu item. Executing command.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.reopen_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Reopen last image.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.save_CanExecute(System.Object,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+            Command implementation of Save menu item. Check if the command can execute.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.save_Executed(System.Object,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+            Command implementation of Save menu item. Executing command.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.saveAs_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Save image at a preferred format.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Undo_CanExecute(System.Object,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+            Command implementation of Undo menu item. Check if the command can execute.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Undo_Executed(System.Object,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+            Command implementation of Undo menu item. Executing command.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Redo_CanExecute(System.Object,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+            Command implementation of Redo menu item. Check if the command can execute.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Redo_Executed(System.Object,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+            Command implementation of Redo menu item. Executing command.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.statusBarShowHide_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Get and set the visibility of status bar.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Help_CanExecute(System.Object,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+            Command implementation of Help menu item. Check if the command can execute.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Help_Executed(System.Object,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+            Command implementation of Help menu item. Executing command.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.about_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            About window.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Information_CanExecute(System.Object,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+            Command implementation of Information menu item. Check if the command can execute.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Information_Executed(System.Object,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+            Command implementation of Information menu item. Executing command.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.shiftBits_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Shift Bits algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.threshold_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Threshold algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.autoThreshold_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Auto Threshold algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.negative_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Negative algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.squareRoot_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Square root algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.contrastEnhancement_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Contrast Enhancement algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.brightness_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Brightness algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.contrast_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Contrast algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.grayscale_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Convert a colored image to grayscale algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Sepia_OnClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Sepia tone.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.CartoonEffect_OnClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Cartoon effect.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.OilPaintEffect_OnClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Oil paint effect.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.histogram_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Histogram algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.histogramEqualizationRGB_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Histogram Equalization algorithm for the RGB color space.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.histogramEqualizationHSV_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Histogram Equalization algorithm for the HSV color space.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.histogramEqualizationYUV_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Histogram Equalization algorithm for the YUV color space.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.imageSummarization_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Image Summarization algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.imageSubtraction_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Image Subtraction algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.sobel_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Edge Detection algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.gaussianBlur_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Gaussian Blur algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.sharpen_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Sharpen algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.noiseColor_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Colored Salt-and-Pepper Noise algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.noiseBW_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Black and White Salt-and-Pepper Noise algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.noiseReductionMean_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Noise Reduction (Mean filter) algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.noiseReductionMedian_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Noise Reduction (Median filter) algorithm. Here we create a new window from where we implement the algorithm.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.Window_Closing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Event that fires when we are trying to close the window.
+            It is used to check if there are any unsaved changes.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:ImageEdit_WPF.MainWindow.undo">
+            <summary>
+            undo Name Field
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.MainWindow.redo">
+            <summary>
+            redo Name Field
+            </summary>
+        </member>
+        <member name="F:ImageEdit_WPF.MainWindow.mainImage">
+            <summary>
+            mainImage Name Field
+            </summary>
+        </member>
+        <member name="M:ImageEdit_WPF.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:ImageEdit_WPF.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ImageEdit_WPF.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ImageEdit_WPF.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>
