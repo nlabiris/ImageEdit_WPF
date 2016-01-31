@@ -63,14 +63,12 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
             try {
-                contrast = double.Parse(textboxContrast.Text, new CultureInfo("el-GR"));
                 brightness = int.Parse(textboxBrightness.Text);
-                //if (brightness > 255 || brightness < 0)
-                //{
-                //    String message = "Wrong range" + Environment.NewLine + Environment.NewLine + "Give a number between 0 and 255";
-                //    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                //    return;
-                //}
+                if (textboxContrast.Text.Contains(".")) {
+                    contrast = double.Parse(textboxContrast.Text, new CultureInfo("en-US"));
+                } else if (textboxContrast.Text.Contains(",")) {
+                    contrast = double.Parse(textboxContrast.Text, new CultureInfo("el-GR"));
+                }
             } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();

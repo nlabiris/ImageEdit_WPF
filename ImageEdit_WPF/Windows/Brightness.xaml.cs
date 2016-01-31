@@ -63,12 +63,6 @@ namespace ImageEdit_WPF.Windows {
 
             try {
                 brightness = int.Parse(textboxBrightness.Text);
-                //if (brightness > 255 || brightness < 0)
-                //{
-                //    String message = "Wrong range" + Environment.NewLine + Environment.NewLine + "Give a number between 0 and 255";
-                //    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                //    return;
-                //}
             } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
