@@ -1,6 +1,6 @@
 # Basic image processing program
 
-A simple image processing program made with *C#* and *WPF* containing a large amount of algorithms to test.
+A simple image processing program made with *C#* and *WPF* containing a large amount of algorithms to test. It also supports multithreading.
 Currently supports the following file formats:
 
 - JPEG/JPG
@@ -8,7 +8,6 @@ Currently supports the following file formats:
 - BMP
 
 ![Main window](https://i.imgur.com/q7Q5J4T.png)
-
 
 ### Algorithms
 
@@ -47,7 +46,7 @@ git clone https://github.com/nlabiris/ImageEdit_WPF.git
 
 #### Download binary
 
-[ImageEdit v0.7.1 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.1_beta.rar?raw=true)
+[ImageEdit v0.7.2 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.2_beta.rar?raw=true)
 
 
 #### License
