@@ -1961,6 +1961,8 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
 
             // Calculate the offset regarding the size of the kernel.
             int filterOffset = (kernelSize - 1)/2;
+            int calcOffset = 0;
+            int byteOffset = 0; 
 
             // Get the bytes per pixel value.
             int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
@@ -1974,14 +1976,14 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             Marshal.Copy(ptr, rgb, 0, bytes);
 
             #region Algorithm
-            for (int i = filterOffset; i < bmpData.Height - filterOffset; i++) {
-                for (int j = filterOffset; j < bmpData.Width - filterOffset; j++) {
-                    int index = (j * bmpData.Stride) + (i * bytesPerPixel);
+            /*for (int i = filterOffset; i < bmpData.Width - filterOffset; i++) {
+                for (int j = filterOffset; j < bmpData.Height - filterOffset; j++) {
+                    int index = (j*bmpData.Stride) + (i*bytesPerPixel);
 
                     neighbourPixels.Clear();
                     for (int k = 0; k < kernelSize; k++) {
                         for (int l = 0; l < kernelSize; l++) {
-                            int indexX = ((j + l - filterOffset) * bmpData.Stride) + ((i + k - filterOffset) * bytesPerPixel);
+                            int indexX = ((j + l - filterOffset)*bmpData.Stride) + ((i + k - filterOffset)*bytesPerPixel);
                             //int indexX = index + (l*bytesPerPixel) + (k*bmpData.Stride);
 
                             neighbourPixels.Add(BitConverter.ToInt32(rgb, indexX));
@@ -1994,6 +1996,28 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     bgr[index] = middlePixel[0];
                     bgr[index + 1] = middlePixel[1];
                     bgr[index + 2] = middlePixel[2];
+                }
+            }*/
+
+            for (int offsetY = filterOffset; offsetY < bmpData.Height - filterOffset; offsetY++) {
+                for (int offsetX = filterOffset; offsetX < bmpData.Width - filterOffset; offsetX++) {
+                    byteOffset = offsetY*bmpData.Stride + offsetX*3;
+
+                    neighbourPixels.Clear();
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++) {
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++) {
+                            calcOffset = byteOffset + (filterX*3) + (filterY*bmpData.Stride);
+
+                            neighbourPixels.Add(BitConverter.ToInt32(rgb, calcOffset));
+                        }
+                    }
+                    neighbourPixels.Sort();
+
+                    byte[] middlePixel = BitConverter.GetBytes(neighbourPixels[filterOffset]);
+
+                    bgr[byteOffset] = middlePixel[0];
+                    bgr[byteOffset + 1] = middlePixel[1];
+                    bgr[byteOffset + 2] = middlePixel[2];
                 }
             }
             #endregion
@@ -2033,16 +2057,16 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     Convolution(data, 7, Kernel.M_Gaussian7x7);
                     break;
                 case KernelType.Median3x3:
-                    MedianFilter(data, 3);
+                    NoiseReduction_Median(data, 3);
                     break;
                 case KernelType.Median5x5:
-                    MedianFilter(data, 5);
+                    NoiseReduction_Median(data, 5);
                     break;
                 case KernelType.Median7x7:
-                    MedianFilter(data, 7);
+                    NoiseReduction_Median(data, 7);
                     break;
                 case KernelType.Median9x9:
-                    MedianFilter(data, 9);
+                    NoiseReduction_Median(data, 9);
                     break;
                 case KernelType.Mean3x3:
                     Convolution(data, 3, Kernel.M_Mean3x3);

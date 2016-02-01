@@ -46,7 +46,7 @@ git clone https://github.com/nlabiris/ImageEdit_WPF.git
 
 #### Download binary
 
-[ImageEdit v0.7.3 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.3_beta.rar?raw=true)
+[ImageEdit v0.7.4 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.4_beta.rar?raw=true)
 
 
 #### License
