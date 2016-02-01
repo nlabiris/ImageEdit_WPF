@@ -75,7 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <MenuItem Name="grayscale" Header="Grayscale" Click="grayscale_Click"></MenuItem>
                 <MenuItem Name="sepia" Header="Sepia" Click="Sepia_OnClick"></MenuItem>
                 <MenuItem Name="cartoonEffect" Header="Cartoon" Click="CartoonEffect_OnClick"></MenuItem>
-                <MenuItem Name="oilPaintEffect" Header="Oil Painting" Click="OilPaintEffect_OnClick"></MenuItem>
+                <MenuItem IsEnabled="False" Name="oilPaintEffect" Header="Oil Painting" Click="OilPaintEffect_OnClick"></MenuItem>
                 <MenuItem Name="histogramEqualization" Header="Histogram Equalization">
                     <MenuItem Name="histogramEqualizationRGB" Header="RGB" Click="histogramEqualizationRGB_Click"></MenuItem>
                     <MenuItem Name="histogramEqualizationHSV" Header="HSV" Click="histogramEqualizationHSV_Click"></MenuItem>

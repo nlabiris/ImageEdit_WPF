@@ -751,8 +751,9 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                m_data.M_action = ActionType.Cartoon;
-                m_backgroundWorker.RunWorkerAsync();
+                CartoonEffect cartoonEffectWindow = new CartoonEffect(m_data, m_vm);
+                cartoonEffectWindow.Owner = this;
+                cartoonEffectWindow.Show();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
@@ -1263,14 +1264,6 @@ namespace ImageEdit_WPF {
                 case ActionType.Sepia:
                     // Apply algorithm and return execution time
                     elapsedTime = Algorithms.Sepia(m_data);
-                    break;
-                case ActionType.Cartoon:
-                    // Apply algorithm and return execution time
-                    //elapsedTime = Algorithms.Sepia(m_data);
-                    break;
-                case ActionType.OilPaint:
-                    // Apply algorithm and return execution time
-                    //elapsedTime = Algorithms.Sepia(m_data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

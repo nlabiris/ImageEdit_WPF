@@ -19,50 +19,114 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using ImageEdit_WPF.HelperClasses;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
-using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
-    /// Interaction logic for AutoThreshold.xaml
+    /// Interaction logic for CartoonEffect.xaml
     /// </summary>
-    public partial class AutoThreshold : Window {
+    public partial class CartoonEffect : Window {
         private ImageData m_data = null;
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
-        private int distance = 0;
+        private byte threshold = 0;
+        private KernelType kernelType = KernelType.None;
 
-        /// <summary>
-        /// Auto Threshold <c>constructor</c>.
-        /// Here we initialiaze the images and also we set the focus at the textBox being used.
-        /// </summary>
-        public AutoThreshold(ImageData data, ViewModel vm) {
+        public CartoonEffect(ImageData data, ViewModel vm) {
             m_data = data;
             m_vm = vm;
 
             InitializeComponent();
-            textboxDistance.Focus();
 
             m_backgroundWorker = new BackgroundWorker();
             m_backgroundWorker.WorkerReportsProgress = false;
             m_backgroundWorker.WorkerSupportsCancellation = false;
             m_backgroundWorker.DoWork += backgroundWorker_DoWork;
             m_backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+
+            // Fill list of filters
+            List<string> filters = new List<string>();
+            filters.Add("None");
+            filters.Add("Gaussian (3x3)");
+            filters.Add("Gaussian (5x5)");
+            filters.Add("Gaussian (7x7)");
+            filters.Add("Mean (3x3)");
+            filters.Add("Mean (5x5)");
+            filters.Add("Mean (7x7)");
+            filters.Add("Median (3x3)");
+            filters.Add("Median (5x5)");
+            filters.Add("Median (7x7)");
+            filters.Add("Median (9x9)");
+            filters.Add("Low pass (3x3)");
+            filters.Add("Low pass (5x5)");
+            filters.Add("Sharpen (3x3)");
+            filters.Add("Sharpen (5x5)");
+            filters.Add("Sharpen (7x7)");
+            cmbFilters.ItemsSource = filters;
+            cmbFilters.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Implementation of the Auto Threshold algorithm.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ok_Click(object sender, RoutedEventArgs e) {
+        private void Ok_OnClick(object sender, RoutedEventArgs e) {
             try {
-                distance = int.Parse(textboxDistance.Text);
-                if (distance > 255 || distance < 0) {
+                switch (cmbFilters.SelectionBoxItem.ToString()) {
+                    case "Gaussian (3x3)":
+                        kernelType = KernelType.Gaussian3x3;
+                        break;
+                    case "Gaussian (5x5)":
+                        kernelType = KernelType.Gaussian5x5;
+                        break;
+                    case "Gaussian (7x7)":
+                        kernelType = KernelType.Gaussian7x7;
+                        break;
+                    case "Mean (3x3)":
+                        kernelType = KernelType.Mean3x3;
+                        break;
+                    case "Mean (5x5)":
+                        kernelType = KernelType.Mean5x5;
+                        break;
+                    case "Mean (7x7)":
+                        kernelType = KernelType.Mean7x7;
+                        break;
+                    case "Median (3x3)":
+                        kernelType = KernelType.Median3x3;
+                        break;
+                    case "Median (5x5)":
+                        kernelType = KernelType.Median5x5;
+                        break;
+                    case "Median (7x7)":
+                        kernelType = KernelType.Median7x7;
+                        break;
+                    case "Median (9x9)":
+                        kernelType = KernelType.Median9x9;
+                        break;
+                    case "Low pass (3x3)":
+                        kernelType = KernelType.LowPass3x3;
+                        break;
+                    case "Low pass (5x5)":
+                        kernelType = KernelType.LowPass5x5;
+                        break;
+                    case "Sharpen (3x3)":
+                        kernelType = KernelType.Sharpen3x3;
+                        break;
+                    case "Sharpen (5x5)":
+                        kernelType = KernelType.Sharpen5x5;
+                        break;
+                    case "Sharpen (7x7)":
+                        kernelType = KernelType.Sharpen7x7;
+                        break;
+                    case "None":
+                        kernelType = KernelType.None;
+                        break;
+                }
+
+                threshold = byte.Parse(txbThreshold.Text);
+                if (threshold > 255 || threshold < 0) {
                     string message = "Wrong range\r\n\r\nGive a number between 0 and 255";
                     MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -90,7 +154,7 @@ namespace ImageEdit_WPF.Windows {
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             // Apply algorithm and return execution time
-            elapsedTime = Algorithms.AutoThreshold(m_data, distance);
+            elapsedTime = Algorithms.CartoonEffect(m_data, threshold, kernelType);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

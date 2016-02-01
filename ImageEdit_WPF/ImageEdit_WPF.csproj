@@ -90,6 +90,9 @@
     <Compile Include="Windows\Brightness.xaml.cs">
       <DependentUpon>Brightness.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\CartoonEffect.xaml.cs">
+      <DependentUpon>CartoonEffect.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Contrast.xaml.cs">
       <DependentUpon>Contrast.xaml</DependentUpon>
     </Compile>
@@ -136,6 +139,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Brightness.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\CartoonEffect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

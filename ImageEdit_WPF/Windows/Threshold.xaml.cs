@@ -34,7 +34,7 @@ namespace ImageEdit_WPF.Windows {
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
-        int threshold = 0;
+        private byte threshold = 0;
 
         /// <summary>
         /// Threshold <c>constructor</c>.
@@ -61,7 +61,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
             try {
-                threshold = int.Parse(textboxThreshold.Text);
+                threshold = byte.Parse(textboxThreshold.Text);
                 if (threshold > 255 || threshold < 0) {
                     string message = "Wrong range\r\n\r\nGive a number between 0 and 255";
                     MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);

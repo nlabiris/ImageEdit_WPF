@@ -1532,15 +1532,15 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region Gaussian blur
+        #region Convolution
         /// <summary>
-        /// Gaussian blur filter.
+        /// Convolution algorithm.
         /// </summary>
         /// <param name="data">Image data.</param>
         /// <param name="kernelSize">Kernel size.</param>
-        /// <param name="kernelX">X axis kernel.</param>
+        /// <param name="kernel">Kernel.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan GaussianBlur(ImageData data, int kernelSize, double[,] kernelX) {
+        public static TimeSpan Convolution(ImageData data, int kernelSize, double[,] kernel) {
             double sumMask = 0;
 
             // Lock the bitmap's bits.  
@@ -1569,7 +1569,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             #region Algorithm
             for (int i = 0; i < kernelSize; i++) {
                 for (int j = 0; j < kernelSize; j++) {
-                    sumMask += kernelX[i, j];
+                    sumMask += kernel[i, j];
                 }
             }
 
@@ -1582,104 +1582,9 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     for (int k = 0; k < kernelSize; k++) {
                         for (int l = 0; l < kernelSize; l++) {
                             int indexX = ((j + l - filterOffset)*bmpData.Stride) + ((i + k - filterOffset)*bytesPerPixel);
-                            tR = tR + (rgbValues[indexX + 2]*kernelX[k, l])/sumMask;
-                            tG = tG + (rgbValues[indexX + 1]*kernelX[k, l])/sumMask;
-                            tB = tB + (rgbValues[indexX]*kernelX[k, l])/sumMask;
-                        }
-                    }
-
-                    if (tR > 255.0) {
-                        tR = 255.0;
-                    } else if (tR < 0.0) {
-                        tR = 0.0;
-                    }
-
-                    if (tG > 255.0) {
-                        tG = 255.0;
-                    } else if (tG < 0.0) {
-                        tG = 0.0;
-                    }
-
-                    if (tB > 255.0) {
-                        tB = 255.0;
-                    } else if (tB < 0.0) {
-                        tB = 0.0;
-                    }
-
-                    index = (j*bmpData.Stride) + (i*bytesPerPixel);
-
-                    bgrValues[index + 2] = (byte)tR;
-                    bgrValues[index + 1] = (byte)tG;
-                    bgrValues[index] = (byte)tB;
-                }
-            });
-            #endregion
-
-            Marshal.Copy(bgrValues, 0, ptr, bytes);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
-
-            // Unlock the bits.
-            data.M_bitmap.UnlockBits(bmpData);
-
-            return elapsedTime;
-        }
-        #endregion
-
-        #region Sharpen
-        /// <summary>
-        /// Sharpen filter.
-        /// </summary>
-        /// <param name="data">Image data.</param>
-        /// <param name="kernelSize">Kernel size.</param>
-        /// <param name="kernelX">X axis mask.</param>
-        /// <returns>Execution time.</returns>
-        public static TimeSpan Sharpen(ImageData data, int kernelSize, double[,] kernelX) {
-            double sumMask = 0;
-
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare 2 arrays to hold the bytes of the bitmap.
-            // The first to read from and then write to the scond.
-            int bytes = bmpData.Stride*bmpData.Height;
-            byte[] rgbValues = new byte[bytes];
-            byte[] bgrValues = new byte[bytes];
-
-            // Calculate the offset regarding the size of the kernel.
-            int filterOffset = (kernelSize - 1)/2;
-
-            // Get the bytes per pixel value.
-            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
-
-            Stopwatch watch = Stopwatch.StartNew();
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            #region Algorithm
-            for (int i = 0; i < kernelSize; i++) {
-                for (int j = 0; j < kernelSize; j++) {
-                    sumMask += kernelX[i, j];
-                }
-            }
-
-            Parallel.For(filterOffset, bmpData.Width - filterOffset, i => {
-                for (int j = filterOffset; j < bmpData.Height - filterOffset; j++) {
-                    int index = 0;
-                    double tR = 0.0;
-                    double tG = 0.0;
-                    double tB = 0.0;
-                    for (int k = 0; k < kernelSize; k++) {
-                        for (int l = 0; l < kernelSize; l++) {
-                            int indexX = ((j + l - filterOffset)*bmpData.Stride) + ((i + k - filterOffset)*bytesPerPixel);
-                            tR = tR + (rgbValues[indexX + 2]*kernelX[k, l])/sumMask;
-                            tG = tG + (rgbValues[indexX + 1]*kernelX[k, l])/sumMask;
-                            tB = tB + (rgbValues[indexX]*kernelX[k, l])/sumMask;
+                            tR = tR + (rgbValues[indexX + 2]*kernel[k, l])/sumMask;
+                            tG = tG + (rgbValues[indexX + 1]*kernel[k, l])/sumMask;
+                            tB = tB + (rgbValues[indexX]*kernel[k, l])/sumMask;
                         }
                     }
 
@@ -1751,7 +1656,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             byte[] rgb = new byte[bytes];
 
             // Get the bytes per pixel value.
-            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat) / 8;
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
 
             Stopwatch watch = Stopwatch.StartNew();
 
@@ -1914,8 +1819,8 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
 
                     index = (j*bmpData.Stride) + (i*bytesPerPixel);
 
-                    rgb[index] = (byte)(sumB / (kernelSize * kernelSize));
-                    rgb[index + 1] = (byte)(sumG / (kernelSize * kernelSize));
+                    rgb[index] = (byte)(sumB/(kernelSize*kernelSize));
+                    rgb[index + 1] = (byte)(sumG/(kernelSize*kernelSize));
                     rgb[index + 2] = (byte)(sumR/(kernelSize*kernelSize));
                 }
             });
@@ -2023,6 +1928,184 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             #endregion
 
             Marshal.Copy(rgb, 0, ptr, bytes);
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region CartoonEffect
+        /// <summary>
+        /// Cartoon effect filter.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="threshold">Threshold.</param>
+        /// <param name="smoothFilter">Smoothing filter.</param>
+        /// <returns>Execution time.</returns>
+        public static TimeSpan CartoonEffect(ImageData data, byte threshold = 0, KernelType smoothFilter = KernelType.None) {
+            switch (smoothFilter) {
+                case KernelType.None:
+                    break;
+                case KernelType.Gaussian3x3:
+                    Convolution(data, 3, Kernel.M_Gaussian3x3);
+                    break;
+                case KernelType.Gaussian5x5:
+                    Convolution(data, 5, Kernel.M_Gaussian5x5);
+                    break;
+                case KernelType.Gaussian7x7:
+                    Convolution(data, 7, Kernel.M_Gaussian7x7);
+                    break;
+                case KernelType.Median3x3:
+                    NoiseReduction_Median(data, 3);
+                    break;
+                case KernelType.Median5x5:
+                    NoiseReduction_Median(data, 5);
+                    break;
+                case KernelType.Median7x7:
+                    NoiseReduction_Median(data, 7);
+                    break;
+                case KernelType.Median9x9:
+                    NoiseReduction_Median(data, 9);
+                    break;
+                case KernelType.Mean3x3:
+                    Convolution(data, 3, Kernel.M_Mean3x3);
+                    break;
+                case KernelType.Mean5x5:
+                    Convolution(data, 5, Kernel.M_Mean5x5);
+                    break;
+                case KernelType.Mean7x7:
+                    Convolution(data, 7, Kernel.M_Mean7x7);
+                    break;
+                case KernelType.LowPass3x3:
+                    Convolution(data, 3, Kernel.M_LowPass3x3);
+                    break;
+                case KernelType.LowPass5x5:
+                    Convolution(data, 5, Kernel.M_LowPass5x5);
+                    break;
+                case KernelType.Sharpen3x3:
+                    Convolution(data, 3, Kernel.M_Sharpen3x3);
+                    break;
+                case KernelType.Sharpen5x5:
+                    Convolution(data, 5, Kernel.M_Sharpen5x5);
+                    break;
+                case KernelType.Sharpen7x7:
+                    Convolution(data, 7, Kernel.M_Sharpen7x7);
+                    break;
+            }
+
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare 2 arrays to hold the bytes of the bitmap.
+            // The first to read from and then write to the scond.
+            int bytes = bmpData.Stride*bmpData.Height;
+            byte[] rgbValues = new byte[bytes];
+            byte[] bgrValues = new byte[bytes];
+            bool exceedsThreshold = false;
+
+            // Calculate the offset regarding the size of the kernel.
+            //int filterOffset = (kernelSize - 1)/2;
+
+            // Get the bytes per pixel value.
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            #region Algorithm
+            for (int i = 1; i < bmpData.Height - 1; i++) {
+                for (int j = 1; j < bmpData.Width - 1; j++) {
+                    int index = i*bmpData.Stride + j*bytesPerPixel;
+
+                    int bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                    int gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                    int rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+
+                    bGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                    gGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                    rGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+
+                    if (bGradient + gGradient + rGradient > threshold) {
+                        exceedsThreshold = true;
+                    } else {
+                        bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                        gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                        rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+
+                        if (bGradient + gGradient + rGradient > threshold) {
+                            exceedsThreshold = true;
+                        } else {
+                            bGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                            gGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                            rGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+
+                            if (bGradient + gGradient + rGradient > threshold) {
+                                exceedsThreshold = true;
+                            } else {
+                                bGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride]);
+                                gGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride]);
+                                rGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride]);
+                                
+                                gGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]);
+                                bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]);
+                                rGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]);
+
+                                if (bGradient + gGradient + rGradient > threshold) {
+                                    exceedsThreshold = true;
+                                } else {
+                                    exceedsThreshold = false;
+                                }
+                            }
+                        }
+                    }
+
+                    int b = 0;
+                    int g = 0;
+                    int r = 0;
+                    if (exceedsThreshold) {
+                        b = 0;
+                        g = 0;
+                        r = 0;
+                    } else {
+                        b = rgbValues[index];
+                        g = rgbValues[index + 1];
+                        r = rgbValues[index + 2];
+                    }
+
+                    if (b > 255) {
+                        b = 255;
+                    } else if (b < 0) {
+                        b = 0;
+                    }
+                    if (g > 255) {
+                        g = 255;
+                    } else if (g < 0) {
+                        g = 0;
+                    }
+                    if (r > 255) {
+                        r = 255;
+                    } else if (r < 0) {
+                        r = 0;
+                    }
+
+                    bgrValues[index] = (byte)b;
+                    bgrValues[index + 1] = (byte)g;
+                    bgrValues[index + 2] = (byte)r;
+                }
+            }
+            #endregion
+
+            Marshal.Copy(bgrValues, 0, ptr, bytes);
 
             watch.Stop();
             TimeSpan elapsedTime = watch.Elapsed;

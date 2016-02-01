@@ -102,15 +102,15 @@ namespace ImageEdit_WPF.Windows {
             {
                 case 3:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.Sharpen(m_data, m_kernelSize, Kernel.M_Sharpen3x3);
+                    elapsedTime = Algorithms.Convolution(m_data, m_kernelSize, Kernel.M_Sharpen3x3);
                     break;
                 case 5:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.Sharpen(m_data, m_kernelSize, Kernel.M_Sharpen5x5);
+                    elapsedTime = Algorithms.Convolution(m_data, m_kernelSize, Kernel.M_Sharpen5x5);
                     break;
                 case 7:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.Sharpen(m_data, m_kernelSize, Kernel.M_Sharpen7x7);
+                    elapsedTime = Algorithms.Convolution(m_data, m_kernelSize, Kernel.M_Sharpen7x7);
                     break;
             }
         }

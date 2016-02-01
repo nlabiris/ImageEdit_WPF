@@ -35,6 +35,7 @@ namespace ImageEdit_WPF.Windows {
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
+        private double contrast = 0;
 
         /// <summary>
         /// Contrast <c>constructor</c>
@@ -60,8 +61,6 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            double contrast = 0;
-
             try {
                 if (textboxContrast.Text.Contains(".")) {
                     contrast = double.Parse(textboxContrast.Text, new CultureInfo("en-US"));
@@ -85,13 +84,11 @@ namespace ImageEdit_WPF.Windows {
                 Close();
                 return;
             }
-            m_backgroundWorker.RunWorkerAsync(contrast);
+            m_backgroundWorker.RunWorkerAsync();
             Close();
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
-            double contrast = (double)e.Argument;
-
             // Apply algorithm and return execution time
             elapsedTime = Algorithms.Contrast(m_data, contrast);
         }

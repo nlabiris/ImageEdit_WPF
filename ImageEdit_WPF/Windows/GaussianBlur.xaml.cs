@@ -101,15 +101,15 @@ namespace ImageEdit_WPF.Windows {
             switch (m_kernelSize) {
                 case 3:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.GaussianBlur(m_data, m_kernelSize, Kernel.M_Gaussian3x3);
+                    elapsedTime = Algorithms.Convolution(m_data, m_kernelSize, Kernel.M_Gaussian3x3);
                     break;
                 case 5:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.GaussianBlur(m_data, m_kernelSize, Kernel.M_Gaussian5x5);
+                    elapsedTime = Algorithms.Convolution(m_data, m_kernelSize, Kernel.M_Gaussian5x5);
                     break;
                 case 7:
                     // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.GaussianBlur(m_data, m_kernelSize, Kernel.M_Gaussian7x7);
+                    elapsedTime = Algorithms.Convolution(m_data, m_kernelSize, Kernel.M_Gaussian7x7);
                     break;
             }
         }
