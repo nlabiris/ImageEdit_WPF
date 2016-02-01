@@ -34,6 +34,7 @@ namespace ImageEdit_WPF.Windows {
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
+        private int brightness = 0;
 
         /// <summary>
         /// Brightness <c>constructor</c>.
@@ -59,8 +60,6 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            int brightness = 0;
-
             try {
                 brightness = int.Parse(textboxBrightness.Text);
             } catch (ArgumentNullException ex) {
@@ -80,13 +79,11 @@ namespace ImageEdit_WPF.Windows {
                 Close();
                 return;
             }
-            m_backgroundWorker.RunWorkerAsync(brightness);
+            m_backgroundWorker.RunWorkerAsync();
             Close();
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
-            int brightness = (int)e.Argument;
-
             // Apply algorithm and return execution time
             elapsedTime = Algorithms.Brightness(m_data, brightness);
         }

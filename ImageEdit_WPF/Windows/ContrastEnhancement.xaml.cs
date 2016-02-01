@@ -35,8 +35,8 @@ namespace ImageEdit_WPF.Windows {
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
-        int brightness = 0;
-        double contrast = 0;
+        private int brightness = 0;
+        private double contrast = 0;
 
         /// <summary>
         /// Contrast Enhancement <c>constructor</c>.

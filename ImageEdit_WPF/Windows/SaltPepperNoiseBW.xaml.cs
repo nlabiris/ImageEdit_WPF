@@ -22,6 +22,7 @@ using ImageEdit_WPF.HelperClasses;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Windows;
 using ImageEdit_WPF.HelperClasses.Algorithms;
 
@@ -34,7 +35,7 @@ namespace ImageEdit_WPF.Windows {
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
-        double probability = 0.0;
+        private double probability = 0.0;
 
         /// <summary>
         /// Salt-and-Pepper Noise generator (Black/White) <c>constructor</c>.
@@ -61,7 +62,11 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
             try {
-                probability = double.Parse(textboxNoiseBW.Text);
+                if (textboxNoiseBW.Text.Contains(".")) {
+                    probability = double.Parse(textboxNoiseBW.Text, new CultureInfo("en-US"));
+                } else if (textboxNoiseBW.Text.Contains(",")) {
+                    probability = double.Parse(textboxNoiseBW.Text, new CultureInfo("el-GR"));
+                }
             } catch (ArgumentNullException ex) {
                 MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();

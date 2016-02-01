@@ -34,7 +34,7 @@ namespace ImageEdit_WPF.Windows {
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
-        int bits = 0;
+        private int bits = 0;
 
         /// <summary>
         /// Shift Bits <c>constructor</c>.

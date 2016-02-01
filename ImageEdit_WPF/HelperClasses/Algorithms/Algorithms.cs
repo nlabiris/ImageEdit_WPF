@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -1874,7 +1875,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     int z = 0;
                     for (int k = -kernelSize/2; k <= kernelSize/2; k++) {
                         for (int l = -kernelSize/2; l <= kernelSize/2; l++) {
-                            int indexX = ((j + l)*bmpData.Stride) + ((i + k)*3);
+                            int indexX = ((j + l) * bmpData.Stride) + ((i + k) * bytesPerPixel);
                             arR[z] = rgb[indexX + 2];
                             arG[z] = rgb[indexX + 1];
                             arB[z] = rgb[indexX];
@@ -1939,6 +1940,76 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
+        #region Median filter (gradient based)
+        /// <summary>
+        /// Median filter (gradient based).
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="kernelSize">Kernel size.</param>
+        /// <returns>Execution time.</returns>
+        public static TimeSpan MedianFilter(ImageData data, int kernelSize) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride*bmpData.Height;
+            byte[] rgb = new byte[bytes];
+            byte[] bgr = new byte[bytes];
+
+            // Calculate the offset regarding the size of the kernel.
+            int filterOffset = (kernelSize - 1)/2;
+
+            // Get the bytes per pixel value.
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+
+            // List of neighbouring pixels
+            List<int> neighbourPixels = new List<int>();
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgb, 0, bytes);
+
+            #region Algorithm
+            for (int i = filterOffset; i < bmpData.Height - filterOffset; i++) {
+                for (int j = filterOffset; j < bmpData.Width - filterOffset; j++) {
+                    int index = (j * bmpData.Stride) + (i * bytesPerPixel);
+
+                    neighbourPixels.Clear();
+                    for (int k = 0; k < kernelSize; k++) {
+                        for (int l = 0; l < kernelSize; l++) {
+                            int indexX = ((j + l - filterOffset) * bmpData.Stride) + ((i + k - filterOffset) * bytesPerPixel);
+                            //int indexX = index + (l*bytesPerPixel) + (k*bmpData.Stride);
+
+                            neighbourPixels.Add(BitConverter.ToInt32(rgb, indexX));
+                        }
+                    }
+                    neighbourPixels.Sort();
+
+                    byte[] middlePixel = BitConverter.GetBytes(neighbourPixels[filterOffset]);
+
+                    bgr[index] = middlePixel[0];
+                    bgr[index + 1] = middlePixel[1];
+                    bgr[index + 2] = middlePixel[2];
+                }
+            }
+            #endregion
+
+            Marshal.Copy(bgr, 0, ptr, bytes);
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
         #region CartoonEffect
         /// <summary>
         /// Cartoon effect filter.
@@ -1948,6 +2019,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         /// <param name="smoothFilter">Smoothing filter.</param>
         /// <returns>Execution time.</returns>
         public static TimeSpan CartoonEffect(ImageData data, byte threshold = 0, KernelType smoothFilter = KernelType.None) {
+            // Choose a smoothing filter
             switch (smoothFilter) {
                 case KernelType.None:
                     break;
@@ -1961,16 +2033,16 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     Convolution(data, 7, Kernel.M_Gaussian7x7);
                     break;
                 case KernelType.Median3x3:
-                    NoiseReduction_Median(data, 3);
+                    MedianFilter(data, 3);
                     break;
                 case KernelType.Median5x5:
-                    NoiseReduction_Median(data, 5);
+                    MedianFilter(data, 5);
                     break;
                 case KernelType.Median7x7:
-                    NoiseReduction_Median(data, 7);
+                    MedianFilter(data, 7);
                     break;
                 case KernelType.Median9x9:
-                    NoiseReduction_Median(data, 9);
+                    MedianFilter(data, 9);
                     break;
                 case KernelType.Mean3x3:
                     Convolution(data, 3, Kernel.M_Mean3x3);
@@ -2009,7 +2081,6 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             int bytes = bmpData.Stride*bmpData.Height;
             byte[] rgbValues = new byte[bytes];
             byte[] bgrValues = new byte[bytes];
-            bool exceedsThreshold = false;
 
             // Calculate the offset regarding the size of the kernel.
             //int filterOffset = (kernelSize - 1)/2;
@@ -2023,7 +2094,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             #region Algorithm
-            for (int i = 1; i < bmpData.Height - 1; i++) {
+            Parallel.For(1, bmpData.Height - 1, i => {
                 for (int j = 1; j < bmpData.Width - 1; j++) {
                     int index = i*bmpData.Stride + j*bytesPerPixel;
 
@@ -2035,6 +2106,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     gGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
                     rGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
 
+                    bool exceedsThreshold = false;
                     if (bGradient + gGradient + rGradient > threshold) {
                         exceedsThreshold = true;
                     } else {
@@ -2055,7 +2127,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                                 bGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride]);
                                 gGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride]);
                                 rGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride]);
-                                
+
                                 gGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]);
                                 bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]);
                                 rGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]);
@@ -2102,7 +2174,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     bgrValues[index + 1] = (byte)g;
                     bgrValues[index + 2] = (byte)r;
                 }
-            }
+            });
             #endregion
 
             Marshal.Copy(bgrValues, 0, ptr, bytes);
