@@ -77,6 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HelperClasses\Algorithms\Algorithms.cs" />
+    <Compile Include="HelperClasses\Algorithms\EdgeFilters.cs" />
     <Compile Include="HelperClasses\Algorithms\Kernels.cs" />
     <Compile Include="HelperClasses\BetterEnumerable.cs" />
     <Compile Include="HelperClasses\Algorithms\AlgorithmsBackup.cs" />
@@ -103,6 +104,9 @@
       <DependentUpon>GaussianBlur.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="Windows\GradientBased.xaml.cs">
+      <DependentUpon>GradientBased.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Information.xaml.cs">
       <DependentUpon>Information.xaml</DependentUpon>
     </Compile>
@@ -155,6 +159,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\GaussianBlur.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GradientBased.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

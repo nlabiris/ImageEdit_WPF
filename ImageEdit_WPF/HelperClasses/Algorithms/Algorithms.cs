@@ -635,6 +635,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
+        #region Convert to grayscale
         /// <summary>
         /// Convert colored image to grayscale.
         /// </summary>
@@ -679,6 +680,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
 
             return elapsedTime;
         }
+        #endregion
 
         #region Sepia tone
         /// <summary>
@@ -1875,7 +1877,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     int z = 0;
                     for (int k = -kernelSize/2; k <= kernelSize/2; k++) {
                         for (int l = -kernelSize/2; l <= kernelSize/2; l++) {
-                            int indexX = ((j + l) * bmpData.Stride) + ((i + k) * bytesPerPixel);
+                            int indexX = ((j + l)*bmpData.Stride) + ((i + k)*bytesPerPixel);
                             arR[z] = rgb[indexX + 2];
                             arG[z] = rgb[indexX + 1];
                             arB[z] = rgb[indexX];
@@ -1940,7 +1942,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region Median filter (gradient based)
+        #region Median filter (gradient based) [Not working or now]
         /// <summary>
         /// Median filter (gradient based).
         /// </summary>
@@ -1962,7 +1964,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             // Calculate the offset regarding the size of the kernel.
             int filterOffset = (kernelSize - 1)/2;
             int calcOffset = 0;
-            int byteOffset = 0; 
+            int byteOffset = 0;
 
             // Get the bytes per pixel value.
             int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
@@ -2106,9 +2108,6 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             byte[] rgbValues = new byte[bytes];
             byte[] bgrValues = new byte[bytes];
 
-            // Calculate the offset regarding the size of the kernel.
-            //int filterOffset = (kernelSize - 1)/2;
-
             // Get the bytes per pixel value.
             int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
 
@@ -2199,6 +2198,158 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     bgrValues[index + 2] = (byte)r;
                 }
             });
+            #endregion
+
+            Marshal.Copy(bgrValues, 0, ptr, bytes);
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region CartoonEffect
+        /// <summary>
+        /// Cartoon effect filter.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="filterType">Filter type.</param>
+        /// <param name="derivativeLevel">Derivative</param>
+        /// <param name="rFactor">Red factor</param>
+        /// <param name="gFactor">Green factor.</param>
+        /// <param name="bFactor">Blue factor.</param>
+        /// <param name="threshold">Threshold.</param>
+        /// <returns>Execution time.</returns>
+        public static TimeSpan EdgeDetection_GradientBased(ImageData data, EdgeFilterType filterType, DerivativeLevel derivativeLevel, double rFactor = 1.0, double gFactor = 1.0, double bFactor = 1.0, byte threshold = 0) {
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare 2 arrays to hold the bytes of the bitmap.
+            // The first to read from and then write to the scond.
+            int bytes = bmpData.Stride*bmpData.Height;
+            byte[] rgbValues = new byte[bytes];
+            byte[] bgrValues = new byte[bytes];
+            int derivative = (int)derivativeLevel;
+
+            // Get the bytes per pixel value.
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            #region Algorithm
+            for (int i = 1; i < bmpData.Height - 1; i++) {
+                for (int j = 1; j < bmpData.Width - 1; j++) {
+                    int index = i*bmpData.Stride + j*bytesPerPixel;
+
+                    int bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
+                    int gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
+                    int rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
+
+                    bGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride])/derivative;
+                    gGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride])/derivative;
+                    rGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride])/derivative;
+
+                    bool exceedsThreshold = false;
+                    if (bGradient + gGradient + rGradient > threshold) {
+                        exceedsThreshold = true;
+                    } else {
+                        bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                        gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                        rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+
+                        if (bGradient + gGradient + rGradient > threshold) {
+                            exceedsThreshold = true;
+                        } else {
+                            bGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                            gGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                            rGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+
+                            if (bGradient + gGradient + rGradient > threshold) {
+                                exceedsThreshold = true;
+                            } else {
+                                bGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride])/derivative;
+                                gGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride])/derivative;
+                                rGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride])/derivative;
+
+                                gGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
+                                bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
+                                rGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
+
+                                if (bGradient + gGradient + rGradient > threshold) {
+                                    exceedsThreshold = true;
+                                } else {
+                                    exceedsThreshold = false;
+                                }
+                            }
+                        }
+                    }
+
+                    double b = 0.0;
+                    double g = 0.0;
+                    double r = 0.0;
+
+                    if (exceedsThreshold) {
+                        switch (filterType) {
+                            case EdgeFilterType.EdgeDetectMono:
+                                b = g = r = 255;
+                                break;
+                            case EdgeFilterType.EdgeDetectGradient:
+                                b = bGradient*bFactor;
+                                g = gGradient*gFactor;
+                                r = rGradient*rFactor;
+                                break;
+                            case EdgeFilterType.Sharpen:
+                                b = rgbValues[index]*bFactor;
+                                g = rgbValues[index + 1]*gFactor;
+                                r = rgbValues[index + 2]*rFactor;
+                                break;
+                            case EdgeFilterType.SharpenGradient:
+                                b = rgbValues[index] + bGradient*bFactor;
+                                g = rgbValues[index + 1] + gGradient*gFactor;
+                                r = rgbValues[index + 2] + rGradient*rFactor;
+                                break;
+                        }
+                    } else {
+                        if (filterType == EdgeFilterType.EdgeDetectMono || filterType == EdgeFilterType.EdgeDetectGradient) {
+                            b = g = r = 0;
+                        } else if (filterType == EdgeFilterType.Sharpen || filterType == EdgeFilterType.SharpenGradient) {
+                            b = rgbValues[index];
+                            g = rgbValues[index + 1];
+                            r = rgbValues[index + 2];
+                        }
+                    }
+
+                    if (b > 255.0) {
+                        b = 255.0;
+                    } else if (b < 0.0) {
+                        b = 0.0;
+                    }
+                    if (g > 255.0) {
+                        g = 255.0;
+                    } else if (g < 0.0) {
+                        g = 0.0;
+                    }
+                    if (r > 255.0) {
+                        r = 255.0;
+                    } else if (r < 0.0) {
+                        r = 0.0;
+                    }
+
+                    bgrValues[index] = (byte)b;
+                    bgrValues[index + 1] = (byte)g;
+                    bgrValues[index + 2] = (byte)r;
+                }
+            }
             #endregion
 
             Marshal.Copy(bgrValues, 0, ptr, bytes);

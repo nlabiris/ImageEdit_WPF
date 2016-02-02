@@ -740,7 +740,7 @@ namespace ImageEdit_WPF {
 
         #region Cartoon effect
         /// <summary>
-        /// Cartoon effect.
+        /// Cartoon effect. Here we create a new window from where we implement the algorithm.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -974,7 +974,7 @@ namespace ImageEdit_WPF {
 
         #region Edge detection (Sobel)
         /// <summary>
-        /// Edge Detection algorithm. Here we create a new window from where we implement the algorithm.
+        /// Edge detection using the Sobel algorithm. Here we create a new window from where we implement the algorithm.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -988,6 +988,36 @@ namespace ImageEdit_WPF {
                 Sobel sobelWindow = new Sobel(m_data, m_vm);
                 sobelWindow.Owner = this;
                 sobelWindow.Show();
+            } catch (FileNotFoundException ex) {
+                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (InvalidOperationException ex) {
+                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (IndexOutOfRangeException ex) {
+                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Edge detection (Gradient based)
+        /// <summary>
+        /// Edge detection using a gradient based method. Here we create a new window from where we implement the algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GradientBased_OnClick(object sender, RoutedEventArgs e) {
+            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
+                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try {
+                GradientBased gradientBasedWindow = new GradientBased(m_data, m_vm);
+                gradientBasedWindow.Owner = this;
+                gradientBasedWindow.Show();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {
