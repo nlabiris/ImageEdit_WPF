@@ -2227,7 +2227,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         /// <param name="bFactor">Blue factor.</param>
         /// <param name="threshold">Threshold.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan EdgeDetection_GradientBased(ImageData data, EdgeFilterType filterType, DerivativeLevel derivativeLevel, double rFactor = 1.0, double gFactor = 1.0, double bFactor = 1.0, byte threshold = 0) {
+        public static TimeSpan EdgeDetection_GradientBased(ImageData data, EdgeFilterType filterType, DerivativeLevel derivativeLevel, float rFactor = 1.0f, float gFactor = 1.0f, float bFactor = 1.0f, byte threshold = 0) {
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -2258,38 +2258,38 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     double g = 0.0;
                     double r = 0.0;
                     int bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
-                    int gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
-                    int rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
+                    int gGradient = Math.Abs(rgbValues[index + 1 - bytesPerPixel] - rgbValues[index + 1 + bytesPerPixel])/derivative;
+                    int rGradient = Math.Abs(rgbValues[index + 2 - bytesPerPixel] - rgbValues[index + 2 + bytesPerPixel])/derivative;
 
                     bGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride])/derivative;
-                    gGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride])/derivative;
-                    rGradient += Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride])/derivative;
+                    gGradient += Math.Abs(rgbValues[index + 1 - bmpData.Stride] - rgbValues[index + 1 + bmpData.Stride])/derivative;
+                    rGradient += Math.Abs(rgbValues[index + 2 - bmpData.Stride] - rgbValues[index + 2 + bmpData.Stride])/derivative;
 
                     bool exceedsThreshold = false;
                     if (bGradient + gGradient + rGradient > threshold) {
                         exceedsThreshold = true;
                     } else {
                         bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
-                        gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
-                        rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel]);
+                        gGradient = Math.Abs(rgbValues[index + 1 - bytesPerPixel] - rgbValues[index + 1 + bytesPerPixel]);
+                        rGradient = Math.Abs(rgbValues[index + 2 - bytesPerPixel] - rgbValues[index + 2 + bytesPerPixel]);
 
                         if (bGradient + gGradient + rGradient > threshold) {
                             exceedsThreshold = true;
                         } else {
                             bGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
-                            gGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
-                            rGradient = Math.Abs(rgbValues[index - bmpData.Stride] - rgbValues[index + bmpData.Stride]);
+                            gGradient = Math.Abs(rgbValues[index + 1 - bmpData.Stride] - rgbValues[index + 1 + bmpData.Stride]);
+                            rGradient = Math.Abs(rgbValues[index + 2 - bmpData.Stride] - rgbValues[index + 2 + bmpData.Stride]);
 
                             if (bGradient + gGradient + rGradient > threshold) {
                                 exceedsThreshold = true;
                             } else {
                                 bGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride])/derivative;
-                                gGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride])/derivative;
-                                rGradient = Math.Abs(rgbValues[index - bytesPerPixel - bmpData.Stride] - rgbValues[index + bytesPerPixel + bmpData.Stride])/derivative;
+                                gGradient = Math.Abs(rgbValues[index + 1 - bytesPerPixel - bmpData.Stride] - rgbValues[index + 1 + bytesPerPixel + bmpData.Stride])/derivative;
+                                rGradient = Math.Abs(rgbValues[index + 2 - bytesPerPixel - bmpData.Stride] - rgbValues[index + 2 + bytesPerPixel + bmpData.Stride])/derivative;
 
-                                gGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
-                                bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
-                                rGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
+                                bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]) / derivative;
+                                gGradient += Math.Abs(rgbValues[index + 1 - bmpData.Stride + bytesPerPixel] - rgbValues[index + 1 + bmpData.Stride - bytesPerPixel])/derivative;
+                                rGradient += Math.Abs(rgbValues[index + 2 - bmpData.Stride + bytesPerPixel] - rgbValues[index + 2 + bmpData.Stride - bytesPerPixel])/derivative;
 
                                 if (bGradient + gGradient + rGradient > threshold) {
                                     exceedsThreshold = true;

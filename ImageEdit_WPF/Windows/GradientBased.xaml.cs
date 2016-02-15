@@ -39,9 +39,9 @@ namespace ImageEdit_WPF.Windows {
         private EdgeFilterType filterType = EdgeFilterType.EdgeDetectMono;
         private DerivativeLevel derivativeLevel = DerivativeLevel.FirstDerivative;
         private byte threshold = 0;
-        private double bFactor = 0.0;
-        private double gFactor = 0.0;
-        private double rFactor = 0.0;
+        private float bFactor = 1.0f;
+        private float gFactor = 1.0f;
+        private float rFactor = 1.0f;
 
         public GradientBased(ImageData data, ViewModel vm) {
             m_data = data;
@@ -90,22 +90,22 @@ namespace ImageEdit_WPF.Windows {
                 }
 
                 threshold = byte.Parse(txbThreshold.Text);
-                if (threshold > 255 || threshold < 0) {
+                if (threshold > 200 || threshold < 0) {
                     string message = "Wrong range\r\n\r\nGive a number between 0 and 255";
                     MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
                 if (txbBlueFactor.Text.Contains(".")) {
-                    bFactor = double.Parse(txbBlueFactor.Text, new CultureInfo("en-US"));
-                    if (bFactor > 1.0 || bFactor < 0.0) {
+                    bFactor = float.Parse(txbBlueFactor.Text, new CultureInfo("en-US"));
+                    if (bFactor > 3.0 || bFactor < 0.0) {
                         string message = "Wrong range\r\n\r\nGive a number between 0.0 and 1.0";
                         MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 } else if (txbBlueFactor.Text.Contains(",")) {
-                    bFactor = double.Parse(txbBlueFactor.Text, new CultureInfo("el-GR"));
-                    if (bFactor > 1.0 || bFactor < 0.0) {
+                    bFactor = float.Parse(txbBlueFactor.Text, new CultureInfo("el-GR"));
+                    if (bFactor > 3.0 || bFactor < 0.0) {
                         string message = "Wrong range\r\n\r\nGive a number between 0,0 and 1,0";
                         MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
@@ -113,15 +113,15 @@ namespace ImageEdit_WPF.Windows {
                 }
 
                 if (txbGreenFactor.Text.Contains(".")) {
-                    gFactor = double.Parse(txbGreenFactor.Text, new CultureInfo("en-US"));
-                    if (gFactor > 1.0 || gFactor < 0.0) {
+                    gFactor = float.Parse(txbGreenFactor.Text, new CultureInfo("en-US"));
+                    if (gFactor > 3.0 || gFactor < 0.0) {
                         string message = "Wrong range\r\n\r\nGive a number between 0.0 and 1.0";
                         MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 } else if (txbGreenFactor.Text.Contains(",")) {
-                    gFactor = double.Parse(txbGreenFactor.Text, new CultureInfo("el-GR"));
-                    if (gFactor > 1.0 || gFactor < 0.0) {
+                    gFactor = float.Parse(txbGreenFactor.Text, new CultureInfo("el-GR"));
+                    if (gFactor > 3.0 || gFactor < 0.0) {
                         string message = "Wrong range\r\n\r\nGive a number between 0,0 and 1,0";
                         MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
@@ -129,15 +129,15 @@ namespace ImageEdit_WPF.Windows {
                 }
 
                 if (txbRedFactor.Text.Contains(".")) {
-                    rFactor = double.Parse(txbRedFactor.Text, new CultureInfo("en-US"));
-                    if (rFactor > 1.0 || rFactor < 0.0) {
+                    rFactor = float.Parse(txbRedFactor.Text, new CultureInfo("en-US"));
+                    if (rFactor > 3.0 || rFactor < 0.0) {
                         string message = "Wrong range\r\n\r\nGive a number between 0.0 and 1.0";
                         MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 } else if (txbRedFactor.Text.Contains(",")) {
-                    rFactor = double.Parse(txbRedFactor.Text, new CultureInfo("el-GR"));
-                    if (rFactor > 1.0 || rFactor < 0.0) {
+                    rFactor = float.Parse(txbRedFactor.Text, new CultureInfo("el-GR"));
+                    if (rFactor > 3.0 || rFactor < 0.0) {
                         string message = "Wrong range\r\n\r\nGive a number between 0,0 and 1,0";
                         MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
