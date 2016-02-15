@@ -1323,112 +1323,6 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region Image summarization
-        /// <summary>
-        /// Image Summarization.
-        /// <para>Adding the same image, increasing its brightness.</para>
-        /// </summary>
-        /// <param name="data">Image data.</param>
-        /// <returns>Execution time.</returns>
-        public static TimeSpan ImageSummarization(ImageData data) {
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride*bmpData.Height;
-            byte[] rgb = new byte[bytes];
-
-            Stopwatch watch = Stopwatch.StartNew();
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgb, 0, bytes);
-
-            #region Algorithm
-            Parallel.ForEach(BetterEnumerable.SteppedRange(0, bytes, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), p => {
-                int b = rgb[p] + rgb[p]; // B
-                int g = rgb[p + 1] + rgb[p + 1]; // G
-                int r = rgb[p + 2] + rgb[p + 2]; // R
-
-                if (r > 255) {
-                    r = 255;
-                }
-
-                if (g > 255) {
-                    g = 255;
-                }
-
-                if (b > 255) {
-                    b = 255;
-                }
-
-                rgb[p] = (byte)b; // B
-                rgb[p + 1] = (byte)g; // G
-                rgb[p + 2] = (byte)r; // R
-            });
-            #endregion
-
-            Marshal.Copy(rgb, 0, ptr, bytes);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
-
-            // Unlock the bits.
-            data.M_bitmap.UnlockBits(bmpData);
-
-            return elapsedTime;
-        }
-        #endregion
-
-        #region Image subtraction
-        /// <summary>
-        /// Image subtraction.
-        /// <para>Subtract image from itselft which results to a black image. Not useful at all. It will be chnaged soon.</para>
-        /// </summary>
-        /// <param name="data">Image data.</param>
-        /// <returns>Execution time.</returns>
-        public static TimeSpan ImageSubtraction(ImageData data) {
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride*bmpData.Height;
-            byte[] rgb = new byte[bytes];
-
-            Stopwatch watch = Stopwatch.StartNew();
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(ptr, rgb, 0, bytes);
-
-            #region Algorithm
-            Parallel.ForEach(BetterEnumerable.SteppedRange(0, bytes, Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8), p => {
-                int b = rgb[p] - rgb[p]; // B
-                int g = rgb[p + 1] - rgb[p + 1]; // G
-                int r = rgb[p + 2] - rgb[p + 2]; // R
-
-                rgb[p] = (byte)b; // B
-                rgb[p + 1] = (byte)g; // G
-                rgb[p + 2] = (byte)r; // R
-            });
-            #endregion
-
-            Marshal.Copy(rgb, 0, ptr, bytes);
-
-            watch.Stop();
-            TimeSpan elapsedTime = watch.Elapsed;
-
-            // Unlock the bits.
-            data.M_bitmap.UnlockBits(bmpData);
-
-            return elapsedTime;
-        }
-        #endregion
-
         #region Edge detection [Sobel]
         /// <summary>
         /// Sobel edge detector.
@@ -2305,7 +2199,6 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     bgrValues[index] = (byte)b;
                     bgrValues[index + 1] = (byte)g;
                     bgrValues[index + 2] = (byte)r;
-                    bgrValues[index + 3] = 255;
                 }
             }
             #endregion
@@ -2361,6 +2254,9 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                 for (int j = 1; j < bmpData.Width - 1; j++) {
                     int index = i*bmpData.Stride + j*bytesPerPixel;
 
+                    double b = 0.0;
+                    double g = 0.0;
+                    double r = 0.0;
                     int bGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
                     int gGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
                     int rGradient = Math.Abs(rgbValues[index - bytesPerPixel] - rgbValues[index + bytesPerPixel])/derivative;
@@ -2403,10 +2299,6 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                             }
                         }
                     }
-
-                    double b = 0.0;
-                    double g = 0.0;
-                    double r = 0.0;
 
                     if (exceedsThreshold) {
                         switch (filterType) {

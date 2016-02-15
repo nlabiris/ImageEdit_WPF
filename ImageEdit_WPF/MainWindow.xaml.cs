@@ -915,64 +915,6 @@ namespace ImageEdit_WPF {
         }
         #endregion
 
-        #region Image Summarization
-        /// <summary>
-        /// Image Summarization algorithm.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void imageSummarization_Click(object sender, RoutedEventArgs e) {
-            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
-                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            try {
-                m_data.M_action = ActionType.ImageSummarization;
-                m_backgroundWorker.RunWorkerAsync();
-            } catch (FileNotFoundException ex) {
-                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (ArgumentException ex) {
-                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (InvalidOperationException ex) {
-                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (IndexOutOfRangeException ex) {
-                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        #endregion
-
-        #region Image Subtraction
-        /// <summary>
-        /// Image Subtraction algorithm.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void imageSubtraction_Click(object sender, RoutedEventArgs e) {
-            if (m_data.M_inputFilename == string.Empty || m_data.M_bitmap == null) {
-                MessageBox.Show("Open image first!", "ArgumentsNull", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            try {
-                m_data.M_action = ActionType.ImageSubtraction;
-                m_backgroundWorker.RunWorkerAsync();
-            } catch (FileNotFoundException ex) {
-                MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (ArgumentException ex) {
-                MessageBox.Show(ex.Message, "ArgumentException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (InvalidOperationException ex) {
-                MessageBox.Show(ex.Message, "InvalidOperationException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (IndexOutOfRangeException ex) {
-                MessageBox.Show(ex.Message, "IndexOutOfRangeException", MessageBoxButton.OK, MessageBoxImage.Error);
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        #endregion
-
         #region Edge detection (Sobel)
         /// <summary>
         /// Edge detection using the Sobel algorithm. Here we create a new window from where we implement the algorithm.
@@ -1267,14 +1209,6 @@ namespace ImageEdit_WPF {
                 case ActionType.SquareRoot:
                     // Apply algorithm and return execution time
                     elapsedTime = Algorithms.SquareRoot(m_data);
-                    break;
-                case ActionType.ImageSummarization:
-                    // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageSummarization(m_data);
-                    break;
-                case ActionType.ImageSubtraction:
-                    // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageSubtraction(m_data);
                     break;
                 case ActionType.ImageEqualizationRGB:
                     // Apply algorithm and return execution time

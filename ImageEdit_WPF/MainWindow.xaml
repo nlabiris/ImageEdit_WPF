@@ -81,8 +81,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <MenuItem Name="histogramEqualizationHSV" Header="HSV" Click="histogramEqualizationHSV_Click"></MenuItem>
                     <MenuItem Name="histogramEqualizationYUV" Header="YUV" Click="histogramEqualizationYUV_Click"></MenuItem>
                 </MenuItem>
-                <MenuItem Name="imageSummarization" Header="Image Summarization" Click="imageSummarization_Click"></MenuItem>
-                <MenuItem Name="imageSubtraction" Header="Image Subtraction" Click="imageSubtraction_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Filters" StaysOpenOnClick="True">
                 <MenuItem Name="sobel" Header="Sobel (Edge detection)" Click="sobel_Click"></MenuItem>

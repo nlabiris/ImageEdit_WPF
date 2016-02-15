@@ -23,8 +23,6 @@ Currently supports the following file formats:
 - Salt-and-Pepper noise generator (Color/BW)
 - Median filter (Noise reduction)
 - Arithmetic mean filter (Noise reduction)
-- Image summarization
-- Image subtraction
 - Edge detection (Sobel)
 - Gaussian Blur filter
 - Sharpen filter
