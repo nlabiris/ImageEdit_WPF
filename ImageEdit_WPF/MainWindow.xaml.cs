@@ -781,8 +781,9 @@ namespace ImageEdit_WPF {
             }
 
             try {
-                m_data.M_action = ActionType.OilPaint;
-                m_backgroundWorker.RunWorkerAsync();
+                OilPaintEffect oilPaintEffectWindow = new OilPaintEffect(m_data, m_vm);
+                oilPaintEffectWindow.Owner = this;
+                oilPaintEffectWindow.Show();
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (ArgumentException ex) {

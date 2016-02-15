@@ -1535,7 +1535,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region Convolution
+        #region Image Convolution
         /// <summary>
         /// Convolution algorithm.
         /// </summary>
@@ -1543,7 +1543,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         /// <param name="kernelSize">Kernel size.</param>
         /// <param name="kernel">Kernel.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan Convolution(ImageData data, int kernelSize, double[,] kernel) {
+        public static TimeSpan ImageConvolution(ImageData data, int kernelSize, double[,] kernel) {
             double sumMask = 0;
 
             // Lock the bitmap's bits.  
@@ -1942,7 +1942,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region Median filter (gradient based) [Not working or now]
+        #region Median filter (gradient based) [Not working for now]
         /// <summary>
         /// Median filter (gradient based).
         /// </summary>
@@ -2036,7 +2036,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region CartoonEffect
+        #region Cartoon effect
         /// <summary>
         /// Cartoon effect filter.
         /// </summary>
@@ -2050,13 +2050,13 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                 case KernelType.None:
                     break;
                 case KernelType.Gaussian3x3:
-                    Convolution(data, 3, Kernel.M_Gaussian3x3);
+                    ImageConvolution(data, 3, Kernel.M_Gaussian3x3);
                     break;
                 case KernelType.Gaussian5x5:
-                    Convolution(data, 5, Kernel.M_Gaussian5x5);
+                    ImageConvolution(data, 5, Kernel.M_Gaussian5x5);
                     break;
                 case KernelType.Gaussian7x7:
-                    Convolution(data, 7, Kernel.M_Gaussian7x7);
+                    ImageConvolution(data, 7, Kernel.M_Gaussian7x7);
                     break;
                 case KernelType.Median3x3:
                     NoiseReduction_Median(data, 3);
@@ -2071,28 +2071,28 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     NoiseReduction_Median(data, 9);
                     break;
                 case KernelType.Mean3x3:
-                    Convolution(data, 3, Kernel.M_Mean3x3);
+                    ImageConvolution(data, 3, Kernel.M_Mean3x3);
                     break;
                 case KernelType.Mean5x5:
-                    Convolution(data, 5, Kernel.M_Mean5x5);
+                    ImageConvolution(data, 5, Kernel.M_Mean5x5);
                     break;
                 case KernelType.Mean7x7:
-                    Convolution(data, 7, Kernel.M_Mean7x7);
+                    ImageConvolution(data, 7, Kernel.M_Mean7x7);
                     break;
                 case KernelType.LowPass3x3:
-                    Convolution(data, 3, Kernel.M_LowPass3x3);
+                    ImageConvolution(data, 3, Kernel.M_LowPass3x3);
                     break;
                 case KernelType.LowPass5x5:
-                    Convolution(data, 5, Kernel.M_LowPass5x5);
+                    ImageConvolution(data, 5, Kernel.M_LowPass5x5);
                     break;
                 case KernelType.Sharpen3x3:
-                    Convolution(data, 3, Kernel.M_Sharpen3x3);
+                    ImageConvolution(data, 3, Kernel.M_Sharpen3x3);
                     break;
                 case KernelType.Sharpen5x5:
-                    Convolution(data, 5, Kernel.M_Sharpen5x5);
+                    ImageConvolution(data, 5, Kernel.M_Sharpen5x5);
                     break;
                 case KernelType.Sharpen7x7:
-                    Convolution(data, 7, Kernel.M_Sharpen7x7);
+                    ImageConvolution(data, 7, Kernel.M_Sharpen7x7);
                     break;
             }
 
@@ -2212,7 +2212,117 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         }
         #endregion
 
-        #region CartoonEffect
+        #region Oil paint effect
+        /// <summary>
+        /// Cartoon effect filter.
+        /// </summary>
+        /// <param name="data">Image data.</param>
+        /// <param name="levels">Intensity levels.</param>
+        /// <param name="kernelSize">Kernel size.</param>
+        /// <returns>Execution time.</returns>
+        public static TimeSpan OilPaintEffect(ImageData data, int levels, int kernelSize) {
+            
+            // Lock the bitmap's bits.  
+            BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare 2 arrays to hold the bytes of the bitmap.
+            // The first to read from and then write to the scond.
+            int bytes = bmpData.Stride*bmpData.Height;
+            byte[] rgbValues = new byte[bytes];
+            byte[] bgrValues = new byte[bytes];
+
+            // Calculate the offset regarding the size of the kernel.
+            int filterOffset = (kernelSize - 1) / 2;
+
+            // Get the bytes per pixel value.
+            int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;
+
+            levels--;
+
+            Stopwatch watch = Stopwatch.StartNew();
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            #region Algorithm
+            for (int i = filterOffset; i < bmpData.Width - filterOffset; i++) {
+                for (int j = filterOffset; j < bmpData.Height - filterOffset; j++) {
+                    int index = j*bmpData.Stride + i*bytesPerPixel;
+
+                    double b = 0;
+                    double g = 0;
+                    double r = 0;
+                    int maxIntensity = 0;
+                    int maxIndex = 0;
+                    int[] intensityBin = new int[levels + 1];
+                    int[] bBin = new int[levels + 1];
+                    int[] gBin = new int[levels + 1];
+                    int[] rBin = new int[levels + 1];
+
+                    for (int k = 0; k < kernelSize; k++) {
+                        for (int l = 0; l < kernelSize; l++) {
+                            int indexX = ((j + l - filterOffset)*bmpData.Stride) + ((i + k - filterOffset)*bytesPerPixel);
+
+                            int currentIntensity = (int)Math.Round(((double)(rgbValues[indexX] + rgbValues[indexX + 1] + rgbValues[indexX + 2])/3.0*(levels))/255.0);
+
+                            intensityBin[currentIntensity] += 1;
+                            bBin[currentIntensity] += rgbValues[indexX];
+                            gBin[currentIntensity] += rgbValues[indexX + 1];
+                            rBin[currentIntensity] += rgbValues[indexX + 2];
+
+                            if (intensityBin[currentIntensity] > maxIntensity) {
+                                maxIntensity = intensityBin[currentIntensity];
+                                maxIndex = currentIntensity;
+                            }
+                        }
+                    }
+
+                    b = bBin[maxIndex]/(double)maxIntensity;
+                    g = gBin[maxIndex]/(double)maxIntensity;
+                    r = rBin[maxIndex]/(double)maxIntensity;
+
+                    if (r > 255.0) {
+                        r = 255.0;
+                    } else if (r < 0.0) {
+                        r = 0.0;
+                    }
+
+                    if (g > 255.0) {
+                        g = 255.0;
+                    } else if (g < 0.0) {
+                        g = 0.0;
+                    }
+
+                    if (b > 255.0) {
+                        b = 255.0;
+                    } else if (b < 0.0) {
+                        b = 0.0;
+                    }
+
+                    bgrValues[index] = (byte)b;
+                    bgrValues[index + 1] = (byte)g;
+                    bgrValues[index + 2] = (byte)r;
+                    bgrValues[index + 3] = 255;
+                }
+            }
+            #endregion
+
+            Marshal.Copy(bgrValues, 0, ptr, bytes);
+
+            watch.Stop();
+            TimeSpan elapsedTime = watch.Elapsed;
+
+            // Unlock the bits.
+            data.M_bitmap.UnlockBits(bmpData);
+
+            return elapsedTime;
+        }
+        #endregion
+
+        #region Edge detection [Gradient-based]
         /// <summary>
         /// Cartoon effect filter.
         /// </summary>

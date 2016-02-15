@@ -19,100 +19,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using ImageEdit_WPF.HelperClasses;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
-using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>
-    /// Interaction logic for Sharpen.xaml
+    /// Interaction logic for OilPaintEffect.xaml
     /// </summary>
-    public partial class Sharpen : Window {
+    public partial class OilPaintEffect : Window {
         private ImageData m_data = null;
         private ViewModel m_vm = null;
         private BackgroundWorker m_backgroundWorker = null;
         private TimeSpan elapsedTime = TimeSpan.Zero;
+        private int levels = 0;
+        private int kernelSize = 0;
 
-        /// <summary>
-        /// Size of the kernel.
-        /// </summary>
-        private int m_kernelSize = 0;
-
-        /// <summary>
-        /// Sharpen <c>constructor</c>.
-        /// Here we initialiaze the images and also we set the focus
-        /// at the 'OK' button and at one of the three radio boxes (kernel size).
-        /// </summary>
-        public Sharpen(ImageData data, ViewModel vm) {
+        public OilPaintEffect(ImageData data, ViewModel vm) {
             m_data = data;
             m_vm = vm;
-            m_backgroundWorker = new BackgroundWorker();
 
             InitializeComponent();
-            three.IsChecked = true;
 
             m_backgroundWorker = new BackgroundWorker();
             m_backgroundWorker.WorkerReportsProgress = false;
             m_backgroundWorker.WorkerSupportsCancellation = false;
             m_backgroundWorker.DoWork += backgroundWorker_DoWork;
             m_backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+            cmbKernelSize.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Set kernel's size to 3.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void three_Checked(object sender, RoutedEventArgs e) {
-            m_kernelSize = 3;
-        }
-
-        /// <summary>
-        /// Set kernel's size to 5.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void five_Checked(object sender, RoutedEventArgs e) {
-            m_kernelSize = 5;
-        }
-
-        /// <summary>
-        /// Set kernel's size to 7.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void seven_Checked(object sender, RoutedEventArgs e) {
-            m_kernelSize = 7;
-        }
-
-        /// <summary>
-        /// Implementation of the Sharpen algorithm.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ok_Click(object sender, RoutedEventArgs e) {
+        private void Ok_OnClick(object sender, RoutedEventArgs e) {
+            try {
+                levels = int.Parse(txbIntensityLevels.Text);
+                kernelSize = int.Parse(cmbKernelSize.SelectionBoxItem.ToString());
+            } catch (ArgumentNullException ex) {
+                MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+                return;
+            } catch (FormatException ex) {
+                MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+                return;
+            } catch (OverflowException ex) {
+                MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+                return;
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+                return;
+            }
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
-            switch(m_kernelSize)
-            {
-                case 3:
-                    // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageConvolution(m_data, m_kernelSize, Kernel.M_Sharpen3x3);
-                    break;
-                case 5:
-                    // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageConvolution(m_data, m_kernelSize, Kernel.M_Sharpen5x5);
-                    break;
-                case 7:
-                    // Apply algorithm and return execution time
-                    elapsedTime = Algorithms.ImageConvolution(m_data, m_kernelSize, Kernel.M_Sharpen7x7);
-                    break;
-            }
+            // Apply algorithm and return execution time
+            elapsedTime = Algorithms.OilPaintEffect(m_data, levels, kernelSize);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {

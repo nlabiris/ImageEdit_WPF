@@ -118,6 +118,9 @@
       <DependentUpon>NoiseReductionMedian.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\RedoCommand.cs" />
+    <Compile Include="Windows\OilPaintEffect.xaml.cs">
+      <DependentUpon>OilPaintEffect.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SaltPepperNoiseBW.xaml.cs">
       <DependentUpon>SaltPepperNoiseBW.xaml</DependentUpon>
     </Compile>
@@ -194,6 +197,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\NoiseReductionMedian.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\OilPaintEffect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

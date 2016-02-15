@@ -31,13 +31,16 @@ Currently supports the following file formats:
 - Image equalization [RGB],[HSV],[YUV]
 - Color to grayscale
 - Sepia tone
+- Cartoon effect
+- Oil paint effect
 
 ### Supported platforms
+
 - Windows
 
 #### Source code
 
-You can download the executable below. For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* (if you are using  **Github for Windows**) to clone the repository.
+For the source code, you can click the *"Download ZIP"* on the right or the *"Clone in Desktop"* (if you are using  **Github for Windows**) to clone the repository.
 
 Alternatively, from the command line (if you have `git` installed):
 ```
@@ -46,7 +49,7 @@ git clone https://github.com/nlabiris/ImageEdit_WPF.git
 
 #### Download binary
 
-[ImageEdit v0.7.4 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.4_beta.rar?raw=true)
+[ImageEdit v0.7.5 beta](https://github.com/nlabiris/ImageEdit_WPF/blob/master/ImageEdit_WPF/bin/Release/ImageEdit_v0.7.5_beta.rar?raw=true)
 
 
 #### License
