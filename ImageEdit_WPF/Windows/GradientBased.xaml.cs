@@ -67,99 +67,32 @@ namespace ImageEdit_WPF.Windows {
         }
 
         private void Ok_OnClick(object sender, RoutedEventArgs e) {
-            try {
-                switch (cmbFilters.SelectionBoxItem.ToString()) {
-                    case "Edge Detect Mono":
-                        filterType = EdgeFilterType.EdgeDetectMono;
-                        break;
-                    case "Edge Detect Gradient":
-                        filterType = EdgeFilterType.EdgeDetectGradient;
-                        break;
-                    case "Sharpen":
-                        filterType = EdgeFilterType.Sharpen;
-                        break;
-                    case "Sharpen Gradient":
-                        filterType = EdgeFilterType.SharpenGradient;
-                        break;
-                }
-
-                if (rdbFirstDerivative.IsChecked == true) {
-                    derivativeLevel = DerivativeLevel.FirstDerivative;
-                } else if (rdbSecondDerivative.IsChecked == true) {
-                    derivativeLevel = DerivativeLevel.SecondDerivative;
-                }
-
-                threshold = byte.Parse(txbThreshold.Text);
-                if (threshold > 200 || threshold < 0) {
-                    string message = "Wrong range\r\n\r\nGive a number between 0 and 255";
-                    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                if (txbBlueFactor.Text.Contains(".")) {
-                    bFactor = float.Parse(txbBlueFactor.Text, new CultureInfo("en-US"));
-                    if (bFactor > 3.0 || bFactor < 0.0) {
-                        string message = "Wrong range\r\n\r\nGive a number between 0.0 and 1.0";
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                } else if (txbBlueFactor.Text.Contains(",")) {
-                    bFactor = float.Parse(txbBlueFactor.Text, new CultureInfo("el-GR"));
-                    if (bFactor > 3.0 || bFactor < 0.0) {
-                        string message = "Wrong range\r\n\r\nGive a number between 0,0 and 1,0";
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                }
-
-                if (txbGreenFactor.Text.Contains(".")) {
-                    gFactor = float.Parse(txbGreenFactor.Text, new CultureInfo("en-US"));
-                    if (gFactor > 3.0 || gFactor < 0.0) {
-                        string message = "Wrong range\r\n\r\nGive a number between 0.0 and 1.0";
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                } else if (txbGreenFactor.Text.Contains(",")) {
-                    gFactor = float.Parse(txbGreenFactor.Text, new CultureInfo("el-GR"));
-                    if (gFactor > 3.0 || gFactor < 0.0) {
-                        string message = "Wrong range\r\n\r\nGive a number between 0,0 and 1,0";
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                }
-
-                if (txbRedFactor.Text.Contains(".")) {
-                    rFactor = float.Parse(txbRedFactor.Text, new CultureInfo("en-US"));
-                    if (rFactor > 3.0 || rFactor < 0.0) {
-                        string message = "Wrong range\r\n\r\nGive a number between 0.0 and 1.0";
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                } else if (txbRedFactor.Text.Contains(",")) {
-                    rFactor = float.Parse(txbRedFactor.Text, new CultureInfo("el-GR"));
-                    if (rFactor > 3.0 || rFactor < 0.0) {
-                        string message = "Wrong range\r\n\r\nGive a number between 0,0 and 1,0";
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                }
-            } catch (ArgumentNullException ex) {
-                MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (FormatException ex) {
-                MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (OverflowException ex) {
-                MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
+            switch (cmbFilters.SelectionBoxItem.ToString()) {
+                case "Edge Detect Mono":
+                    filterType = EdgeFilterType.EdgeDetectMono;
+                    break;
+                case "Edge Detect Gradient":
+                    filterType = EdgeFilterType.EdgeDetectGradient;
+                    break;
+                case "Sharpen":
+                    filterType = EdgeFilterType.Sharpen;
+                    break;
+                case "Sharpen Gradient":
+                    filterType = EdgeFilterType.SharpenGradient;
+                    break;
             }
+
+            if (rdbFirstDerivative.IsChecked == true) {
+                derivativeLevel = DerivativeLevel.FirstDerivative;
+            } else if (rdbSecondDerivative.IsChecked == true) {
+                derivativeLevel = DerivativeLevel.SecondDerivative;
+            }
+
+            threshold = (byte)sldThreshold.Value;
+            bFactor = (float)sldBlueFactor.Value;
+            gFactor = (float)sldGreenFactor.Value;
+            rFactor = (float)sldRedFactor.Value;
+
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }

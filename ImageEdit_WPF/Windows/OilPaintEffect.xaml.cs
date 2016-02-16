@@ -52,26 +52,8 @@ namespace ImageEdit_WPF.Windows {
         }
 
         private void Ok_OnClick(object sender, RoutedEventArgs e) {
-            try {
-                levels = int.Parse(txbIntensityLevels.Text);
-                kernelSize = int.Parse(cmbKernelSize.SelectionBoxItem.ToString());
-            } catch (ArgumentNullException ex) {
-                MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (FormatException ex) {
-                MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (OverflowException ex) {
-                MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            }
+            levels = (int)sldIntensityLevels.Value;
+            kernelSize = int.Parse(cmbKernelSize.SelectionBoxItem.ToString());
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }

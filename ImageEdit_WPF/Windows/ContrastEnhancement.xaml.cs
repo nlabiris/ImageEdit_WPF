@@ -47,7 +47,7 @@ namespace ImageEdit_WPF.Windows {
             m_vm = vm;
 
             InitializeComponent();
-            textboxBrightness.Focus();
+            sldBrightness.Focus();
 
             m_backgroundWorker = new BackgroundWorker();
             m_backgroundWorker.WorkerReportsProgress = true;
@@ -62,30 +62,8 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            try {
-                brightness = int.Parse(textboxBrightness.Text);
-                if (textboxContrast.Text.Contains(".")) {
-                    contrast = double.Parse(textboxContrast.Text, new CultureInfo("en-US"));
-                } else if (textboxContrast.Text.Contains(",")) {
-                    contrast = double.Parse(textboxContrast.Text, new CultureInfo("el-GR"));
-                }
-            } catch (ArgumentNullException ex) {
-                MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (FormatException ex) {
-                MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (OverflowException ex) {
-                MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            }
+            brightness = (int)sldBrightness.Value;
+            contrast = sldContrast.Value;
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }

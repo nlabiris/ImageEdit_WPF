@@ -45,7 +45,7 @@ namespace ImageEdit_WPF.Windows {
             m_vm = vm;
 
             InitializeComponent();
-            textboxThreshold.Focus();
+            sldThreshold.Focus();
 
             m_backgroundWorker = new BackgroundWorker();
             m_backgroundWorker.WorkerReportsProgress = false;
@@ -60,30 +60,7 @@ namespace ImageEdit_WPF.Windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e) {
-            try {
-                threshold = byte.Parse(textboxThreshold.Text);
-                if (threshold > 255 || threshold < 0) {
-                    string message = "Wrong range\r\n\r\nGive a number between 0 and 255";
-                    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-            } catch (ArgumentNullException ex) {
-                MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (FormatException ex) {
-                MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (OverflowException ex) {
-                MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            }
+            threshold = (byte)sldThreshold.Value;
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }

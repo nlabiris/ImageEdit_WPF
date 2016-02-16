@@ -24,6 +24,7 @@ Currently supports the following file formats:
 - Median filter (Noise reduction)
 - Arithmetic mean filter (Noise reduction)
 - Edge detection (Sobel)
+- Edge detection (Gradient-based)
 - Gaussian Blur filter
 - Sharpen filter
 - Image equalization [RGB],[HSV],[YUV]

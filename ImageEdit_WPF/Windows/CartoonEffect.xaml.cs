@@ -73,81 +73,58 @@ namespace ImageEdit_WPF.Windows {
         }
 
         private void Ok_OnClick(object sender, RoutedEventArgs e) {
-            try {
-                switch (cmbFilters.SelectionBoxItem.ToString()) {
-                    case "Gaussian (3x3)":
-                        kernelType = KernelType.Gaussian3x3;
-                        break;
-                    case "Gaussian (5x5)":
-                        kernelType = KernelType.Gaussian5x5;
-                        break;
-                    case "Gaussian (7x7)":
-                        kernelType = KernelType.Gaussian7x7;
-                        break;
-                    case "Mean (3x3)":
-                        kernelType = KernelType.Mean3x3;
-                        break;
-                    case "Mean (5x5)":
-                        kernelType = KernelType.Mean5x5;
-                        break;
-                    case "Mean (7x7)":
-                        kernelType = KernelType.Mean7x7;
-                        break;
-                    case "Median (3x3)":
-                        kernelType = KernelType.Median3x3;
-                        break;
-                    case "Median (5x5)":
-                        kernelType = KernelType.Median5x5;
-                        break;
-                    case "Median (7x7)":
-                        kernelType = KernelType.Median7x7;
-                        break;
-                    case "Median (9x9)":
-                        kernelType = KernelType.Median9x9;
-                        break;
-                    case "Low pass (3x3)":
-                        kernelType = KernelType.LowPass3x3;
-                        break;
-                    case "Low pass (5x5)":
-                        kernelType = KernelType.LowPass5x5;
-                        break;
-                    case "Sharpen (3x3)":
-                        kernelType = KernelType.Sharpen3x3;
-                        break;
-                    case "Sharpen (5x5)":
-                        kernelType = KernelType.Sharpen5x5;
-                        break;
-                    case "Sharpen (7x7)":
-                        kernelType = KernelType.Sharpen7x7;
-                        break;
-                    case "None":
-                        kernelType = KernelType.None;
-                        break;
-                }
-
-                threshold = byte.Parse(txbThreshold.Text);
-                if (threshold > 255 || threshold < 0) {
-                    string message = "Wrong range\r\n\r\nGive a number between 0 and 255";
-                    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-            } catch (ArgumentNullException ex) {
-                MessageBox.Show(ex.Message, "ArgumentNullException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (FormatException ex) {
-                MessageBox.Show(ex.Message, "FormatException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (OverflowException ex) {
-                MessageBox.Show(ex.Message, "OverflowException", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
+            switch (cmbFilters.SelectionBoxItem.ToString()) {
+                case "Gaussian (3x3)":
+                    kernelType = KernelType.Gaussian3x3;
+                    break;
+                case "Gaussian (5x5)":
+                    kernelType = KernelType.Gaussian5x5;
+                    break;
+                case "Gaussian (7x7)":
+                    kernelType = KernelType.Gaussian7x7;
+                    break;
+                case "Mean (3x3)":
+                    kernelType = KernelType.Mean3x3;
+                    break;
+                case "Mean (5x5)":
+                    kernelType = KernelType.Mean5x5;
+                    break;
+                case "Mean (7x7)":
+                    kernelType = KernelType.Mean7x7;
+                    break;
+                case "Median (3x3)":
+                    kernelType = KernelType.Median3x3;
+                    break;
+                case "Median (5x5)":
+                    kernelType = KernelType.Median5x5;
+                    break;
+                case "Median (7x7)":
+                    kernelType = KernelType.Median7x7;
+                    break;
+                case "Median (9x9)":
+                    kernelType = KernelType.Median9x9;
+                    break;
+                case "Low pass (3x3)":
+                    kernelType = KernelType.LowPass3x3;
+                    break;
+                case "Low pass (5x5)":
+                    kernelType = KernelType.LowPass5x5;
+                    break;
+                case "Sharpen (3x3)":
+                    kernelType = KernelType.Sharpen3x3;
+                    break;
+                case "Sharpen (5x5)":
+                    kernelType = KernelType.Sharpen5x5;
+                    break;
+                case "Sharpen (7x7)":
+                    kernelType = KernelType.Sharpen7x7;
+                    break;
+                case "None":
+                    kernelType = KernelType.None;
+                    break;
             }
+
+            threshold = (byte)sldThreshold.Value;
             m_backgroundWorker.RunWorkerAsync();
             Close();
         }

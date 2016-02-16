@@ -84,6 +84,7 @@
     <Compile Include="HelperClasses\ConvertionMethods.cs" />
     <Compile Include="HelperClasses\Algorithms\ImageData.cs" />
     <Compile Include="HelperClasses\SaveImage.cs" />
+    <Compile Include="HelperClasses\SliderValueConverter.cs" />
     <Compile Include="HelperClasses\ViewModel.cs" />
     <Compile Include="Windows\AutoThreshold.xaml.cs">
       <DependentUpon>AutoThreshold.xaml</DependentUpon>

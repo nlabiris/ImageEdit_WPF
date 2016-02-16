@@ -35,7 +35,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         /// <param name="data">Image data.</param>
         /// <param name="bits">Bits.</param>
         /// <returns>Execution time.</returns>
-        public static TimeSpan ShiftBits(ImageData data, int bits) {
+        public static TimeSpan ShiftBits(ImageData data, byte bits) {
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
             // Get the address of the first line.
