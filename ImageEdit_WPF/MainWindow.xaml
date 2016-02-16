@@ -83,8 +83,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Filters" StaysOpenOnClick="True">
-                <MenuItem Name="sobel" Header="Sobel (Edge detection)" Click="sobel_Click"></MenuItem>
-                <MenuItem Name="gradientBased" Header="Gradient based (Edge detection)" Click="GradientBased_OnClick"></MenuItem>
+                <MenuItem Name="sobel" Header="Edge detection (Sobel)" Click="sobel_Click"></MenuItem>
+                <MenuItem Name="gradientBased" Header="Edge detection (Gradient-based)" Click="GradientBased_OnClick"></MenuItem>
                 <MenuItem Name="gaussianBlur" Header="Gaussian Blur" Click="gaussianBlur_Click"></MenuItem>
                 <MenuItem Name="sharpen" Header="Sharpen" Click="sharpen_Click"></MenuItem>
                 <MenuItem Name="noiseColor" Header="Salt-and-Pepper noise (Color)" Click="noiseColor_Click"></MenuItem>

@@ -2142,7 +2142,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             #region Algorithm
-            for (int i = filterOffset; i < bmpData.Width - filterOffset; i++) {
+            Parallel.For(filterOffset, bmpData.Width - filterOffset, i => {
                 for (int j = filterOffset; j < bmpData.Height - filterOffset; j++) {
                     int index = j*bmpData.Stride + i*bytesPerPixel;
 
@@ -2200,7 +2200,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     bgrValues[index + 1] = (byte)g;
                     bgrValues[index + 2] = (byte)r;
                 }
-            }
+            });
             #endregion
 
             Marshal.Copy(bgrValues, 0, ptr, bytes);
@@ -2250,7 +2250,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             #region Algorithm
-            for (int i = 1; i < bmpData.Height - 1; i++) {
+            Parallel.For(1, bmpData.Height - 1, i => {
                 for (int j = 1; j < bmpData.Width - 1; j++) {
                     int index = i*bmpData.Stride + j*bytesPerPixel;
 
@@ -2287,7 +2287,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                                 gGradient = Math.Abs(rgbValues[index + 1 - bytesPerPixel - bmpData.Stride] - rgbValues[index + 1 + bytesPerPixel + bmpData.Stride])/derivative;
                                 rGradient = Math.Abs(rgbValues[index + 2 - bytesPerPixel - bmpData.Stride] - rgbValues[index + 2 + bytesPerPixel + bmpData.Stride])/derivative;
 
-                                bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel]) / derivative;
+                                bGradient += Math.Abs(rgbValues[index - bmpData.Stride + bytesPerPixel] - rgbValues[index + bmpData.Stride - bytesPerPixel])/derivative;
                                 gGradient += Math.Abs(rgbValues[index + 1 - bmpData.Stride + bytesPerPixel] - rgbValues[index + 1 + bmpData.Stride - bytesPerPixel])/derivative;
                                 rGradient += Math.Abs(rgbValues[index + 2 - bmpData.Stride + bytesPerPixel] - rgbValues[index + 2 + bmpData.Stride - bytesPerPixel])/derivative;
 
@@ -2351,7 +2351,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
                     bgrValues[index + 1] = (byte)g;
                     bgrValues[index + 2] = (byte)r;
                 }
-            }
+            });
             #endregion
 
             Marshal.Copy(bgrValues, 0, ptr, bytes);
