@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 using ImageEdit_WPF.HelperClasses;
+using ImageEdit_WPF.HelperClasses.Algorithms;
 using ImageEdit_WPF.Windows;
 using Microsoft.Win32;
 using System;
@@ -32,22 +33,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using ImageEdit_WPF.HelperClasses.Algorithms;
 
 // BUG: Undo/Redo
-// PENDING: Color to Grayscale algorithm
 // PENDING: Canny Edge detection algorithm
-// PENDING: Noise reduction algorithm
 // PENDING: Image croping
 // PENDING: Rotation algorithm
 // PENDING: Resize
 // PENDING: HDR
 // PENDING: Thermal
 // PENDING: Pixelization
-// PENDING: null action in enum
 // PENDING: Better encoder (I used Magick.NET but I have to deal with some problems to use it again)
-// PENDING: Check sum of kernel windows
-// PENDING: Progress bar on every algorithm window
 // PENDING: Preferences window
 
 
