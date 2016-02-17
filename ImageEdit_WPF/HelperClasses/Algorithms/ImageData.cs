@@ -140,7 +140,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             get { return m_action; }
             set { m_action = value; }
         }
-
+        
         public Bitmap M_bmpUndoRedo {
             get { return m_bmpUndoRedo; }
             set { m_bmpUndoRedo = value; }
