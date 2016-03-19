@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace ImageAlgorithms.Algorithms {
+namespace ImageAlgorithms {
     /// <summary>
     /// <c>ActionType</c> enumeration.
     /// <para>Used to distinguish different actions (algorithms).</para>
