@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+using ImageAlgorithms.Algorithms;
 using ImageEdit_WPF.HelperClasses;
-using ImageEdit_WPF.HelperClasses.Algorithms;
 using ImageEdit_WPF.Windows;
 using Microsoft.Win32;
 using System;

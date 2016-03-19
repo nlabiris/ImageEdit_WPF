@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 
-namespace ImageEdit_WPF.HelperClasses {
+namespace ImageAlgorithms {
     public static class BetterEnumerable {
         public static IEnumerable<int> SteppedRange(int fromInclusive, int toExclusive, int step) {
             for (var i = fromInclusive; i < toExclusive; i += step) {

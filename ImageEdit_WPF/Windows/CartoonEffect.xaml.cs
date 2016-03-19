@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using ImageEdit_WPF.HelperClasses;
-using ImageEdit_WPF.HelperClasses.Algorithms;
+using ImageAlgorithms.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

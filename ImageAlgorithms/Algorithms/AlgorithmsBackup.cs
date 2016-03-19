@@ -29,8 +29,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace ImageEdit_WPF.HelperClasses.Algorithms {
-
+namespace ImageAlgorithms.Algorithms {
     #region algorithms backup (do not use, only for reference) (31/1/2016)
     /// <summary>
     /// This class contains older implementations of algorithms. It is not meant for use in the program.

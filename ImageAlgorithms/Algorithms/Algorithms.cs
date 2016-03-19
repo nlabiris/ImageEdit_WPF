@@ -26,7 +26,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace ImageEdit_WPF.HelperClasses.Algorithms {
+namespace ImageAlgorithms.Algorithms {
     public static class Algorithms {
         #region Shift bits
         /// <summary>
@@ -2115,7 +2115,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
         /// <param name="kernelSize">Kernel size.</param>
         /// <returns>Execution time.</returns>
         public static TimeSpan OilPaintEffect(ImageData data, int levels, int kernelSize) {
-            
+
             // Lock the bitmap's bits.  
             BitmapData bmpData = data.M_bitmap.LockBits(new Rectangle(0, 0, data.M_width, data.M_height), ImageLockMode.ReadWrite, data.M_bitmap.PixelFormat);
 
@@ -2129,7 +2129,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             byte[] bgrValues = new byte[bytes];
 
             // Calculate the offset regarding the size of the kernel.
-            int filterOffset = (kernelSize - 1) / 2;
+            int filterOffset = (kernelSize - 1)/2;
 
             // Get the bytes per pixel value.
             int bytesPerPixel = Image.GetPixelFormatSize(data.M_bitmap.PixelFormat)/8;

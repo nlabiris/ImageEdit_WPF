@@ -1,4 +1,4 @@
-﻿namespace ImageEdit_WPF.HelperClasses.Algorithms {
+﻿namespace ImageAlgorithms.Algorithms {
     /// <summary>
     /// Kernel type.
     /// </summary>

@@ -76,13 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="HelperClasses\Algorithms\Algorithms.cs" />
-    <Compile Include="HelperClasses\Algorithms\EdgeFilters.cs" />
-    <Compile Include="HelperClasses\Algorithms\Kernels.cs" />
-    <Compile Include="HelperClasses\BetterEnumerable.cs" />
-    <Compile Include="HelperClasses\Algorithms\AlgorithmsBackup.cs" />
     <Compile Include="HelperClasses\ConvertionMethods.cs" />
-    <Compile Include="HelperClasses\Algorithms\ImageData.cs" />
     <Compile Include="HelperClasses\SaveImage.cs" />
     <Compile Include="HelperClasses\SliderValueConverter.cs" />
     <Compile Include="HelperClasses\ViewModel.cs" />
@@ -274,7 +268,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ImageAlgorithms\ImageAlgorithms.csproj">
+      <Project>{aecbc784-28b8-4ddf-9bd5-1f41d89f6f0b}</Project>
+      <Name>ImageAlgorithms</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

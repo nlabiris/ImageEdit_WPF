@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using ImageAlgorithms.Algorithms;
 using ImageEdit_WPF.HelperClasses;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows;
-using ImageEdit_WPF.HelperClasses.Algorithms;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>

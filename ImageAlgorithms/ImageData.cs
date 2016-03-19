@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace ImageEdit_WPF.HelperClasses.Algorithms {
+namespace ImageAlgorithms.Algorithms {
     /// <summary>
     /// <c>ActionType</c> enumeration.
     /// <para>Used to distinguish different actions (algorithms).</para>
@@ -140,7 +140,7 @@ namespace ImageEdit_WPF.HelperClasses.Algorithms {
             get { return m_action; }
             set { m_action = value; }
         }
-        
+
         public Bitmap M_bmpUndoRedo {
             get { return m_bmpUndoRedo; }
             set { m_bmpUndoRedo = value; }

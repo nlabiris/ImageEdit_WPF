@@ -1,0 +1,4 @@
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageAlgorithms\bin\Debug\ImageAlgorithms.dll
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageAlgorithms\bin\Debug\ImageAlgorithms.pdb
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageAlgorithms\obj\Debug\ImageAlgorithms.dll
+C:\Users\Sonic\Documents\Visual Studio 2013\Projects\ImageEdit_WPF\ImageAlgorithms\obj\Debug\ImageAlgorithms.pdb
