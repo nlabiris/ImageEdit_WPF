@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Media;
 
-namespace ImageEdit_WPF.HelperClasses {
+namespace ImageEdit_WPF.HelperClasses.ViewModel {
     public class ViewModel : INotifyPropertyChanged {
         /// <summary>
         /// Image that binds to the GUI.

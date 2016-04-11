@@ -24,6 +24,7 @@ using ImageEdit_WPF.HelperClasses;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ImageEdit_WPF.HelperClasses.ViewModel;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>

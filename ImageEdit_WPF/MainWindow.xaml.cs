@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using ImageEdit_WPF.HelperClasses.ViewModel;
 
 // BUG: Undo/Redo
 // PENDING: Canny Edge detection algorithm
@@ -112,14 +113,9 @@ namespace ImageEdit_WPF {
                 if (openFile.ShowDialog() == true) {
                     m_data.M_inputFilename = openFile.FileName;
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
-                    m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
                     m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
 
                     CalculateData_StatusBar();
-
-                    m_data.M_undoStack.Clear();
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    m_data.M_redoStack.Clear();
                 }
             } catch (FileNotFoundException ex) {
                 MessageBox.Show(ex.Message, "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -143,12 +139,7 @@ namespace ImageEdit_WPF {
             try {
                 if (m_data.M_inputFilename != string.Empty) {
                     m_data.M_bitmap = new Bitmap(m_data.M_inputFilename);
-                    m_data.M_bmpUndoRedo = new Bitmap(m_data.M_inputFilename);
                     m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource();
-
-                    m_data.M_undoStack.Clear();
-                    m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-                    m_data.M_redoStack.Clear();
                 } else {
                     MessageBox.Show("Open image first!", "FileNotFoundException", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -278,74 +269,6 @@ namespace ImageEdit_WPF {
                 MessageBox.Show(ex.Message, "ExternalException", MessageBoxButton.OK, MessageBoxImage.Error);
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        #endregion
-
-        #region Undo
-        /// <summary>
-        /// Command implementation of Undo menu item. Check if the command can execute.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = true;
-        }
-
-        /// <summary>
-        /// Command implementation of Undo menu item. Executing command.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e) {
-            if (m_data.M_undoStack.Count <= 1) {
-                undo.IsEnabled = false;
-                return;
-            }
-
-            if (m_data.M_undoStack.Count == 2) {
-                undo.IsEnabled = false;
-            }
-
-            m_data.M_bmpUndoRedo = m_data.M_undoStack.Pop();
-            m_data.M_redoStack.Push(m_data.M_bmpUndoRedo);
-            redo.IsEnabled = true;
-            m_data.M_bitmap = m_data.M_undoStack.Peek();
-            mainImage.Source = m_data.M_bitmap.BitmapToBitmapSource();
-        }
-        #endregion
-
-        #region Redo
-        /// <summary>
-        /// Command implementation of Redo menu item. Check if the command can execute.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = true;
-        }
-
-        /// <summary>
-        /// Command implementation of Redo menu item. Executing command.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e) {
-            if (m_data.M_redoStack.Count == 0) {
-                redo.IsEnabled = false;
-                return;
-            }
-
-            if (m_data.M_redoStack.Count == 1) {
-                redo.IsEnabled = false;
-            }
-
-            m_data.M_bitmap = m_data.M_bmpUndoRedo = m_data.M_redoStack.Pop();
-            m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
-            mainImage.Source = m_data.M_bitmap.BitmapToBitmapSource();
-
-            if (m_data.M_undoStack.Count > 1) {
-                undo.IsEnabled = true;
             }
         }
         #endregion
@@ -1242,11 +1165,8 @@ namespace ImageEdit_WPF {
             if (result == MessageBoxResult.OK) {
                 m_vm.M_bitmapBind = m_data.M_bitmap.BitmapToBitmapSource(); // Set main image
                 m_data.M_noChange = false;
-                m_data.M_bmpUndoRedo = m_data.M_bitmap.Clone() as Bitmap;
-                m_data.M_undoStack.Push(m_data.M_bmpUndoRedo);
                 undo.IsEnabled = true;
                 redo.IsEnabled = false;
-                m_data.M_redoStack.Clear();
             }
         }
         #endregion

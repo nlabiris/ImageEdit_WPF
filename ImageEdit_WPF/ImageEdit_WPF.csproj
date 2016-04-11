@@ -79,7 +79,12 @@
     <Compile Include="HelperClasses\ConvertionMethods.cs" />
     <Compile Include="HelperClasses\SaveImage.cs" />
     <Compile Include="HelperClasses\SliderValueConverter.cs" />
-    <Compile Include="HelperClasses\ViewModel.cs" />
+    <Compile Include="HelperClasses\ViewModel\ViewModel.cs" />
+    <Compile Include="HelperClasses\View\IViewModel.cs" />
+    <Compile Include="UndoRedoSystem\CommandStateManager.cs" />
+    <Compile Include="UndoRedoSystem\Command\IUndoCommand.cs" />
+    <Compile Include="UndoRedoSystem\Command\RedoCommand.cs" />
+    <Compile Include="UndoRedoSystem\Command\UndoCommand.cs" />
     <Compile Include="Windows\AutoThreshold.xaml.cs">
       <DependentUpon>AutoThreshold.xaml</DependentUpon>
     </Compile>
@@ -274,6 +279,7 @@
       <Name>ImageAlgorithms</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

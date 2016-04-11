@@ -26,6 +26,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows;
+using ImageEdit_WPF.HelperClasses.ViewModel;
 
 namespace ImageEdit_WPF.Windows {
     /// <summary>

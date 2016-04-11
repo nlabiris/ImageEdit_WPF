@@ -90,11 +90,6 @@ namespace ImageAlgorithms {
         /// Type of action (which algorithm used).
         /// </summary>
         private ActionType m_action;
-
-        /// <summary>
-        /// Image used at the Undo/Redo system.
-        /// </summary>
-        private Bitmap m_bmpUndoRedo = null;
         #endregion
 
         #region Public properties
@@ -139,11 +134,6 @@ namespace ImageAlgorithms {
         public ActionType M_action {
             get { return m_action; }
             set { m_action = value; }
-        }
-
-        public Bitmap M_bmpUndoRedo {
-            get { return m_bmpUndoRedo; }
-            set { m_bmpUndoRedo = value; }
         }
         #endregion
     }
